@@ -1,0 +1,152 @@
+1. 删除index
+curl -XDELETE 'localhost:9200/ticket'
+
+
+2. 新建index, mapping
+curl -XPUT 'localhost:9200/ticket' -d '{"settings":{"index":{"analysis":{"tokenizer":{"comma":{"type":"pattern","pattern":","}},"analyzer":{"comma":{"type":"custom","tokenizer":"comma"}}}}},"mappings":{"leads":{"dynamic":false,"properties":{"id":{"type":"integer"},"remoteId":{"type":"integer"},"companyId":{"type":"integer"},"officeId":{"type":"integer"},"masterUserId":{"type":"integer"},"name":{"type":"string","analyzer":"ik","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"telephone":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"mobile":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"email":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"province":{"type":"integer"},"city":{"type":"integer"},"district":{"type":"integer"},"address":{"type":"string","analyzer":"ik","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"CustomField_13":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"CustomField_18":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"CustomField_24":{"type":"integer"},"CustomField_20":{"type":"string","analyzer":"comma","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"CustomField_19":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"CustomField_21":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"CustomField_22":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"CustomField_23":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"CustomField_14":{"type":"date","format":"yyyy-MM-dd"},"signDate":{"type":"date","format":"yyyy-MM-dd"},"followStatus":{"type":"integer"},"createUserId":{"type":"integer"},"createTime":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"updateUserId":{"type":"integer"},"updateTime":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"remark":{"type":"string","analyzer":"ik","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"deleteFlag":{"type":"integer"},"isTransferToCustomer":{"type":"integer"},"leadsHighSeaId":{"type":"integer"},"leadsHighSeaTransferCount":{"type":"integer"},"leadsHighSeaReceiveTime":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"remoteCreateTime":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"remoteUpdateTime":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"CustomField_15":{"type":"integer"},"leadsSource":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"CustomField_16":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"CustomField_17":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"isAgentChannel":{"type":"string","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"contactsName":{"type":"string","analyzer":"ik","fields":{"raw":{"type":"string","index":"not_analyzed"}}},"source":{"type":"integer"},"changeTimestamp":{"type":"date","format":"yyyy-MM-dd HH:mm:ss.SSS"},"customFieldJson":{"type":"string"},"lastFollowTime":{"type":"date","format":"yyyy-MM-dd HH:mm:ss"},"lastMasterUserId":{"type":"integer"},"highSeaStatus":{"type":"integer"}}}}}'
+
+3. 查询mapping 同义词支持英文
+
+
+curl localhost:9200/_template/template_1
+
+{
+
+  "settings": {
+    "index": {
+      "analysis": {
+        "tokenizer": {
+          "pinyin_analyzer": {
+            "type": "pinyin",
+            "keep_full_pinyin" : false,
+            "keep_joined_full_pinyin" : true
+          },
+          "comma": {
+            "type": "pattern",
+            "pattern": ","
+          }
+        },
+        "analyzer": {
+          "ik_smart": {
+            "tokenizer": "ik_smart"
+          },
+          "ik_max_word": {
+            "tokenizer": "ik_max_word"
+          },
+          "pinyin": {
+            "tokenizer": "pinyin_analyzer"
+          },
+          "ik_max_word_pinyin": {
+            "tokenizer": "ik_smart",
+            "filter": ["pinyin", "word_delimiter"]
+          },
+          "chinese_sort": {
+            "tokenizer": "keyword",
+            "filter": "chinese_collator"
+          },
+          "comma": {
+            "type": "custom",
+            "tokenizer": "comma"
+          }
+        },
+        "filter": {
+          "pinyin": {
+            "type": "pinyin",
+            "padding_char": " ",
+            "keep_full_pinyin" : false,
+            "keep_joined_full_pinyin" : true
+          },
+          "chinese_collator": {
+            "type": "icu_collation",
+            "language": "zh-cn"
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "ticket": {
+      "dynamic": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "keyword",
+          "index": false,
+          "fields": {
+            "ik_smart": {
+              "type": "text",
+              "analyzer": "ik_smart"
+            },
+            "ik_max_word": {
+              "type": "text",
+              "analyzer": "ik_max_word"
+            },
+            "pinyin": {
+              "type": "text",
+              "analyzer": "pinyin_analyzer"
+            },
+            "ik_max_word_pinyin": {
+              "type": "text",
+              "analyzer": "ik_pinyin_analyzer"
+            },
+            "raw": {
+              "type": "keyword"
+            },
+            "sort": {
+              "type": "text",
+              "fielddata": true,
+              "analyzer": "chinese_sort"
+            }
+          }
+        }
+      }
+      }
+    }
+  }
+
+4. 测试数据
+curl -XPOST http://localhost:9200/ticket/ticket/1 -d'{"name":"zhangsan"}'
+curl -XPOST http://localhost:9200/ticket/ticket/2 -d'{"name":"中国人民"}'
+curl -XPOST http://localhost:9200/ticket/ticket/3 -d'{"name":"中华人民"}'
+curl -XPOST http://localhost:9200/ticket/ticket/4 -d'{"name":"人民"}'
+curl -XPOST http://localhost:9200/ticket/ticket/5 -d'{"name":"人命关天"}'
+curl -XPOST http://localhost:9200/ticket/ticket/6 -d'{"name":"仁者无敌"}'
+curl -XPOST http://localhost:9200/ticket/ticket/7 -d'{"name":"刘德华"}'
+curl -XPOST http://localhost:9200/ticket/ticket/8 -d'{"name":"刘德华"}'
+curl -XPOST http://localhost:9200/ticket/ticket/9 -d'{"name":"a"}'
+curl -XPOST http://localhost:9200/ticket/ticket/10 -d'{"name":"阿里民"}'
+curl -XPOST http://localhost:9200/ticket/ticket/11 -d'{"name":"死鬼"}'
+curl -XPOST http://localhost:9200/ticket/ticket/12 -d'{"name":"戴笠"}'
+
+curl -XGET 'http://localhost:9200/ticket/_analyze?text=%e4%b8%ad%e5%8d%8e%e4%ba%ba%e6%b0%91%e5%85%b1%e5%92%8c%e5%9b%bd&analyzer=ik_pinyin_analyzer'
+
+5. 查询DEMO
+
+curl -XPOST http://localhost:9200/ticket/ticket/_search?pretty -d'
+{
+"query": {
+"match_all": {}
+}
+}'
+
+curl -XPOST http://localhost:9200/ticket/ticket/_search?pretty -d'
+{
+"query": {
+"match": {
+"name.pinyin_analyzer": "dehua"
+}
+}
+}'
+
+curl -XPOST http://localhost:9200/ticket/ticket/_search?pretty -d '
+{
+"size" : 100,
+"sort" : [
+{ "name.sort" : "asc" }
+],
+"query": {
+"match_all": {}
+}
+}'

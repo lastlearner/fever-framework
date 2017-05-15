@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.udesk.cases.repository.sys.query.RoleQueryMapper">
+	<sql id="roleColumns">
+		role.id,
+		role.name,
+		role.data_scope,
+		role.create_user_id,
+		role.create_time,
+		role.update_user_id,
+		role.update_time,
+		role.remark,
+		role.delete_flag,
+		role.office_id
+		AS "role.office.id",
+		office.name AS
+		"role.office.name"
+	</sql>
+
+	<sql id="roleJoins">
+		LEFT JOIN sys_office office ON office.id = role.office_id
+	</sql>
+
+	<select id="findById" resultType="cn.udesk.cases.model.sys.Role">
+		SELECT
+		<include refid="roleColumns" />
+		FROM sys_role role
+		<include refid="roleJoins" />
+		WHERE role.id = #{id}
+	</select>
+
+	<select id="findAll" resultType="cn.udesk.cases.model.sys.Role">
+		SELECT
+		<include refid="roleColumns" />
+		FROM sys_role role
+		<include refid="roleJoins" />
+		WHERE role.delete_flag = 0
+	</select>
+	
+	<select id="findByUser" resultMap="roleResultMap.role">
+		SELECT
+		<include refid="roleColumns" />
+		roleOffice.office_id AS "officeList.id"
+		FROM sys_role role
+		LEFT JOIN sys_office office ON office.id = role.office_id
+		LEFT JOIN sys_user_role userRole ON userRole.role_id = role.id
+		LEFT JOIN sys_user user ON user.id = userRole.user_id
+		LEFT JOIN sys_role_office roleOffice ON roleOffice.role_id = role.id
+		WHERE a.delete_flag = 0
+		<if test="user != null and user.id != null and user.id != ''">
+			AND user.id = #{user.id}
+		</if>
+		<if test="user != null and user.username != null and user.username != ''">
+			AND user.login_name = #{user.loginName}
+		</if>
+		ORDER BY office.code, role.name
+	</select>
+</mapper>

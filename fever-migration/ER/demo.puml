@@ -1,0 +1,24 @@
+UML legend:
+
+table = class
+#pkey
++index
+
+@startuml
+    class user <<(T,olive)>> {
+        user table info
+        ==
+        #id : bigint(11) -- ID
+        +company_id : bigint(11) -- 公司ID
+        name : varchar(64) -- 名称
+    }
+    user "1" -- "1..*" ticket
+    class ticket <<(T,olive)>> {
+        ticket table info
+        ==
+        #id : bigint(11) -- ID
+        +company_id : bigint(11) -- 公司ID
+        name : varchar(64) -- 名称
+    }
+@enduml
+

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.udesk.cases.repository.niche.query.NicheQueryMapper">
+  <sql id="nicheColumns">
+		  niche.id,
+		  niche.customer_id AS "customerId",
+		  niche.customer_id AS "customer.id",
+		  customer.`realname` AS "customer.realname",
+		  niche.charge_user_id AS "chargeUserId",
+		  niche.charge_user_id AS "charge.id",
+		  charge.`realname` AS "charge.realname",
+		  niche.name,
+		  niche.sale_process AS "saleProcess",
+		  niche.pre_sale_amount AS "preSaleAmount",
+		  niche.pre_sign_date AS "preSignDate",
+		  niche.create_user_id AS "createUserId",
+		  niche.create_time AS "createTime",
+		  niche.update_user_id AS "updateUserId",
+		  niche.update_time AS "updateTime",
+		  niche.remark
+		  
+    </sql>
+    
+	<sql id="nicheJoins">
+		LEFT JOIN sys_user customer ON customer.`id` = niche.`customer_id`
+	 	LEFT JOIN sys_user charge ON charge.`id` = niche.`charge_user_id`
+	</sql>
+  <select id="findById" resultType="cn.udesk.cases.model.niche.Niche">
+  	SELECT
+    <include refid="nicheColumns"/>
+    FROM niche_niche niche 
+    <include refid="nicheJoins"/>
+   	WHERE niche.id = #{id}
+  </select>
+  <select id="findAll" resultType="cn.udesk.cases.model.niche.Niche">
+	SELECT
+    <include refid="nicheColumns"/>
+    FROM niche_niche niche 
+    <include refid="nicheJoins"/>
+   	WHERE niche.delete_flag = 0
+  </select>
+</mapper>

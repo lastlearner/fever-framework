@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+	<property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}" />
+	<property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}" />
+	<springProperty scope="context" name="serverName" source="spring.profiles" />
+	<contextName>${serverName}</contextName>
+
+	<appender name="serverConsole" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Append>true</Append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/serverConsole/${serverName}.catalina.out-%d{yyyy-MM-dd}</fileNamePattern>
+			<maxHistory>15</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${FILE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="server-warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Append>true</Append>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>WARN</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/server-warn/${serverName}-warn.log-%d{yyyy-MM-dd}</fileNamePattern>
+			<maxHistory>15</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${FILE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="server-error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Append>true</Append>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/server-error/${serverName}-error.log-%d{yyyy-MM-dd}</fileNamePattern>
+			<maxHistory>15</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${FILE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="stash" class="net.logstash.logback.appender.LogstashSocketAppender">
+		<host>172.16.3.74</host>
+		<!-- port is optional (default value shown) -->
+		<port>5000</port>
+<!-- 		<customFields>{"appname":"production"}</customFields> -->
+	</appender>
+
+	<logger name="cn.udesk" level="INFO">
+		<appender-ref ref="server-warn" />
+		<appender-ref ref="server-error" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="serverConsole" />
+	</root>
+
+	<root level="INFO">
+		<appender-ref ref="stash" />
+	</root>
+
+	<jmxConfigurator />
+	<logger name="cn.udesk.cases" level="DEBUG" />
+	<logger name="springfox" level="WARN" />
+	<logger name="org.springframework" level="WARN" />
+</configuration>

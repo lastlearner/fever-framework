@@ -1,0 +1,80 @@
+# EMBEDDED SERVER CONFIGURATION
+server:
+  port: 8081
+#  context-path: /
+
+flyway: 
+  enabled: false
+
+spring.cache.ehcache.config: classpath:cache/ehcache-local.xml
+spring: 
+  # IDENTITY
+  application:
+    name: crm
+  # DATASOURCE
+  datasource:
+    name: udesk_crm
+    url: jdbc:mysql://localhost:3306/udesk_crm?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: admin
+    #考虑用hikariCP替代
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    #配置连接池初始化大小,最小,最大
+    initialSize: 1
+    minIdle: 1
+    maxActive: 20
+    #配置获取连接等待超时的时间
+    maxWait: 60000
+    #配置间隔多久才进行一次检测,检测需要关闭的空闲连接,单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    #配置一个连接在池中最小生存的时间,单位是毫秒
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    #打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+  messages:
+    basename: i18n/message/Messages
+    #配置监控统计拦截的filters
+    #filters: stat, wall
+# 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+#spring.datasource.connectionProperties=druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+# 合并多个DruidDataSource的监控数据
+#spring.datasource.useGlobalDataSourceStat=true
+  #METRICS
+  boot.admin.url: http://localhost:8090
+  aop:
+    auto: true
+# tomcat最大线程数，默认为200
+#server.tomcat.max-threads: 800
+server.tomcat.uri-encoding: UTF-8
+
+mybatis: 
+  mapperLocations: classpath:sqlmap/**/*.xml
+  typeAliasesPackage: cn.udesk.crm.model
+  configuration:
+    #使用驼峰命名法转换字段
+    mapUnderscoreToCamelCases: true
+    
+#logging:
+#  level:
+#    springfox: WARN
+#    cn.udesk.cases DEBUG
+
+
+endpoints.shutdown.enabled: true
+
+ribbon:
+  ServerListRefreshInterval: 1000
+
+endpoints: 
+  health:
+    sensitive: false
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true

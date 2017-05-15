@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nicheResultMap">
+	<resultMap id="niche" type="cn.udesk.cases.model.niche.Niche">
+		<result property="id" column="id" />
+		<result property="customerId" column="customer_id" />
+		<result property="chargeUserId" column="charge_user_id" />
+		<result property="name" column="name" />
+		<result property="saleProcess" column="sale_process"/>
+		<result property="preSaleAmount" column="pre_sale_amount" />
+		<result property="preSignDate" column="pre_sign_date"/>
+		
+		<result property="createUserId" column="create_user_id" />
+		<result property="createTime" column="create_time" />
+		<result property="updateUserId" column="update_user_id"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="remark" column="remark"/>
+		<result property="deleteFlag" column="delete_flag"/>
+	</resultMap>
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.udesk.cases.repository.sys.query.UserQueryMapper">
+	<sql id="userColumns">
+		user.id,
+		user.realname,
+		user.email,
+		user.mobile,
+		user.username,
+		user.password,
+		user.create_user_id,
+		user.create_time,
+		user.update_user_id,
+		user.update_time,
+		user.remark,
+		user.delete_flag,
+		user.company_id AS "company.id",
+		company.name AS "company.name",
+		company.parent_id AS "company.parent.id",
+		company.parent_ids AS "company.parentIds",
+		companyArea.id AS "company.area.id",
+		companyArea.name AS "company.area.name",
+		companyArea.parent_id AS "company.area.parent.id",
+		companyArea.parent_ids AS "company.area.parentIds",
+		user.office_id AS "office.id",
+		office.name AS "office.name",
+		office.parent_id AS "office.parent.id",
+		office.parent_ids AS "office.parentIds",
+		officeArea.id AS "office.area.id",
+		officeArea.name AS "office.area.name",
+		officeArea.parent_id AS "office.area.parent.id",
+		officeArea.parent_ids AS "office.area.parentIds"
+	</sql>
+
+	<sql id="userJoins">
+		LEFT JOIN sys_office company ON company.id = user.company_id
+		LEFT JOIN sys_area companyArea ON companyArea.id = company.area_id
+		LEFT JOIN sys_office office ON office.id = user.office_id
+		LEFT JOIN sys_area officeArea ON officeArea.id = office.area_id
+	</sql>
+
+	<select id="findById" resultType="cn.udesk.cases.model.sys.User">
+		SELECT
+		<include refid="userColumns" />
+		FROM sys_user user
+		<include refid="userJoins" />
+		WHERE user.id = #{id}
+	</select>
+
+	<select id="findAll" resultType="cn.udesk.cases.model.sys.User">
+		SELECT
+		<include refid="userColumns" />
+		FROM sys_user user
+		<include refid="userJoins" />
+		WHERE user.delete_flag = 0
+	</select>
+	
+	<select id="findByUsername" resultType="cn.udesk.cases.model.sys.User">
+		SELECT
+		<include refid="userColumns" />
+		FROM sys_user user
+		<include refid="userJoins" />
+		WHERE user.username = #{username}
+	</select>
+</mapper>

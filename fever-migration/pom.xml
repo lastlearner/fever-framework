@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.fanfever</groupId>
+        <artifactId>fever-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../fever-parent</relativePath>
+    </parent>
+    <artifactId>fever-migration</artifactId>
+    <name>fever-migration</name>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <!-- DB -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId><!-- spring-boot-dependencies version -->
+        </dependency>
+        <!-- MIGRATION -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId><!-- spring-boot-dependencies version -->
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>develop</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>4.0.3</version>
+                        <configuration>
+                            <url>
+                                <![CDATA[jdbc:mysql://localhost:3306/udesk_crm?useUnicode=true&characterEncoding=UTF-8&useSSL=false]]></url>
+                            <user>root</user>
+                            <password>admin</password>
+                            <!-- 设置接受flyway进行版本管理的数据库，多个数据库以逗号分隔 -->
+                            <schemas>udesk_crm</schemas>
+                            <!-- 设置存放flyway metadata数据的表名 -->
+                            <table>schema_version</table>
+                            <!-- 设置flyway扫描sql升级脚本、java升级脚本的目录路径或包路径 -->
+                            <locations>
+                                <location>filesystem:migration</location>
+                            </locations>
+                            <!-- 设置sql脚本文件的编码 -->
+                            <encoding>UTF-8</encoding>
+                            <!-- 设置执行migrate操作之前的validation行为 -->
+                            <validateOnMigrate>false</validateOnMigrate>
+                            <!-- 是否初始化 -->
+                            <baselineOnMigrate>true</baselineOnMigrate>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>staging</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>4.0.3</version>
+                        <configuration>
+                            <url>
+                                <![CDATA[jdbc:mysql://localhost:3306/udesk_crm?useUnicode=true&characterEncoding=UTF-8&useSSL=false]]></url>
+                            <user>crm</user>
+                            <password>password</password>
+                            <!-- 设置接受flyway进行版本管理的数据库，多个数据库以逗号分隔 -->
+                            <schemas>udesk_crm</schemas>
+                            <!-- 设置存放flyway metadata数据的表名 -->
+                            <table>schema_version</table>
+                            <!-- 设置flyway扫描sql升级脚本、java升级脚本的目录路径或包路径 -->
+                            <locations>
+                                <location>filesystem:migration</location>
+                            </locations>
+                            <!-- 设置sql脚本文件的编码 -->
+                            <encoding>UTF-8</encoding>
+                            <!-- 设置执行migrate操作之前的validation行为 -->
+                            <validateOnMigrate>false</validateOnMigrate>
+                            <!-- 是否初始化 -->
+                            <baselineOnMigrate>true</baselineOnMigrate>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>production</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>4.0.3</version>
+                        <configuration>
+                            <url>
+                                <![CDATA[jdbc:mysql://crm-db.cp4y2mv6moha.rds.cn-north-1.amazonaws.com.cn:3306/udesk_crm?useUnicode=true&characterEncoding=utf-8&useSSL=false]]></url>
+                            <user>crm</user>
+                            <password>fanfever</password>
+                            <!-- 设置接受flyway进行版本管理的数据库，多个数据库以逗号分隔 -->
+                            <schemas>udesk_crm</schemas>
+                            <!-- 设置存放flyway metadata数据的表名 -->
+                            <table>schema_version</table>
+                            <!-- 设置flyway扫描sql升级脚本、java升级脚本的目录路径或包路径 -->
+                            <locations>
+                                <location>filesystem:migration</location>
+                            </locations>
+                            <!-- 设置sql脚本文件的编码 -->
+                            <encoding>UTF-8</encoding>
+                            <!-- 是否初始化 -->
+                            <baselineOnMigrate>true</baselineOnMigrate>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

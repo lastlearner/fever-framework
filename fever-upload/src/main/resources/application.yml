@@ -1,0 +1,26 @@
+cloud.aws:
+  credentials:
+    accessKey: AKIAOCPVFG6YDO6DYRAQ
+    secretKey: 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
+  region:
+    auto: false
+    static: cn-north-1
+  stack:
+    auto: false
+  sqs:
+    queueName: km_develop_sync_es
+  s3:
+    bucketName: staging-km-storage
+oss:
+  endpoint: oss-cn-beijing.aliyuncs.com
+  accessKeyId: LTAI8NLRZ2OyATLy
+  accessKeySecret: rbWUPwRPONFS0ARRzLRxJvVOzvs6me
+  bucketName: staging-udesk
+  dir: attachment
+# Spring Boot Servlet multipart size
+# Single file max size
+multipart.maxFileSize: 100Mb
+# All files max size
+multipart.maxRequestSize: 1000Mb
+# SYS ENCODE
+sys.encode: UTF-8

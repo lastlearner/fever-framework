@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.udesk.cases.repository.sys.command.MenuCommandMapper">
+	<insert id="save" parameterType="cn.udesk.cases.model.sys.Menu">
+		INSERT INTO sys_menu(
+		name,
+		orders,
+		href,
+		target,
+		is_show,
+		permission,
+		create_user_id,
+		create_time,
+		remark
+		)VALUES (
+		#{name},
+		#{orders},
+		#{href},
+		#{target},
+		#{isShow},
+		#{permission},
+		#{createUserId},
+		NOW(),
+		#{remark}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE sys_menu
+		<set>
+			<if test="menu.name != null">
+				name = #{menu.name},
+			</if>
+			<if test="menu.orders != null">
+				orders = #{menu.orders},
+			</if>
+			<if test="menu.href != null">
+				href = #{menu.href},
+			</if>
+			<if test="menu.target != null">
+				target = #{menu.target},
+			</if>
+			<if test="menu.isShow != null">
+				is_show = #{menu.is_show},
+			</if>
+			<if test="menu.permission != null">
+				permission = #{menu.permission},
+			</if>
+			update_user_id=#{menu.updateUserId},
+			update_time=NOW()
+		</set>
+		WHERE id = #{menu.id}
+	</update>
+
+	<update id="updateParentIds">
+		UPDATE sys_menu SET
+		parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteById">
+		UPDATE sys_menu SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id} OR parent_ids LIKE
+		<if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+</mapper>

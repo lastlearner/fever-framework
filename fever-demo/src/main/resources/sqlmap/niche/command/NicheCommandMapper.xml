@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.udesk.cases.repository.niche.command.NicheCommandMapper">
+	<insert id="save" parameterType="cn.udesk.cases.model.niche.Niche">
+		INSERT INTO niche_niche (
+			customer_id,
+			charge_user_id,
+			name,
+			sale_process,
+			pre_sale_amount,
+			<!-- pre_sign_date, -->
+			create_user_id,
+			create_time,
+			update_user_id,
+			update_time,
+			remark,
+			delete_flag
+			)
+		VALUES(
+			#{customerId},
+			#{chargeUserId},
+			#{name},
+			#{saleProcess},
+			#{preSaleAmount}, 
+			<!-- STR_TO_DATE(#{preSignDate},'%Y-%m-%d'), -->
+			#{createUserId},
+			NOW(),
+			#{updateUserId},
+			NOW(),
+			#{remark},
+			0
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE niche_niche
+		<set>
+			<if test="customerId != null">
+				customer_id = #{customerId},
+			</if>
+			<if test="chargeUserId != null">
+				charge_user_id = #{chargeUserId},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="saleProcess != null">
+				sale_process = #{saleProcess},
+			</if>
+			<if test="preSaleAmount != null">
+				pre_sale_amount = #{preSaleAmount},
+			</if>
+			<if test="preSignDate != null">
+				pre_sign_date = #{preSignDate},
+			</if>
+			<if test="createUserId != null">
+				create_user_id = #{createUserId},
+			</if>
+			<if test="updateUserId != null">
+				update_user_id = #{updateUserId},
+			</if>
+				update_time = NOW(),
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+			<if test="deleteFlag != null">
+				delete_flag = #{deleteFlag}
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+</mapper>

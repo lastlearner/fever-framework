@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.udesk.cases.repository.sys.query.MenuQueryMapper">
+	<sql id="menuColumns">
+		menu.id,
+		menu.name,
+		menu.orders,
+		menu.href,
+		menu.target,
+		menu.is_show,
+		menu.permission,
+		menu.create_user_id,
+		createUser.username AS "menu.createUserUsername",
+		menu.create_time,
+		menu.update_user_id,
+		updateUser.username AS "menu.updateUserUsername",
+		menu.update_time,
+		menu.remark,
+		menu.delete_flag,
+		menu.parent_ids,
+		menu.parent_id
+		AS "menu.parent.id",
+		parent.name AS "menu.parent.name"
+	</sql>
+
+	<sql id="menuJoins">
+		LEFT JOIN sys_menu parent ON parent.id = menu.parent_id
+		LEFT JOIN sys_user createUser ON createUser.id = menu.create_user_id
+		LEFT JOIN sys_user updateUser ON updateUser.id = menu.update_user_id
+	</sql>
+
+	<select id="findById" resultType="cn.udesk.cases.model.sys.Menu">
+		SELECT
+		<include refid="menuColumns" />
+		FROM sys_menu menu
+		<include refid="menuJoins" />
+		WHERE menu.id = #{id}
+	</select>
+
+	<select id="findAll" resultType="cn.udesk.cases.model.sys.Menu">
+		SELECT
+		<include refid="menuColumns" />
+		FROM sys_menu menu
+		<include refid="menuJoins" />
+		WHERE menu.delete_flag = 0
+	</select>
+
+	<select id="findByUserId" resultType="cn.udesk.cases.model.sys.Menu">
+		SELECT DISTINCT
+		<include refid="menuColumns" />
+		FROM sys_menu menu
+		LEFT JOIN sys_menu parent ON parent.id = menu.parent_id
+		JOIN sys_role_menu roleMenu ON roleMenu.menu_id = menu.id
+		JOIN sys_role role ON role.id = roleMenu.role_id
+		JOIN sys_user_role
+		userRole ON userRole.role_id = role.id
+		JOIN sys_user user ON user.id = userRole.user_id AND user.id = #{userId}
+		WHERE menu.delete_flag = 0 AND role.delete_flag = 0
+		AND user.delete_flag = 0
+		ORDER BY menu.sort
+	</select>
+	
+	<select id="findByParentIdsLike" resultType="cn.udesk.cases.model.sys.Menu">
+		SELECT
+			menu.id,
+			menu.parent_id AS "parent.id",
+			menu.parent_ids
+		FROM sys_menu menu
+		WHERE a.delete_flag = 0 AND menu.parent_ids LIKE #{parentIds}
+		ORDER BY menu.sort
+	</select>
+</mapper>

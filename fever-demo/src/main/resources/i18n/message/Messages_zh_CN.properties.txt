@@ -1,0 +1,12 @@
+vaildate.base.remark.size=备注长度校验失败
+vaildate.base.deleteFlag.notNull=删除标签不能为空
+vaildate.base.deleteFlag.size=删除标签长度校验失败
+validate.sys.menu.parent.notNull=父亲不能为空
+validate.sys.menu.parentIds.size=父亲们长度校验失败
+validate.sys.menu.name.size=名称长度校验失败
+validate.sys.menu.href.size=链接长度校验失败
+validate.sys.menu.target.size=目标长度校验失败
+validate.sys.menu.isShow.notNull=是否显示不能为空
+validate.sys.menu.isShow.size=是否显示长度校验失败
+validate.sys.menu.permission.size=权限长度校验失败
+validate.sys.user.username.exist=用户名已经存在

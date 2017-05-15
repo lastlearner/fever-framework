@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.udesk.cases.repository.sys.command.UserCommandMapper">
+	<insert id="save" parameterType="cn.udesk.cases.model.sys.User">
+		INSERT INTO sys_user(
+		realname,
+		email,
+		mobile,
+		username,
+		password,
+		company_id,
+		office_id,
+		create_user_id,
+		create_time,
+		remark
+		)VALUES (
+		#{realname},
+		#{email},
+		#{mobile},
+		#{username},
+		#{password},
+		#{companyId},
+		#{officeId},
+		#{createUserId},
+		NOW(),
+		#{remark}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE sys_user
+		<set>
+			<if test="user.realname != null">
+				name = #{user.realname},
+			</if>
+			<if test="user.email != null">
+				email = #{user.email},
+			</if>
+			<if test="user.mobile != null">
+				mobile = #{user.mobile},
+			</if>
+			<if test="user.username != null">
+				username = #{user.username},
+			</if>
+			<if test="user.password != null">
+				password = #{user.password},
+			</if>
+			<if test="user.companyId != null">
+				company_id = #{user.companyId},
+			</if>
+			<if test="user.officeId != null">
+				office_id = #{user.officeId},
+			</if>
+			update_user_id=#{user.updateUserId},
+			update_time=NOW()
+		</set>
+		WHERE id = #{user.id}
+	</update>
+</mapper>

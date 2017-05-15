@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.udesk.cases.repository.sys.query.AreaQueryMapper">
+	<sql id="areaColumns">
+		area.id,
+		area.name,
+		area.orders,
+		area.create_user_id,
+		area.create_time,
+		area.update_user_id,
+		area.update_time,
+		area.remark,
+		area.delete_flag,
+		area.parent_ids,
+		area.parent_id AS "area.parent.id",
+		parent.name AS "area.parent.name"
+	</sql>
+
+	<sql id="areaJoins">
+		LEFT JOIN sys_area parent ON parent.id = area.parent_id
+	</sql>
+
+	<select id="findById" resultType="cn.udesk.cases.model.sys.Area">
+		SELECT
+		<include refid="areaColumns" />
+		FROM sys_area area
+		<include refid="areaJoins" />
+		WHERE area.id = #{id}
+	</select>
+
+	<select id="findAll" resultType="cn.udesk.cases.model.sys.Area">
+		SELECT
+		<include refid="areaColumns" />
+		FROM sys_area area
+		<include refid="areaJoins" />
+		WHERE area.delete_flag = 0
+	</select>
+</mapper>
