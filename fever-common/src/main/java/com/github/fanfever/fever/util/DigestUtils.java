@@ -29,9 +29,14 @@ import java.util.zip.CRC32;
  */
 public class DigestUtils {
 
+	private DigestUtils(){
+
+	}
+
 	private static final String SHA1 = "SHA-1";
 	private static final String MD5 = "MD5";
 	private static final String SHA256 = "SHA-256";
+	private static final String UTF8 = "UTF-8";
 
 	private static SecureRandom random = new SecureRandom();
 
@@ -46,7 +51,7 @@ public class DigestUtils {
 	 * 对输入字符串进行sha1散列.
 	 */
 	public static byte[] sha1(String input) {
-		return digest(input.getBytes(Charset.forName("UTF-8")), SHA1, null, 1);
+		return digest(input.getBytes(Charset.forName(UTF8)), SHA1, null, 1);
 	}
 
 	/**
@@ -67,7 +72,7 @@ public class DigestUtils {
 	 * 对输入字符串进行sha1散列，带salt达到更高的安全性.
 	 */
 	public static byte[] sha1(String input, byte[] salt) {
-		return digest(input.getBytes(Charset.forName("UTF-8")), SHA1, salt, 1);
+		return digest(input.getBytes(Charset.forName(UTF8)), SHA1, salt, 1);
 	}
 
 	/**
@@ -88,7 +93,7 @@ public class DigestUtils {
 	 * 对输入字符串进行sha1散列，带salt而且迭代达到更高更高的安全性.
 	 */
 	public static byte[] sha1(String input, byte[] salt, int iterations) {
-		return digest(input.getBytes(Charset.forName("UTF-8")), SHA1, salt, iterations);
+		return digest(input.getBytes(Charset.forName(UTF8)), SHA1, salt, iterations);
 	}
 
 	/**
@@ -187,7 +192,7 @@ public class DigestUtils {
 	 */
 	public static int crc32(String input) {
 		CRC32 crc32 = new CRC32();
-		crc32.update(input.getBytes(Charset.forName("UTF-8")));
+		crc32.update(input.getBytes(Charset.forName(UTF8)));
 		return (int) crc32.getValue();
 	}
 
@@ -214,7 +219,7 @@ public class DigestUtils {
 	 */
 	public static long crc32AsLong(String input) {
 		CRC32 crc32 = new CRC32();
-		crc32.update(input.getBytes(Charset.forName("UTF-8")));
+		crc32.update(input.getBytes(Charset.forName(UTF8)));
 		return crc32.getValue();
 	}
 
@@ -238,7 +243,7 @@ public class DigestUtils {
 	 * 对输入字符串进行murmur32散列
 	 */
 	public static int murmur32(String input) {
-		return Hashing.murmur3_32().hashString(input, Charset.forName("UTF-8")).asInt();
+		return Hashing.murmur3_32().hashString(input, Charset.forName(UTF8)).asInt();
 	}
 
 	/**
@@ -259,7 +264,7 @@ public class DigestUtils {
 	 * 对输入字符串进行murmur32散列，带有seed
 	 */
 	public static int murmur32(String input, int seed) {
-		return Hashing.murmur3_32(seed).hashString(input, Charset.forName("UTF-8")).asInt();
+		return Hashing.murmur3_32(seed).hashString(input, Charset.forName(UTF8)).asInt();
 	}
 
 	/**

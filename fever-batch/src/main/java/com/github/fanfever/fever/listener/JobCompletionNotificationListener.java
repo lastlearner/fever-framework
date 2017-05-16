@@ -20,7 +20,6 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 	public void afterJob(JobExecution jobExecution) {
 		if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
 			logger.info("afterJob");
-			// System.exit(0);
 		}
 	}
 }

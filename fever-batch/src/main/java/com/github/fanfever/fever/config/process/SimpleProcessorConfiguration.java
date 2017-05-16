@@ -28,16 +28,11 @@ public class SimpleProcessorConfiguration {
 
 	public class SimpleProcessor implements ItemProcessor<User, User> {
 
-		private int count = 0;
-		
 		@Autowired
 		RestTemplate restTemplate;
 
 		@Override
 		public User process(User user) throws Exception {
-			if (5 > count++) {
-				throw new RuntimeException("process" + count);
-			}
 			String message = restTemplate.exchange("http://staging1.udeska1.com/api/hello", HttpMethod.GET,
 					new HttpEntity<>(null), String.class).getBody();
 			user.setUsername(message);

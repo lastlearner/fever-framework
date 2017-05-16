@@ -35,12 +35,4 @@ public class ElasticSearchConfiguration {
             return null;
         }
     }
-
-//    @Bean
-//    @Lazy
-//    public Client elasticSearchRestClient(@Value("${elasticsearch.hostname}") String hostname,
-//                                      @Value("${elasticsearch.clusterName}") String clusterName) throws UnknownHostException {
-//        return RestClient.builder(
-//                new HttpHost(hostname, 9200, "http")).setRequestConfigCallback(i -> i.setConnectTimeout(5000).setSocketTimeout(30000).setMaxRedirects(30000)).build();
-//    }
 }

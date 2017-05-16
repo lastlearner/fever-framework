@@ -19,7 +19,7 @@ import com.github.fanfever.fever.item.User;
  * @date 2016年8月5日
  */
 @Configuration
-public class scheduleWriterConfiguration {
+public class ScheduleWriterConfiguration {
 
 	@Autowired
 	public DataSource dataSource;
