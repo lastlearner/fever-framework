@@ -19,12 +19,6 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!-- BASIC -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
         <!-- API DOC -->
         <dependency>
             <groupId>io.springfox</groupId>

@@ -1,9 +1,9 @@
 # fever
-this is a basic framework depend on springsource and maven
+This is a basic framework depend on springsource and maven
 
 ## module info
 ```
-.
+.fever
 ├── fever-parent 指定依赖包版本
 ├── fever-common 基类及工具类
 ├── fever-web web项目基类及工具类
@@ -14,6 +14,13 @@ this is a basic framework depend on springsource and maven
 ├── fever-demo DEMO
 ├── fever-metrics web项目监控
 └── fever-batch-metrics 批量任务监控
+
+则新项目启动时遵循此风格
+.proj
+├── proj-parent 继承fever-parent,指定依赖包版本
+├── proj-common 引入fever-common
+├── proj-web 引入fever-web
+
 ```
 ## maven
 + [nexus](http://awsjenkins.flyudesk.com/nexus)
@@ -46,9 +53,9 @@ mvn sonar:sonar -Dsonar.host.url=http://awsjenkins.flyudesk.com/sonar/
 + SDK
     + JDK8
 + VCS
-    + git
+    + Git
 + Build Tools
-    + maven
+    + Maven
 + Basic Library
     + SpringBoot
 + Job Library
@@ -84,25 +91,25 @@ mvn sonar:sonar -Dsonar.host.url=http://awsjenkins.flyudesk.com/sonar/
 + Validation
     + URI -> Regular Expression
     + urlParams -> Spring Validated
-    + Bean -> Hibernate Validation, fluent-validator
+    + Bean -> Hibernate Validation, Fluent-validator
 + Environment
     + Ali
     + AWS
 + Metrics
-    + spring boot admin
-    + spring batch admin
-    + newRelic
-    + dataDog
+    + Spring Boot Admin
+    + Spring Batch Admin
+    + NewRelic
+    + DataDog
 + IT Test
-    + cucumber
+    + Cucumber
 + Search
-    + elasticsearch
+    + ElasticSearch
 + Code Quality
-    + sonarQube
+    + SonarQube
 + Code Coverage
     + jacoco
 + UML
-    + plantUml
+    + PlantUml
 
 ## 管理说明
     + 保证JIRA中时刻有一个任务处于开发中或RD测试中

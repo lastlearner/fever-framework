@@ -13,11 +13,6 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- BASIC -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId><!-- spring-boot-dependencies version -->
-        </dependency>
         <!-- BATCH -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

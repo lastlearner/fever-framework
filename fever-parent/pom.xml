@@ -14,7 +14,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.5.2.RELEASE</version>
-        <relativePath></relativePath>
     </parent>
 
     <repositories>
@@ -39,7 +38,7 @@
         <pluginRepository>
             <id>nexus-repository</id>
             <name>Team Nexus Repository</name>
-            <url>${nexus.url}/content/groups/public</url>
+            <url>http://awsjenkins.flyudesk.com/nexus/content/groups/public</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -490,6 +489,10 @@
                     <target>${jdk.version}</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
             </plugin>
             <!-- validation -->
             <plugin>
