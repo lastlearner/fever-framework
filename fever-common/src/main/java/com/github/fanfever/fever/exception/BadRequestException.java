@@ -21,7 +21,7 @@ class BadRequestException extends BaseException {
 	private static final long serialVersionUID = 1L;
 
 	@JsonProperty("message")
-	private final List<String> messageList;
+	private List<String> messageList;
 
 	private transient I18nMessage i18nMessage;
 
