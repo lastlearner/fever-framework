@@ -14,6 +14,8 @@ import com.github.fanfever.fever.upload.annotation.BeingRealization;
 import com.github.fanfever.fever.upload.model.ResponseModel;
 import com.github.fanfever.fever.upload.util.PreCheck;
 import org.apache.commons.collections.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +33,7 @@ import java.util.Map;
  */
 @Component
 public class AwsS3StorageConfiguration {
+  private final static Logger logger = LoggerFactory.getLogger(AwsS3StorageConfiguration.class);
   //region Properties
   @Value("${cloud.aws.region.static}")
   private String region;
@@ -108,70 +111,13 @@ public class AwsS3StorageConfiguration {
             amazonS3.putObject(bucket, file.getOriginalFilename(), file.getInputStream(), objectMetadata);
           }
         } catch (IOException e) {
-          e.printStackTrace();
+          logger.error(e.getMessage(), e);
           throw new RuntimeException(e);
         }
         return new ResponseModel(false, ResponseModel.Operation.UPLOAD);
       }
     });
   }
-
-  //region BeingRealization
-
-  /**
-   * 创建存储空间
-   * @param bucket 存储空间名称
-   */
-  @BeingRealization
-  public void createBucket(String bucket) {
-    // TODO
-  }
-
-  /**
-   * 删除存储空间
-   * @param bucket 存储空间名称
-   */
-  @BeingRealization
-  public void deleteBucket(String bucket) {
-    // TODO
-  }
-
-  /**
-   * 验证指定bucket是否存在
-   * @param bucket
-   * @return
-   */
-  @BeingRealization
-  public boolean bucketExists(String bucket) {
-    // TODO
-    return false;
-  }
-
-  /**
-   * 指定空间下指定对象是否存在
-   * @param bucket 存储空间
-   * @param key 对象名称
-   * @return
-   */
-  @BeingRealization
-  public boolean objectExists(String bucket, String key) {
-    // TODO
-    return false;
-  }
-
-  /**
-   * 对象元数据
-   * @param bucket 存储空间
-   * @param key 对象名
-   * @return
-   */
-  @BeingRealization
-  public ObjectMetadata objectMetadata(String bucket, String key) {
-    // TODO
-    return null;
-  }
-
-  //endregion
 
   /**
    * S3 Tokens Info
@@ -210,7 +156,6 @@ public class AwsS3StorageConfiguration {
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
-      // TODO
     }
   }
 

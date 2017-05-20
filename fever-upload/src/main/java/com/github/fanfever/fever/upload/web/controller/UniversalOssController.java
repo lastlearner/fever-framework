@@ -49,7 +49,7 @@ public class UniversalOssController {
     httpHeaders.setContentDispositionFormData("attachment", URLEncoder.encode(key, UTF));
     httpHeaders.setContentType(MediaTypeMapper.parse(key));
 
-    return new ResponseEntity<byte[]>(
+    return new ResponseEntity<>(
         responseModel.isExists() ? IOUtils.toByteArray(responseModel.getInputStream()) : ArrayUtils.EMPTY_BYTE_ARRAY,
         httpHeaders,
         HttpStatus.CREATED);
@@ -75,7 +75,7 @@ public class UniversalOssController {
   public void upload(@RequestParam(value = "bucket") String bucket,
                      @RequestParam(value = "files") MultipartFile[] multipartFiles) {
     if(multipartFiles != null && multipartFiles.length > 0) {
-      ResponseModel responseModel = ossStorageConfiguration.upload(bucket, multipartFiles);
+      ossStorageConfiguration.upload(bucket, multipartFiles);
     }
   }
 
@@ -94,7 +94,7 @@ public class UniversalOssController {
    */
   @RequestMapping(value = "/tokens")
   public ResponseEntity<Map<String, String>> tokens(String dir) {
-    return new ResponseEntity<Map<String, String>>(ossStorageConfiguration.tokens(dir), HttpStatus.OK);
+    return new ResponseEntity<>(ossStorageConfiguration.tokens(dir), HttpStatus.OK);
   }
 
   /**
@@ -106,7 +106,7 @@ public class UniversalOssController {
   @RequestMapping(value = "/address/bucket")
   public ResponseEntity<String> chain(@RequestParam(value = "bucket") String bucket,
                                       @RequestParam(value = "key") String key) {
-    return new ResponseEntity<String>(ossStorageConfiguration.chain(bucket, key), HttpStatus.OK);
+    return new ResponseEntity<>(ossStorageConfiguration.chain(bucket, key), HttpStatus.OK);
   }
 
   /**

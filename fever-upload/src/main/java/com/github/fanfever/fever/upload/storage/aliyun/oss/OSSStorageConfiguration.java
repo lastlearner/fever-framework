@@ -39,8 +39,6 @@ public class OSSStorageConfiguration {
   private String accessKeySecret;
   @Value("${oss.bucketName}")
   private String bucketName;
-//  @Value("${oss.dir}")
-//  private String dir;
   //endregion
 
   //region OSSClient
@@ -121,7 +119,7 @@ public class OSSStorageConfiguration {
             ossClient.putObject(bucket, file.getOriginalFilename(), file.getInputStream(),
                     objectMetadata);
           } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
           }
         }
@@ -129,68 +127,6 @@ public class OSSStorageConfiguration {
       }
     });
   }
-
-  //region BeingRealization
-
-  /**
-   * 创建存储空间
-   * @param bucket 存储空间名称
-   */
-  @BeingRealization
-  public void createBucket(String bucket) {
-    // TODO
-    // FIXME
-  }
-
-  /**
-   * 删除存储空间
-   * @param bucket 存储空间名称
-   */
-  @BeingRealization
-  public void deleteBucket(String bucket) {
-    // TODO
-    // FIXME
-  }
-
-  /**
-   * 验证指定bucket是否存在
-   * @param bucket
-   * @return
-   */
-  @BeingRealization
-  public boolean bucketExists(String bucket) {
-    // TODO
-    // FIXME
-    return false;
-  }
-
-  /**
-   * 指定空间下指定对象是否存在
-   * @param bucket 存储空间
-   * @param key 对象名称
-   * @return
-   */
-  @BeingRealization
-  public boolean objectExists(String bucket, String key) {
-    // TODO
-    // FIXME
-    return false;
-  }
-
-  /**
-   * 对象元数据
-   * @param bucket 存储空间
-   * @param key 对象名
-   * @return
-   */
-  @BeingRealization
-  public ObjectMetadata objectMetadata(String bucket, String key) {
-    // TODO
-    // FIXME
-    return null;
-  }
-
-  //endregion
 
   /**
    * OSS Tokens Info
@@ -222,12 +158,13 @@ public class OSSStorageConfiguration {
       });
     } catch (Exception e) {
       logger.error(e.getMessage());
+      throw new RuntimeException(e);
     } finally {
       if(client != null) {
         client.shutdown();
       }
     }
-    return MapUtils.putAll(new HashMap<String, String>(), new String[] {});
+    //return MapUtils.putAll(new HashMap<String, String>(), new String[] {});
   }
 
   /**

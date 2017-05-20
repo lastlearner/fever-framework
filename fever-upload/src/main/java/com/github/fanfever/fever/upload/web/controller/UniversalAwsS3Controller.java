@@ -49,7 +49,7 @@ public class UniversalAwsS3Controller {
     httpHeaders.setContentDispositionFormData("attachment", URLEncoder.encode(key, UTF));
     httpHeaders.setContentType(MediaTypeMapper.parse(key));
 
-    return new ResponseEntity<byte[]>(
+    return new ResponseEntity<>(
         responseModel.isExists() ? IOUtils.toByteArray(responseModel.getInputStream()) : ArrayUtils.EMPTY_BYTE_ARRAY,
         httpHeaders,
         HttpStatus.CREATED);
@@ -75,7 +75,7 @@ public class UniversalAwsS3Controller {
   public void upload(@RequestParam(value = "bucket") String bucket,
                      @RequestParam(value = "files") MultipartFile[] multipartFiles) {
     if(multipartFiles != null && multipartFiles.length > 0) {
-      ResponseModel responseModel = awsS3StorageConfiguration.upload(bucket, multipartFiles);
+      awsS3StorageConfiguration.upload(bucket, multipartFiles);
     }
   }
 
@@ -90,7 +90,7 @@ public class UniversalAwsS3Controller {
 
   @RequestMapping(value = "/tokens")
   public ResponseEntity<Map<String, String>> tokens() {
-    return new ResponseEntity<Map<String, String>>(awsS3StorageConfiguration.tokens(), HttpStatus.OK);
+    return new ResponseEntity<>(awsS3StorageConfiguration.tokens(), HttpStatus.OK);
   }
 
   /**
@@ -102,7 +102,7 @@ public class UniversalAwsS3Controller {
   @RequestMapping(value = "/address/bucket")
   public ResponseEntity<String> chain(@RequestParam(value = "bucket") String bucket,
                                       @RequestParam(value = "key") String key) {
-    return new ResponseEntity<String>(awsS3StorageConfiguration.chain(bucket, key), HttpStatus.OK);
+    return new ResponseEntity<>(awsS3StorageConfiguration.chain(bucket, key), HttpStatus.OK);
   }
 
   /**
