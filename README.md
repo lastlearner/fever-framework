@@ -65,6 +65,8 @@ mvn sonar:sonar -Dsonar.host.url=http://awsjenkins.flyudesk.com/sonar/
 ### UT Test
 ```bash
 使用JUnitGenerator在待测试类下生成相应测试类，路径为src/test/java下对应包路径，命名统一为XXXUnitTest
+
+mvn verify
 ```
 ### IT Test
 ```bash
@@ -74,6 +76,8 @@ mvn sonar:sonar -Dsonar.host.url=http://awsjenkins.flyudesk.com/sonar/
 #BDD
 src/test/features下对应模块下编写feature
 src/test/java/com/fanfever/fever/cucumber/stepdefs下编写step，继承CucumberTest
+
+mvn verify
 ```
 ## framework library
 + SDK
