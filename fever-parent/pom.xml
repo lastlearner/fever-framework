@@ -102,6 +102,8 @@
         <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
         <!-- CODE COVERAGE -->
         <jacoco.version>0.7.9</jacoco.version>
+        <!-- API DOC -->
+        <asciidoctor-maven-plugin.version>1.5.2</asciidoctor-maven-plugin.version>
 
         <!-- other params -->
         <nexus.url>http://awsjenkins.flyudesk.com/nexus</nexus.url>
@@ -215,6 +217,12 @@
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-staticdocs</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+
 
             <!-- LOG -->
             <dependency>
@@ -471,7 +479,7 @@
         </dependency>
     </dependencies>
 
-    <!-- 部署发布 -->
+    <!-- DEPLOY -->
     <distributionManagement>
         <repository>
             <id>releases</id>
@@ -487,7 +495,7 @@
 
     <build>
         <plugins>
-            <!-- compiler -->
+            <!-- COMPILER -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -501,7 +509,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
             </plugin>
-            <!-- validation -->
+            <!-- VALIDATION -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -572,27 +580,25 @@
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.5</version>
+                <version>${asciidoctor-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>generate-docs</id>
-                        <phase>prepare-package</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>process-asciidoc</goal>
                         </goals>
                         <configuration>
                             <backend>html</backend>
                             <doctype>book</doctype>
+                            <attributes>
+                                <snippets>${project.build.directory}/generated-snippets</snippets>
+                            </attributes>
+                            <sourceDirectory>src/docs/asciidocs</sourceDirectory>
+                            <outputDirectory>target/generated-docs</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.springframework.restdocs</groupId>
-                        <artifactId>spring-restdocs-asciidoctor</artifactId>
-                        <version>1.2.1.RELEASE</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
