@@ -1,6 +1,16 @@
 # fever
 This is a basic framework depend on springsource and maven
 
+## Plugin
++ .ignore
++ Cucumber for Java
++ JUnitGenerator
++ Lombok Plugin
++ Markdown Navigator
++ PlantUML integration
++ SonarLint
++ Spring Batch
+
 ## module info
 ```
 .fever
@@ -18,6 +28,7 @@ This is a basic framework depend on springsource and maven
 则新项目启动时遵循此风格
 .proj
 ├── proj-parent 继承fever-parent,指定依赖包版本
+├── proj-migration 引入fever-migration
 ├── proj-common 引入fever-common
 ├── proj-web 引入fever-web
 
@@ -26,7 +37,7 @@ This is a basic framework depend on springsource and maven
 + [nexus](http://awsjenkins.flyudesk.com/nexus)
 + deploy
 ```
-vim $MAVEN_HOME/conf/setting.xml
+#vim $MAVEN_HOME/conf/setting.xml
 <servers>
     <server>
       <id>releases</id>
@@ -39,15 +50,30 @@ vim $MAVEN_HOME/conf/setting.xml
       <password>admin123</password>
     </server>
 </servers>
+
+# deploy
 mvn deploy
 ```
 ## code quality
 + [sonarQube](http://awsjenkins.flyudesk.com/sonar)
 
 ```bash
-#安装sonarlint插件
 mvn clean install
 mvn sonar:sonar -Dsonar.host.url=http://awsjenkins.flyudesk.com/sonar/
+```
+## Test
+### UT Test
+```bash
+使用JUnitGenerator在待测试类下生成相应测试类，路径为src/test/java下对应包路径，命名统一为XXXUnitTest
+```
+### IT Test
+```bash
+#普通测试类
+在待测试类下生成相应测试类，路径为src/test/java下对应包路径，命名统一为XXXIntTest
+
+#BDD
+src/test/features下对应模块下编写feature
+src/test/java/com/fanfever/fever/cucumber/stepdefs下编写step，继承CucumberTest
 ```
 ## framework library
 + SDK
@@ -101,6 +127,12 @@ mvn sonar:sonar -Dsonar.host.url=http://awsjenkins.flyudesk.com/sonar/
     + Spring Batch Admin
     + NewRelic
     + DataDog
++ UT Test
+    + JUnit
+    + Spring Test
+    + Mockito
+    + Hamcrest
+    + JsonPath
 + IT Test
     + Cucumber
 + Search
