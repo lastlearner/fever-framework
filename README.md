@@ -85,13 +85,14 @@ mvn sonar:sonar -Dsonar.host.url=http://awsjenkins.flyudesk.com/sonar/
     + Spring RestTemplate
 + Doc
     + Swagger
+    + Spring Rest Doc
 + Log
     + Logback
     + GrayLog
 + Validation
     + URI -> Regular Expression
     + urlParams -> Spring Validated
-    + Bean -> Hibernate Validation, Fluent-validator
+    + Bean -> Hibernate Validation, Google Preconditions, Fluent-validator
 + Environment
     + Ali
     + AWS
