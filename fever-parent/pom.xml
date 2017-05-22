@@ -110,6 +110,7 @@
         <asciidoctorj.version>1.5.5</asciidoctorj.version>
         <swagger2markup-maven-plugin.version>1.3.1</swagger2markup-maven-plugin.version>
         <swagger2markup.version>1.3.1</swagger2markup.version>
+        <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
 
         <!-- other params -->
         <nexus.url>http://awsjenkins.flyudesk.com/nexus</nexus.url>
@@ -654,6 +655,31 @@
                             </attributes>
                             <sourceDirectory>src/docs/asciidocs</sourceDirectory>
                             <outputDirectory>target/generated-docs</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.outputDirectory}/static/docs
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${project.build.directory}/generated-docs
+                                    </directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
