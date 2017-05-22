@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
  * @date 2017/4/8
  */
 public class MediaTypeMapper {
+  private MediaTypeMapper() {}
 
   /**
    * 指定文件名匹配contentType. <br/>
@@ -22,8 +23,8 @@ public class MediaTypeMapper {
   }
 
   public static MediaType parse(String fileName, String defaultType) {
-    if(!StringUtils.isEmpty(fileName) && fileName.indexOf(".") != -1) {
-      String type = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+    if(!StringUtils.isEmpty(fileName) && fileName.indexOf('.') != -1) {
+      String type = fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length());
       for(AttachmentExtension ext : AttachmentExtension.values()) {
         if(ext.getDesc().equalsIgnoreCase(type))
           return MediaType.parseMediaType(ext.getMedia());

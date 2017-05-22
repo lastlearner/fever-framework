@@ -10,7 +10,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
-import com.github.fanfever.fever.upload.annotation.BeingRealization;
 import com.github.fanfever.fever.upload.model.ResponseModel;
 import com.github.fanfever.fever.upload.util.PreCheck;
 import org.apache.commons.collections.MapUtils;

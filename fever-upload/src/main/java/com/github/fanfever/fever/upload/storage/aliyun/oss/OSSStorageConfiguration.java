@@ -6,7 +6,6 @@ import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PolicyConditions;
-import com.github.fanfever.fever.upload.annotation.BeingRealization;
 import com.github.fanfever.fever.upload.model.ResponseModel;
 import com.github.fanfever.fever.upload.util.PreCheck;
 import org.apache.commons.collections.MapUtils;

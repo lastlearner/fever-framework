@@ -5,6 +5,7 @@ package com.github.fanfever.fever.upload.util;
  * @date 2017/4/7
  */
 public class PreCheck {
+  private PreCheck() {}
   public static void notNull(Object... args) {
     for(Object obj : args) {
       notNull(obj, "参数不能为空");
