@@ -79,6 +79,10 @@ src/test/java/com/fanfever/fever/cucumber/stepdefs下编写step，继承Cucumber
 
 mvn verify
 ```
+## API Doc
+```bash
+URI/docs/api-guide.html || URI/docs/api-guide.pdf
+```
 ## framework library
 + SDK
     + JDK8
