@@ -598,7 +598,6 @@
                 <executions>
                     <execution>
                         <id>pre-unit-tests</id>
-                        <phase>test</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
