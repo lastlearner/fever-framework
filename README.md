@@ -80,8 +80,11 @@ src/test/java/com/fanfever/fever/cucumber/stepdefs下编写step，继承Cucumber
 mvn verify
 ```
 ## API Doc
+### Function1
+use spring rest docs
+### Function2
 ```bash
-URI/docs/api-guide.html || URI/docs/api-guide.pdf
+copy swagger2markup plugin to web-app
 ```
 ## framework library
 + SDK

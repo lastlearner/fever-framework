@@ -40,6 +40,11 @@
             <name>Team Nexus Repository</name>
             <url>http://awsjenkins.flyudesk.com/nexus/content/groups/public</url>
         </pluginRepository>
+        <pluginRepository>
+            <id>jcenter</id>
+            <name>jcenter maven</name>
+            <url>http://jcenter.bintray.com</url>
+        </pluginRepository>
     </pluginRepositories>
 
     <properties>
@@ -111,6 +116,10 @@
         <swagger2markup-maven-plugin.version>1.3.1</swagger2markup-maven-plugin.version>
         <swagger2markup.version>1.3.1</swagger2markup.version>
         <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
+
+        <swagger.output.dir>${project.build.directory}/swagger</swagger.output.dir>
+        <swagger.snippetOutput.dir>${project.build.directory}/asciidoc/snippets</swagger.snippetOutput.dir>
+        <swagger.input>${swagger.output.dir}/swagger.json</swagger.input>
 
         <!-- other params -->
         <nexus.url>http://awsjenkins.flyudesk.com/nexus</nexus.url>
@@ -587,6 +596,18 @@
                 </configuration>
             </plugin>
 
+            <!-- TEST -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <io.springfox.staticdocs.outputDir>${swagger.output.dir}</io.springfox.staticdocs.outputDir>
+                        <io.springfox.staticdocs.snippetsOutputDir>${swagger.snippetOutput.dir}</io.springfox.staticdocs.snippetsOutputDir>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+
             <!-- CODE QUALITY -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -623,6 +644,48 @@
             </plugin>
 
             <!-- API DOC -->
+            <!-- First, use the swagger2markup plugin to generate asciidoc -->
+            <!--<plugin>-->
+                <!--<groupId>io.github.swagger2markup</groupId>-->
+                <!--<artifactId>swagger2markup-maven-plugin</artifactId>-->
+                <!--<version>${swagger2markup.version}</version>-->
+                <!--<dependencies>-->
+                    <!--<dependency>-->
+                        <!--<groupId>io.github.swagger2markup</groupId>-->
+                        <!--<artifactId>swagger2markup-import-files-ext</artifactId>-->
+                        <!--<version>${swagger2markup.version}</version>-->
+                    <!--</dependency>-->
+                    <!--<dependency>-->
+                        <!--<groupId>io.github.swagger2markup</groupId>-->
+                        <!--<artifactId>swagger2markup-spring-restdocs-ext</artifactId>-->
+                        <!--<version>${swagger2markup.version}</version>-->
+                    <!--</dependency>-->
+                <!--</dependencies>-->
+                <!--<configuration>-->
+                    <!--<swaggerInput>${swagger.input}</swaggerInput>-->
+                    <!--<outputDir>target/generated-docs</outputDir>-->
+                    <!--<config>-->
+                        <!--<swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>-->
+                        <!--<swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>-->
+
+                        <!--<swagger2markup.extensions.dynamicOverview.contentPath>${project.basedir}/src/docs/asciidoc/extensions/overview</swagger2markup.extensions.dynamicOverview.contentPath>-->
+                        <!--<swagger2markup.extensions.dynamicDefinitions.contentPath>${project.basedir}/src/docs/asciidoc/extensions/definitions</swagger2markup.extensions.dynamicDefinitions.contentPath>-->
+                        <!--<swagger2markup.extensions.dynamicPaths.contentPath>${project.basedir}/src/docs/asciidoc/extensions/paths</swagger2markup.extensions.dynamicPaths.contentPath>-->
+                        <!--<swagger2markup.extensions.dynamicSecurity.contentPath>${project.basedir}src/docs/asciidoc/extensions/security/</swagger2markup.extensions.dynamicSecurity.contentPath>-->
+
+                        <!--<swagger2markup.extensions.springRestDocs.snippetBaseUri>${swagger.snippetOutput.dir}</swagger2markup.extensions.springRestDocs.snippetBaseUri>-->
+                        <!--<swagger2markup.extensions.springRestDocs.defaultSnippets>true</swagger2markup.extensions.springRestDocs.defaultSnippets>-->
+                    <!--</config>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>convertSwagger2markup</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
@@ -666,6 +729,7 @@
                                 <idprefix/>
                                 <idseparator>-</idseparator>
                                 <docinfo1>true</docinfo1>
+                                <generated>${project.build.directory}/asciidoc/generated</generated>
                             </attributes>
                             <sourceDirectory>src/docs/asciidocs</sourceDirectory>
                             <outputDirectory>target/generated-docs</outputDirectory>
@@ -690,6 +754,7 @@
                                 <toc/>
                                 <idprefix/>
                                 <idseparator>-</idseparator>
+                                <generated>${project.build.directory}/asciidoc/generated</generated>
                             </attributes>
                             <sourceDirectory>src/docs/asciidocs</sourceDirectory>
                             <outputDirectory>target/generated-docs</outputDirectory>
