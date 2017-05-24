@@ -118,10 +118,14 @@
         <swagger2markup.version>1.3.1</swagger2markup.version>
         <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
 
+        <!-- API DOC FUNCTION2 -->
         <swagger.output.dir>${project.build.directory}/swagger</swagger.output.dir>
         <swagger.snippetOutput.dir>${project.build.directory}/asciidoc/snippets</swagger.snippetOutput.dir>
         <swagger.input>${swagger.output.dir}/swagger.json</swagger.input>
         <io.springfox.staticdocs.outputDir>${swagger.output.dir}</io.springfox.staticdocs.outputDir>
+
+        <!-- API DOC FUNCTION3 -->
+        <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
 
         <!-- other params -->
         <nexus.url>http://awsjenkins.flyudesk.com/nexus</nexus.url>
@@ -687,6 +691,7 @@
                         </execution>
                     </executions>
                 </plugin>
+
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${maven-resources-plugin.version}</version>

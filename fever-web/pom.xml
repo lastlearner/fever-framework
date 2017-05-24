@@ -89,7 +89,7 @@
             <!--</plugin>-->
 
             <!-- API DOC -->
-            <!-- FUNCTION1 SWAGGER -->
+            <!-- FUNCTION2 SWAGGER -->
             <!--<plugin>-->
                 <!--<groupId>org.apache.maven.plugins</groupId>-->
                 <!--<artifactId>maven-surefire-plugin</artifactId>-->
@@ -103,6 +103,49 @@
             <!--<plugin>-->
                 <!--<groupId>io.github.swagger2markup</groupId>-->
                 <!--<artifactId>swagger2markup-maven-plugin</artifactId>-->
+            <!--</plugin>-->
+
+            <!-- FUNCTION3 AUTO DOC -->
+            <!--<plugin>-->
+                <!--<artifactId>maven-surefire-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<includes>-->
+                        <!--<include>**/*Test.java</include>-->
+                    <!--</includes>-->
+                    <!--<systemPropertyVariables>-->
+                        <!--<org.springframework.restdocs.outputDir>-->
+                            <!--${snippetsDirectory}-->
+                        <!--</org.springframework.restdocs.outputDir>-->
+                        <!--<org.springframework.restdocs.javadocJsonDir>-->
+                            <!--${project.build.directory}/generated-javadoc-json-->
+                        <!--</org.springframework.restdocs.javadocJsonDir>-->
+                    <!--</systemPropertyVariables>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<artifactId>maven-javadoc-plugin</artifactId>-->
+                <!--<extensions>true</extensions>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>generate-javadoc-json</id>-->
+                        <!--<phase>compile</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>javadoc-no-fork</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<doclet>capital.scalable.restdocs.jsondoclet.ExtractDocumentationAsJsonDoclet</doclet>-->
+                            <!--<docletArtifact>-->
+                                <!--<groupId>capital.scalable</groupId>-->
+                                <!--<artifactId>spring-auto-restdocs-json-doclet</artifactId>-->
+                                <!--<version>1.0.7</version>-->
+                            <!--</docletArtifact>-->
+                            <!--<destDir>generated-javadoc-json</destDir>-->
+                            <!--<reportOutputDirectory>${project.build.directory}</reportOutputDirectory>-->
+                            <!--<useStandardDocletOptions>false</useStandardDocletOptions>-->
+                            <!--<show>package</show>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
             <!--</plugin>-->
 
 
