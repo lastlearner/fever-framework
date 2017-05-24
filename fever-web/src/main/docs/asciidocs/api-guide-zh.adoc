@@ -1,0 +1,67 @@
+= CASE系统API指南
+udesk;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[introduction]
+= 介绍
+
+构建于Maven和Spring Boot安全的RESTful服务
+
+include::overview_manual_content_overview_zh.adoc[]
+
+[[resources]]
+= 资源
+
+[[resources-company]]
+== 公司
+
+公司相关接口
+
+=== 获取公司详情
+
+==== 请求结构
+
+include::{snippets}/company-controller-unit-test/test-get-company/http-request.adoc[]
+
+==== 请求参数
+
+include::{snippets}/company-controller-unit-test/test-get-company/path-parameters.adoc[]
+
+==== 响应数据
+
+include::{snippets}/company-controller-unit-test/test-get-company/response-fields.adoc[]
+
+==== 响应示例
+
+include::{snippets}/company-controller-unit-test/test-get-company/http-response.adoc[]
+
+==== CURL请求示例
+
+include::{snippets}/company-controller-unit-test/test-get-company/curl-request.adoc[]
+
+=== 创建公司接口
+
+==== 请求结构
+
+include::{snippets}/company-controller-unit-test/test-save-company/http-request.adoc[]
+
+==== 请求参数
+
+include::{snippets}/company-controller-unit-test/test-save-company/request-fields.adoc[]
+
+==== 响应数据
+
+include::{snippets}/company-controller-unit-test/test-save-company/response-fields.adoc[]
+
+==== 响应示例
+
+include::{snippets}/company-controller-unit-test/test-save-company/http-response.adoc[]
+
+==== CURL请求示例
+
+include::{snippets}/company-controller-unit-test/test-save-company/curl-request.adoc[]
