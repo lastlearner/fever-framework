@@ -30,7 +30,7 @@ This is a basic framework depend on springsource and maven
 ├── proj-parent 继承fever-parent,指定依赖包版本
 ├── proj-migration 引入fever-migration
 ├── proj-common 引入fever-common
-├── proj-web 引入fever-web
+├── proj-web 引入fever-web,同时复制fever-web下pom中相应plugins
 
 ```
 ## maven
