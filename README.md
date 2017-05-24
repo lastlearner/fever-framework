@@ -36,7 +36,8 @@ This is a basic framework depend on springsource and maven
 ## maven
 + [nexus](http://awsjenkins.flyudesk.com/nexus)
 + deploy
-```
+
+```bash
 #vim $MAVEN_HOME/conf/setting.xml
 <servers>
     <server>
