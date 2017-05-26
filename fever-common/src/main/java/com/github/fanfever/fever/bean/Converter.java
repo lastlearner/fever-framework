@@ -23,17 +23,9 @@ public interface Converter<S, T>{
         if(CollectionUtils.isEmpty(input)){
             return Collections.emptyList();
         }
-        return input.stream().map(this::convert).collect(toList());
-    }
-
-    default List<T> convertToPage(final List<S> input) {
-        if(CollectionUtils.isEmpty(input)){
-            return Collections.emptyList();
-        }
         PageInfo pageInfo = new PageInfo(input);
         List<T> collect = input.stream().map(this::convert).collect(toList());
-        pageInfo.setList(collect);
-        return (List<T>)pageInfo;
+        new PageInfo(input).setList(collect);
+        return pageInfo.getList();
     }
-
 }
