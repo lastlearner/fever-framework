@@ -57,6 +57,7 @@
         <commons-collections4.version>4.1</commons-collections4.version>
         <commons-codec.version>1.10</commons-codec.version>
         <commons-io.version>2.4</commons-io.version>
+        <apache.httpcomponent.version>4.5.3</apache.httpcomponent.version>
         <!-- MIGRATION -->
         <!-- DB -->
         <!-- DB POOL -->
@@ -95,6 +96,8 @@
         <!-- SDK -->
         <aws.s3.version>1.11.22</aws.s3.version>
         <aliyun-sdk-oss.version>2.5.0</aliyun-sdk-oss.version>
+        <!-- MAIL -->
+        <javamail.version>1.4.7</javamail.version>
         <!-- TEST -->
         <!-- UT -->
         <!-- IT -->

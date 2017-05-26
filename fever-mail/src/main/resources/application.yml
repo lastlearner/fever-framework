@@ -1,0 +1,21 @@
+mail:
+  sendcloud:
+    mailer:
+      apiUser: udesk_mailer_crm
+      apiKey: lwOdJg3MT9B79gBK
+      hook:
+        appKey: l5spndym-314o-1nfx-px60-1cdtuyx4ok
+      fromPrefix: sendmail+
+      fromSuffix: s-crm1.udesk.cn
+      #crm_reply_tokens
+      reply:
+        token: Y3JtX3JlcGx5X3Rva2Vucw==
+    sendurl: http://api.sendcloud.net/apiv2/mail/send
+  send:
+    url: http://api.sendcloud.net/apiv2/mail/send
+    fromName: Udesk CRM
+    from: no-reply@support.udeska1.com
+sys:
+  encoding: UTF-8
+server:
+  port: 8080

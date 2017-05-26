@@ -18,6 +18,7 @@
 		<module>fever-metrics</module>
 		<!--<module>fever-batch-metrics</module>-->
 		<module>fever-upload</module>
+		<module>fever-mail</module>
 	</modules>
 
 	<!-- DEPLOY -->
