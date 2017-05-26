@@ -1,5 +1,6 @@
 package com.github.fanfever.fever.bean;
 
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collections;
@@ -23,6 +24,16 @@ public interface Converter<S, T>{
             return Collections.emptyList();
         }
         return input.stream().map(this::convert).collect(toList());
+    }
+
+    default List<T> convertToPage(final List<S> input) {
+        if(CollectionUtils.isEmpty(input)){
+            return Collections.emptyList();
+        }
+        PageInfo pageInfo = new PageInfo(input);
+        List<T> collect = input.stream().map(this::convert).collect(toList());
+        pageInfo.setList(collect);
+        return (List<T>)pageInfo;
     }
 
 }
