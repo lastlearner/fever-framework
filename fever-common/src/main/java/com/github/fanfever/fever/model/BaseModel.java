@@ -1,5 +1,6 @@
 package com.github.fanfever.fever.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Maps;
 import lombok.Data;
@@ -24,9 +25,11 @@ public class BaseModel implements Serializable {
 	protected Integer id;
 	protected Integer createUserId;
 	protected String createUserUsername;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	protected LocalDateTime createTime;
 	protected Integer updateUserId;
 	protected String updateUserUsername;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	protected LocalDateTime updateTime;
 	protected String remark;
 	protected Integer deleteFlag;
