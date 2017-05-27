@@ -1,8 +1,11 @@
 [[overview]]
-= 回顾
+= overview
+
+[[overview-general]]
+== General
 
 [[overview-http-verbs]]
-== HTTP 请求方式
+=== HTTP http-verbs
 CASE服务尽量坚持尽可能接近标准HTTP和REST
 |===
 | 请求方式 | 用法

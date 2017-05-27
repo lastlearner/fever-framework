@@ -1,4 +1,4 @@
-package com.github.fanfever.fever.web.controller;
+package com.github.fanfever.fever.web.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.fanfever.fever.bean.Converter;
@@ -18,18 +18,21 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true, value = "clazz")
 @Data
 @NoArgsConstructor
-public class ClassicIdDTO<T extends BaseModel> implements Converter<ClassicIdDTO, T> {
+public class RequestIdDTO<T extends BaseModel> implements Converter<RequestIdDTO, T> {
 
+    /**
+     * ID
+     */
     private Integer id;
 
     private Class<T> clazz;
 
-    public ClassicIdDTO(Class<T> clazz) {
+    public RequestIdDTO(Class<T> clazz) {
         this.clazz = clazz;
     }
 
     @Override
-    public T convert(final ClassicIdDTO s) {
+    public T convert(final RequestIdDTO s) {
         if (null == s) {
             return null;
         }
@@ -45,12 +48,12 @@ public class ClassicIdDTO<T extends BaseModel> implements Converter<ClassicIdDTO
         return target;
     }
 
-    public static <T> T convert(ClassicIdDTO s, Class<T> targetClass) {
-        return (T) new ClassicIdDTO(targetClass).convert(s);
+    public static <T> T convert(RequestIdDTO s, Class<T> targetClass) {
+        return (T) new RequestIdDTO(targetClass).convert(s);
     }
 
-    public static List convert(List<ClassicIdDTO> s) {
-        return new ClassicIdDTO().convertToList(s);
+    public static List convert(List<RequestIdDTO> s) {
+        return new RequestIdDTO().convertToList(s);
     }
 
 }

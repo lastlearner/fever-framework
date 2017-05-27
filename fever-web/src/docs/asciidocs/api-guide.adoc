@@ -12,56 +12,9 @@ fanfever;
 
 Secure RESTful Services with Maven(Guide) and Spring Boot
 
-include::manual_content_overview_zh.adoc[]
+include::overview-general.adoc[]
 
 [[resources]]
 = Resources
 
-[[resources-company]]
-== Company
-
-The Company resource is used to create, modify and list people.
-
-=== Get Company
-
-==== Request structure
-
-include::{snippets}/company-controller-unit-test/test-get-company/http-request.adoc[]
-
-==== Request parameters
-
-include::{snippets}/company-controller-unit-test/test-get-company/request-fields.adoc[]
-
-==== Response fields
-
-include::{snippets}/company-controller-unit-test/test-get-company/response-fields.adoc[]
-
-==== Example response
-
-include::{snippets}/company-controller-unit-test/test-get-company/http-response.adoc[]
-
-==== CURL request
-
-include::{snippets}/company-controller-unit-test/test-get-company/curl-request.adoc[]
-
-=== Save Company
-
-==== Request structure
-
-include::{snippets}/company-controller-unit-test/test-save-company/http-request.adoc[]
-
-==== Request parameters
-
-include::{snippets}/company-controller-unit-test/test-save-company/request-fields.adoc[]
-
-==== Response fields
-
-include::{snippets}/company-controller-unit-test/test-save-company/response-fields.adoc[]
-
-==== Example response
-
-include::{snippets}/company-controller-unit-test/test-save-company/http-response.adoc[]
-
-==== CURL request
-
-include::{snippets}/company-controller-unit-test/test-save-company/curl-request.adoc[]
+include::company_zh.adoc[]

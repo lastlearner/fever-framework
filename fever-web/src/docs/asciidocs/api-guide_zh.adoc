@@ -12,7 +12,7 @@ udesk;
 
 构建于Maven和Spring Boot安全的RESTful服务
 
-include::manual_content_overview_zh.adoc[]
+include::overview-general_zh.adoc[]
 
 [[resources]]
 = 资源

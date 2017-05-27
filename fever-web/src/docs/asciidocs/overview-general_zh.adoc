@@ -1,8 +1,11 @@
 [[overview]]
-= 回顾
+= 概述
+
+[[overview-general]]
+== 一般原则
 
 [[overview-http-verbs]]
-== HTTP 请求方式
+=== HTTP 请求方式
 CASE服务尽量坚持尽可能接近标准HTTP和REST
 |===
 | 请求方式 | 用法
@@ -20,8 +23,36 @@ CASE服务尽量坚持尽可能接近标准HTTP和REST
 | 删除一个存在的资源
 |===
 
+[[overview-pagination]]
+=== 分页
+CASE服务需要分页返回的对象会符合以下报文格式
+
+|===
+| 参数 | 类型 | 必填 | 描述
+
+| paging
+| Object
+| true
+| 分页对象
+
+| paging.pageNum
+| Integer
+| true
+| 页码
+
+| paging.pageSize
+| Integer
+| true
+| 页码大小
+
+| paging.total
+| Integer
+| true
+| 总数
+|===
+
 [[overview-http-status-codes]]
-== HTTP 状态码
+=== HTTP 状态码
 CASE服务尽量坚持尽可能接近标准HTTP和REST
 
 |===
