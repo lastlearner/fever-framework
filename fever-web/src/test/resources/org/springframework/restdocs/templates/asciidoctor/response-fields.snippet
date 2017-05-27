@@ -1,0 +1,13 @@
+{{#hasContent}}
+{{#isPagedResponse}}标准分页 <<overview-pagination,paging>> response where `content` field is list of following objects:{{/isPagedResponse}}
+|===
+|参数|类型|必填|描述
+
+{{#content}}
+|{{path}}
+|{{type}}
+|{{optional}}
+|{{description}}
+
+{{/content}}
+|==={{/hasContent}}{{#noContent}}No response body.{{/noContent}}
