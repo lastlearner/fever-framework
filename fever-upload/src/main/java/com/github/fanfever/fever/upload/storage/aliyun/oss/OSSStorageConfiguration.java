@@ -8,6 +8,7 @@ import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PolicyConditions;
 import com.github.fanfever.fever.upload.model.ResponseModel;
 import com.github.fanfever.fever.upload.util.PreCheck;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +27,9 @@ import java.util.Map;
  * @author scott.he
  * @date 2017/4/8
  */
+@Slf4j
 @Component
 public class OSSStorageConfiguration {
-  private Logger logger = LoggerFactory.getLogger(OSSStorageConfiguration.class);
   //region Properties
   @Value("${oss.endpoint}")
   private String endpoint;
@@ -61,9 +62,9 @@ public class OSSStorageConfiguration {
 
         OSSObject object = ossClient.getObject(bucket, key);
         return new ResponseModel(object.getObjectContent(),
-                true,
-                object.getObjectMetadata().getUserMetadata(),
-                object.getObjectMetadata().getRawMetadata(), ResponseModel.Operation.DOWNLOAD);
+            true,
+            object.getObjectMetadata().getUserMetadata(),
+            object.getObjectMetadata().getRawMetadata(), ResponseModel.Operation.DOWNLOAD);
       }
     });
   }
@@ -93,7 +94,7 @@ public class OSSStorageConfiguration {
    * @return
    */
   public ResponseModel upload(final String bucket, final String key, final InputStream inputStream, final ObjectMetadata
-          objectMetadata) {
+      objectMetadata) {
     return execute(new OSSStorageCallback<ResponseModel>() {
       public ResponseModel execute(OSSClient ossClient) {
         ossClient.putObject(bucket, key, inputStream, objectMetadata);
@@ -116,9 +117,9 @@ public class OSSStorageConfiguration {
           initializeMetadata(objectMetadata, file);
           try {
             ossClient.putObject(bucket, file.getOriginalFilename(), file.getInputStream(),
-                    objectMetadata);
+                objectMetadata);
           } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
             throw new RuntimeException(e);
           }
         }
@@ -148,22 +149,21 @@ public class OSSStorageConfiguration {
       String postSignature = client.calculatePostSignature(postPolicy);
 
       return MapUtils.putAll(new HashMap<String, String>(), new String[] {
-              "accessId", accessKeyId,
-              "policy", encodedPolicy,
-              "signature", postSignature,
-              "expire", String.valueOf(expireEndTime / 1000),
-              "dir", dir,
-              "host", host
+          "accessId", accessKeyId,
+          "policy", encodedPolicy,
+          "signature", postSignature,
+          "expire", String.valueOf(expireEndTime / 1000),
+          "dir", dir,
+          "host", host
       });
     } catch (Exception e) {
-      logger.error(e.getMessage());
+      log.error(e.getMessage());
       throw new RuntimeException(e);
     } finally {
       if(client != null) {
         client.shutdown();
       }
     }
-    //return MapUtils.putAll(new HashMap<String, String>(), new String[] {});
   }
 
   /**
@@ -176,11 +176,11 @@ public class OSSStorageConfiguration {
    */
   public String chain(String bucket, String key) {
     return new StringBuffer()
-            .append(bucket)
-            .append(".")
-            .append(endpoint)
-            .append("/")
-            .append(key).toString();
+        .append(bucket)
+        .append(".")
+        .append(endpoint)
+        .append("/")
+        .append(key).toString();
   }
 
   public <T> T execute(OSSStorageCallback<T> action) {

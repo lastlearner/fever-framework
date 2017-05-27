@@ -95,6 +95,7 @@
         <spring-batch-admin-manager.version>2.0.0.M1</spring-batch-admin-manager.version>
         <!-- SDK -->
         <aws.s3.version>1.11.22</aws.s3.version>
+        <aws.sts.version>1.11.22</aws.sts.version>
         <aliyun-sdk-oss.version>2.5.0</aliyun-sdk-oss.version>
         <!-- MAIL -->
         <javamail.version>1.4.7</javamail.version>
@@ -452,6 +453,11 @@
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-s3</artifactId>
                 <version>${aws.s3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-sts</artifactId>
+                <version>${aws.sts.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.aliyun.oss</groupId>

@@ -23,10 +23,10 @@ import java.util.Map;
  * @author scott.he
  * @date 2017/4/8
  */
-@RestController
-@RequestMapping("/att/oss")
+//@RestController
+//@RequestMapping("/att/oss")
 public class UniversalOssController {
-  @Value("${oss.bucketName}")
+  /*@Value("${oss.bucketName}")
   private String DEFAULT_BUCKET;
   @Value("${sys.encode}")
   private String UTF;
@@ -34,13 +34,13 @@ public class UniversalOssController {
   @Autowired
   private OSSStorageConfiguration ossStorageConfiguration;
 
-  /**
+  *//**
    * 附件下载
    * @param bucket 存储桶
    * @param key 附件名(含扩展名)
    * @return
    * @throws Exception
-   */
+   *//*
   @RequestMapping(value = "/down/bucket")
   public ResponseEntity<byte[]> download(@RequestParam(value = "bucket") String bucket,
                                          @RequestParam(value = "key") String key) throws Exception {
@@ -49,73 +49,73 @@ public class UniversalOssController {
     httpHeaders.setContentDispositionFormData("attachment", URLEncoder.encode(key, UTF));
     httpHeaders.setContentType(MediaTypeMapper.parse(key));
 
-    return new ResponseEntity<>(
+    return new ResponseEntity<byte[]>(
         responseModel.isExists() ? IOUtils.toByteArray(responseModel.getInputStream()) : ArrayUtils.EMPTY_BYTE_ARRAY,
         httpHeaders,
         HttpStatus.CREATED);
   }
 
-  /**
+  *//**
    * 附件下载. (默认bucket)
    * @param key 附件名(含扩展名)
    * @return
    * @throws Exception
-   */
+   *//*
   @RequestMapping(value = "/down")
   public ResponseEntity<byte[]> download(@RequestParam(value = "key") String key) throws Exception {
     return download(DEFAULT_BUCKET, key);
   }
 
 
-  /**
+  *//**
    * 附件上传
    * @param multipartFiles
-   */
+   *//*
   @RequestMapping(value = "/upload/bucket")
   public void upload(@RequestParam(value = "bucket") String bucket,
                      @RequestParam(value = "files") MultipartFile[] multipartFiles) {
     if(multipartFiles != null && multipartFiles.length > 0) {
-      ossStorageConfiguration.upload(bucket, multipartFiles);
+      ResponseModel responseModel = ossStorageConfiguration.upload(bucket, multipartFiles);
     }
   }
 
-  /**
+  *//**
    * 附件上传. (默认bucket)
    * @param multipartFiles
-   */
+   *//*
   @RequestMapping(value = "/upload")
   public void upload(@RequestParam(value = "files") MultipartFile[] multipartFiles) {
     upload(DEFAULT_BUCKET, multipartFiles);
   }
 
-  /**
+  *//**
    * OSS Tokens Info
    * @return
-   */
+   *//*
   @RequestMapping(value = "/tokens")
-  public ResponseEntity<Map<String, String>> tokens(String dir) {
-    return new ResponseEntity<>(ossStorageConfiguration.tokens(dir), HttpStatus.OK);
+  public ResponseEntity<Map<String, String>> tokens() {
+    return new ResponseEntity<Map<String, String>>(ossStorageConfiguration.tokens(), HttpStatus.OK);
   }
 
-  /**
+  *//**
    * 获取指定对象外链地址
    * @param bucket 存储空间
    * @param key 对象名称
    * @return
-   */
+   *//*
   @RequestMapping(value = "/address/bucket")
   public ResponseEntity<String> chain(@RequestParam(value = "bucket") String bucket,
                                       @RequestParam(value = "key") String key) {
-    return new ResponseEntity<>(ossStorageConfiguration.chain(bucket, key), HttpStatus.OK);
+    return new ResponseEntity<String>(ossStorageConfiguration.chain(bucket, key), HttpStatus.OK);
   }
 
-  /**
+  *//**
    * 获取指定对象外链地址
    * @param key 对象名称
    * @return
-   */
+   *//*
   @RequestMapping(value = "/address")
   public ResponseEntity<String> chain(@RequestParam(value = "key") String key) {
     return chain(DEFAULT_BUCKET, key);
-  }
+  }*/
 }
