@@ -50,7 +50,9 @@ local.properties
 # PDT-specific
 .buildpath
 # sbteclipse plugin
+target
 .target
+/target/
 # TeXlipse plugin
 .texlipse
 
