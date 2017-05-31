@@ -141,6 +141,7 @@ copy swagger2markup plugin to web-app
     + DataDog
 + UT Test
     + JUnit
+    + JUnit Parameterized
     + Spring Test
     + Mockito
     + Hamcrest
