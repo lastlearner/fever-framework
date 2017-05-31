@@ -10,10 +10,11 @@ DROP TABLE IF EXISTS user;
 CREATE TABLE user
 (
 	id int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-	name varchar(32) COMMENT '名称',
+	username varchar(32) COMMENT '名称',
 	sex tinyint(1) COMMENT '编码',
 	create_time datetime NOT NULL COMMENT '创建时间',
 	update_time datetime COMMENT '更新时间',
+	version int(5),
 	PRIMARY KEY (id)
 ) COMMENT = '用户表';
 
