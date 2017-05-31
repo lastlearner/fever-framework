@@ -100,6 +100,7 @@
         <!-- MAIL -->
         <javamail.version>1.4.7</javamail.version>
         <!-- TEST -->
+        <random-beans.version>3.5.0</random-beans.version>
         <!-- UT -->
         <!-- IT -->
         <cucumber.version>1.2.5</cucumber.version>
@@ -424,6 +425,11 @@
             </dependency>
 
             <!-- tag::tests[] -->
+            <dependency>
+                <groupId>io.github.benas</groupId>
+                <artifactId>random-beans</artifactId>
+                <version>${random-beans.version}</version>
+            </dependency>
             <!-- UT -->
             <!-- IT -->
             <dependency>
@@ -507,6 +513,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <!--<scope>test</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>io.github.benas</groupId>
+            <artifactId>random-beans</artifactId>
         </dependency>
 
         <!-- CODE COVERAGE -->

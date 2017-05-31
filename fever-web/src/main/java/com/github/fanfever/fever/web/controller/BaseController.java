@@ -21,42 +21,42 @@ import java.util.List;
 @Slf4j
 public class BaseController {
 
-	protected static final String APPLICATION_JSON = "application/json";
+    protected static final String APPLICATION_JSON = "application/json";
 
-	protected String getRemoteHost() {
-		String url = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
-				.getHeader("referer");
-		URI uri = null;
-		try {
-			uri = new URI(url);
-		} catch (URISyntaxException e) {
-			log.warn("getRemoteHost url:{}, e:{}", url, e);
-			return null;
-		}
-		return uri.getHost();
-	}
+    protected String getRemoteHost() {
+        String url = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
+                .getHeader("referer");
+        URI uri = null;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            log.warn("getRemoteHost url:{}, e:{}", url, e);
+            return null;
+        }
+        return uri.getHost();
+    }
 
-	protected HttpStatus foundHttpStatus(Object object){
-		boolean isHasContent;
-		if(object instanceof List){
-			isHasContent = CollectionUtils.isNotEmpty((List)object);
-		}else{
-			isHasContent = null != object;
-		}
-		return isHasContent ? HttpStatus.OK : HttpStatus.OK;
-	}
+    protected HttpStatus foundHttpStatus(Object object) {
+        boolean isHasContent;
+        if (object instanceof List) {
+            isHasContent = CollectionUtils.isNotEmpty((List) object);
+        } else {
+            isHasContent = null != object;
+        }
+        return isHasContent ? HttpStatus.OK : HttpStatus.OK;
+    }
 
-	public static String getRemoteAddr(HttpServletRequest request) {
-		String remoteAddr = request.getHeader("X-Real-IP");
-		if(StringUtils.isBlank(remoteAddr)){
-			remoteAddr = request.getHeader("X-Forwarded-For");
-			if(StringUtils.isBlank(remoteAddr)){
-				remoteAddr = request.getHeader("Proxy-Client-IP");
-				if(StringUtils.isBlank(remoteAddr)){
-					remoteAddr = request.getHeader("WL-Proxy-Client-IP");
-				}
-			}
-		}
-		return remoteAddr;
-	}
+    public static String getRemoteAddr(HttpServletRequest request) {
+        String remoteAddr = request.getHeader("X-Real-IP");
+        if (StringUtils.isBlank(remoteAddr)) {
+            remoteAddr = request.getHeader("X-Forwarded-For");
+            if (StringUtils.isBlank(remoteAddr)) {
+                remoteAddr = request.getHeader("Proxy-Client-IP");
+                if (StringUtils.isBlank(remoteAddr)) {
+                    remoteAddr = request.getHeader("WL-Proxy-Client-IP");
+                }
+            }
+        }
+        return remoteAddr;
+    }
 }

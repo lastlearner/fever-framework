@@ -145,6 +145,7 @@ copy swagger2markup plugin to web-app
     + Mockito
     + Hamcrest
     + JsonPath
+    + Random Beans
 + IT Test
     + Cucumber
 + Search
