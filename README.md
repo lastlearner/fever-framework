@@ -27,7 +27,7 @@ This is a basic framework depend on springsource and maven
 
 则新项目启动时遵循此风格
 .proj
-├── proj-parent 继承fever-parent,指定依赖包版本
+├── proj-parent 继承fever-parent,指定依赖包版本为<fever.version>[0.0.1-SNAPSHOT,)</fever.version>
 ├── proj-migration 引入fever-migration
 ├── proj-common 引入fever-common
 ├── proj-web 引入fever-web,同时复制fever-web下pom中相应plugins
