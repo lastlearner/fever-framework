@@ -35,6 +35,18 @@ This is a basic framework depend on springsource and maven
 ```
 ## maven
 + [nexus](http://awsjenkins.flyudesk.com/nexus)
++ version
+```bash
+#遇到较大更新时则更新版本号
+cd fever
+mvn versions:set -DnewVersion=NEW_VERSION -DgenerateBackupPoms=false
+cd fever-parent
+mvn versions:set -DnewVersion=NEW_VERSION -DgenerateBackupPoms=false
+```
++ install
+```bash
+mvn package(install) -B -e -U
+```
 + deploy
 
 ```bash
@@ -53,7 +65,7 @@ This is a basic framework depend on springsource and maven
 </servers>
 
 # deploy
-mvn deploy
+mvn deploy -B -e -U
 ```
 ## code quality
 + [sonarQube](http://awsjenkins.flyudesk.com/sonar)
