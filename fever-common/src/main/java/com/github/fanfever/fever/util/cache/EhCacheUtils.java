@@ -8,6 +8,7 @@ import org.apache.shiro.session.Session;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author fanfever
@@ -30,7 +31,10 @@ public class EhCacheUtils {
 	}
 
 	public static List<Session> getSessionAll() {
-		return null;
+		return (List<Session>) getCache(SESSION_CACHE).getKeys().stream().map(i -> {
+			Session session = getSession((Serializable) i);
+			return session;
+		}).collect(Collectors.toList());
 	}
 
 	public static void putSession(Serializable id, Session session) {
