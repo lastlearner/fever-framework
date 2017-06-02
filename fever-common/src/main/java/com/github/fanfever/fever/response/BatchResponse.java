@@ -49,4 +49,16 @@ public class BatchResponse {
 		return failMap.size();
 	}
 
+	public List<Integer> getSuccessList() {
+		return successList;
+	}
+
+	public void setSuccessList(List<Integer> successList) {
+		this.successList = successList;
+	}
+
+	public void setFailMap(Map<String, String> failMap) {
+		this.failMap = failMap;
+	}
+
 }

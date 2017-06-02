@@ -21,6 +21,11 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true, value = {"deleteFlag", "sqlMap", "page"})
 public class BaseModel implements Serializable {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
 //	@JsonView(View.Basic.class)
 	protected Integer id;
 	protected Integer createUserId;
