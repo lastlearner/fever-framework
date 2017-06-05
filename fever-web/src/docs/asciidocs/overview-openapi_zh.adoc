@@ -24,7 +24,7 @@ https://crm.udesk.cn/api/v1/{relative address}?{URL params}&email={administrator
 | 超级管理员邮箱
 
 | timestamp: 时间戳
-| 发起请求时的时间戳，'1970-01-01 00:00:00'至今的毫秒数。如无特别说明，默认过期时间五分钟
+| 发起请求时的时间戳，'1970-01-01 00:00:00'至今的秒数。如无特别说明，默认过期时间五分钟
 
 | signature: 签名
 | 身份认证签名，除非特别说明，否则每次API请求均需要附加此参数，详细生成算法请查阅`鉴权方法`
@@ -62,7 +62,7 @@ sign=SHA1(email&api_token&timestamp)
 
 - email: 管理员邮箱地址
 - api_token: 鉴权私钥，在CRM系统`管理设置 - 系统设置 - 基本设置 - 秘钥`查看
-- timestamp: 时间戳，'1970-01-01 00:00:00'至今的毫秒数
+- timestamp: 时间戳，'1970-01-01 00:00:00'至今的秒数
 
 .示例
 ----
@@ -80,16 +80,16 @@ https://crm.udesk.cn/api/v1/leads
 | 221b368d7f5f597867f525971f28ff75
 
 | timestamp
-| 1495023809508
+| 1496631984
 
 |===
 --
 计算签名:
 ----
-sha1("email@udesk.cn&221b368d7f5f597867f525971f28ff75&1495023809508") -> 3afdd6c7d16080ea404a2410796be8e6fb338632
+sha1("email@udesk.cn&221b368d7f5f597867f525971f28ff75&1496631984") -> a32be53bb42314850715f8b9ab92542f5ed54c5e
 ----
 
 请求URL:
 ----
-https://crm.udesk.cn/api/v1/leads?email=email@udesk.cn&timestamp=1495023809508&sign=3afdd6c7d16080ea404a2410796be8e6fb338632
+https://crm.udesk.cn/api/v1/leads?email=email@udesk.cn&timestamp=1496631984&sign=a32be53bb42314850715f8b9ab92542f5ed54c5e
 ----

@@ -24,7 +24,7 @@ meaning of the brackets part:
 | super administrator email
 
 | timestamp
-| timestamp when the request was made, '1970-01-01 00:00:00' to the current number of milliseconds. If there is no special instructions, the default expiration time is five minutes
+| timestamp when the request was made, '1970-01-01 00:00:00' to the current number of seconds. If there is no special instructions, the default expiration time is five minutes
 
 | signature
 | identity authentication signature, unless otherwise specified, or each API request need to attach this parameter, detailed algorithm please consult the `authentication method`
@@ -62,7 +62,7 @@ note:
 
 - email: super administrator email
 - api_token: authentication secret key，you can find it in the CRM system `Manage Settings - System Settings - Basic Settings - Secret Key`
-- timestamp: timestamp，'1970-01-01 00:00:00' to the current number of milliseconds
+- timestamp: timestamp，'1970-01-01 00:00:00' to the current number of seconds
 
 .example
 ----
@@ -80,16 +80,16 @@ the data you should provide as follows:
 | 221b368d7f5f597867f525971f28ff75
 
 | timestamp
-| 1495023809508
+| 1496631984
 
 |===
 --
 calculate the signature:
 ----
-sha1("email@udesk.cn&221b368d7f5f597867f525971f28ff75&1495023809508") -> 3afdd6c7d16080ea404a2410796be8e6fb338632
+sha1("email@udesk.cn&221b368d7f5f597867f525971f28ff75&1496631984") -> a32be53bb42314850715f8b9ab92542f5ed54c5e
 ----
 
 Request URL:
 ----
-https://crm.udesk.cn/api/v1/leads?email=email@udesk.cn&timestamp=1495023809508&sign=3afdd6c7d16080ea404a2410796be8e6fb338632
+https://crm.udesk.cn/api/v1/leads?email=email@udesk.cn&timestamp=1496631984&sign=a32be53bb42314850715f8b9ab92542f5ed54c5e
 ----
