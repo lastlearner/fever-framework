@@ -1,4 +1,4 @@
-package com.github.fanfever.fever.util;
+package com.github.fanfever.fever.util.json;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
