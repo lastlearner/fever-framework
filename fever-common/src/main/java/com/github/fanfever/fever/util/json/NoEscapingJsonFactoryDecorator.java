@@ -8,6 +8,8 @@ import net.logstash.logback.decorate.JsonFactoryDecorator;
  * <p>reference:
  * <a href="https://github.com/logstash/logstash-logback-encoder/issues/197">logstash-logback-encoder</a>
  *
+ * <p>Chinese loged as unicode
+ *
  * @author scott he
  * @date 2017/6/3
  */
