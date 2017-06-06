@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @Slf4j
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true, value = {"deleteFlag", "sqlMap", "page"})
+@JsonIgnoreProperties(ignoreUnknown = true, value = {"sqlMap", "page"})
 public class BaseModel implements Serializable {
 
 //	@JsonView(View.Basic.class)
