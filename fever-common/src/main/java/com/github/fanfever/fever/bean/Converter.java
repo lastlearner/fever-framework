@@ -3,6 +3,7 @@ package com.github.fanfever.fever.bean;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,10 +26,12 @@ public interface Converter<S, T>{
             return Collections.emptyList();
         }
         if(input instanceof Page){
-            PageInfo pageInfo = new PageInfo(input);
-            List<T> collect = input.stream().map(this::convert).collect(toList());
-            new PageInfo(input).setList(collect);
-            return pageInfo.getList();
+            Page<T> page = new Page<>();
+            page.addAll(input.stream().map(this::convert).collect(toList()));
+            page.setTotal(((Page) input).getTotal());
+            page.setPageNum(((Page) input).getPageNum());
+            page.setPageSize(((Page) input).getPageSize());
+            return page;
         }else{
             return input.stream().map(this::convert).collect(toList());
         }
