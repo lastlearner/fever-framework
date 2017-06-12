@@ -6,12 +6,14 @@ import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PolicyConditions;
-import com.github.fanfever.fever.upload.model.ResponseModel;
+import com.github.fanfever.fever.upload.model.DownloadRequest;
+import com.github.fanfever.fever.upload.model.DownloadResponse;
+import com.github.fanfever.fever.upload.model.UploadRequest;
+import com.github.fanfever.fever.upload.model.UploadResponse;
 import com.github.fanfever.fever.upload.util.PreCheck;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,7 +56,7 @@ public class OSSStorageConfiguration {
    * @param key 对象名
    * @return
    */
-  public ResponseModel download(final String bucket, final String key) {
+  /*public ResponseModel download(final String bucket, final String key) {
     return execute(new OSSStorageCallback<ResponseModel>() {
       public ResponseModel execute(OSSClient ossClient) {
         boolean exists = ossClient.doesObjectExist(bucket, key);
@@ -67,6 +70,55 @@ public class OSSStorageConfiguration {
             object.getObjectMetadata().getRawMetadata(), ResponseModel.Operation.DOWNLOAD);
       }
     });
+  }*/
+
+  /**
+   * 下载
+   * @param bucket 存储桶
+   * @param key 对象名
+   * @return {@link DownloadResponse}
+   */
+  public DownloadResponse download(final String bucket, final String key) {
+    return execute(ossClient -> {
+      boolean exists = ossClient.doesObjectExist(bucket, key);
+      if (!exists)
+        return new DownloadResponse().withExists(false);
+
+      OSSObject object = ossClient.getObject(bucket, key);
+
+      return DownloadResponse.builder()
+          .bucketName(bucket)
+          .keyName(key)
+          .exists(true)
+          .inputStream(object.getObjectContent())
+          .userMetadata(object.getObjectMetadata().getUserMetadata())
+          .metadata(object.getObjectMetadata().getRawMetadata())
+          .status(DownloadResponse.DownStatus.SUCCESS).build();
+    });
+  }
+
+  /**
+   * 下载
+   * @param downloadRequest downloadRequest
+   * @return {@link DownloadResponse}
+   */
+  public DownloadResponse download(DownloadRequest downloadRequest) {
+    return execute(ossClient -> {
+      boolean exists = ossClient.doesObjectExist(downloadRequest.getBucketName(), downloadRequest.getKeyName());
+      if (!exists)
+        return new DownloadResponse().withExists(false);
+
+      OSSObject object = ossClient.getObject(downloadRequest.getKeyName(), downloadRequest.getKeyName());
+
+      return DownloadResponse.builder()
+          .bucketName(downloadRequest.getBucketName())
+          .keyName(downloadRequest.getKeyName())
+          .exists(true)
+          .inputStream(object.getObjectContent())
+          .userMetadata(object.getObjectMetadata().getUserMetadata())
+          .metadata(object.getObjectMetadata().getRawMetadata())
+          .status(DownloadResponse.DownStatus.SUCCESS).build();
+    });
   }
 
   /**
@@ -76,12 +128,29 @@ public class OSSStorageConfiguration {
    * @param inputStream 流
    * @return
    */
-  public ResponseModel upload(final String bucket, final String key, final InputStream inputStream) {
+  /*public ResponseModel upload(final String bucket, final String key, final InputStream inputStream) {
     return execute(new OSSStorageCallback<ResponseModel>() {
       public ResponseModel execute(OSSClient ossClient) {
         ossClient.putObject(bucket, key, inputStream);
         return new ResponseModel(false, ResponseModel.Operation.UPLOAD);
       }
+    });
+  }*/
+
+  /**
+   * 上传
+   * @param bucket 存储空间
+   * @param key 对象名
+   * @param inputStream 流
+   * @return {@link UploadResponse}
+   */
+  public UploadResponse upload(final String bucket, final String key, final InputStream inputStream) {
+    return execute(ossClient -> {
+      ossClient.putObject(bucket, key, inputStream);
+      return UploadResponse.builder()
+          .bucketName(bucket)
+          .keyName(key)
+          .status(UploadResponse.UpStatus.SUCCESS).build();
     });
   }
 
@@ -93,13 +162,32 @@ public class OSSStorageConfiguration {
    * @param objectMetadata 元数据
    * @return
    */
-  public ResponseModel upload(final String bucket, final String key, final InputStream inputStream, final ObjectMetadata
+  /*public ResponseModel upload(final String bucket, final String key, final InputStream inputStream, final ObjectMetadata
       objectMetadata) {
     return execute(new OSSStorageCallback<ResponseModel>() {
       public ResponseModel execute(OSSClient ossClient) {
         ossClient.putObject(bucket, key, inputStream, objectMetadata);
         return new ResponseModel(false, ResponseModel.Operation.UPLOAD);
       }
+    });
+  }*/
+
+  /**
+   * 上传
+   * @param bucket 存储空间
+   * @param key 对象名
+   * @param inputStream 流
+   * @param objectMetadata 元数据
+   * @return {@link UploadResponse}
+   */
+  public UploadResponse upload(final String bucket, final String key, final InputStream inputStream, final ObjectMetadata
+      objectMetadata) {
+    return execute(ossClient -> {
+      ossClient.putObject(bucket, key, inputStream, objectMetadata);
+      return UploadResponse.builder()
+          .bucketName(bucket)
+          .keyName(key)
+          .status(UploadResponse.UpStatus.SUCCESS).build();
     });
   }
 
@@ -109,7 +197,7 @@ public class OSSStorageConfiguration {
    * @param multipartFiles 文件列表
    * @return
    */
-  public ResponseModel upload(final String bucket, final MultipartFile[] multipartFiles) {
+  /*public ResponseModel upload(final String bucket, final MultipartFile[] multipartFiles) {
     return execute(new OSSStorageCallback<ResponseModel>() {
       public ResponseModel execute(OSSClient ossClient) {
         for(MultipartFile file : multipartFiles) {
@@ -125,6 +213,79 @@ public class OSSStorageConfiguration {
         }
         return new ResponseModel(false, ResponseModel.Operation.UPLOAD);
       }
+    });
+  }*/
+
+  /**
+   * 上传
+   * @param bucket 存储空间
+   * @param multipartFiles 文件列表
+   * @return {@link java.util.List<UploadResponse>}
+   */
+  public List<UploadResponse> upload(final String bucket, final MultipartFile[] multipartFiles) {
+    return execute(ossClient -> {
+      List<UploadResponse> uploadResponseList = Lists.newArrayList();
+      for (MultipartFile file : multipartFiles) {
+        UploadResponse uploadResponse = UploadResponse.builder()
+            .bucketName(bucket)
+            .keyName(file.getOriginalFilename())
+            .status(UploadResponse.UpStatus.SUCCESS).build();
+        try {
+          ossClient.putObject(bucket, file.getOriginalFilename(), file.getInputStream());
+        } catch (IOException e) {
+          log.error(e.getMessage(), e);
+          uploadResponse.setStatus(UploadResponse.UpStatus.FAILED);
+          throw new RuntimeException(e);
+        }
+        uploadResponseList.add(uploadResponse);
+      }
+      return uploadResponseList;
+    });
+  }
+
+  /**
+   * 上传
+   * @param uploadRequest uploadRequest
+   * @return {@link UploadResponse}
+   */
+  public UploadResponse upload(UploadRequest uploadRequest) {
+    return execute(ossClient -> {
+      ObjectMetadata objectMetadata = new ObjectMetadata();
+      objectMetadata.setUserMetadata(uploadRequest.getUserMetadata());
+      ossClient.putObject(uploadRequest.getBucketName(), uploadRequest.getKeyName(),
+          uploadRequest.getInputStream(), objectMetadata);
+      return UploadResponse.builder()
+          .bucketName(uploadRequest.getBucketName())
+          .keyName(uploadRequest.getKeyName())
+          .status(UploadResponse.UpStatus.SUCCESS).build();
+    });
+  }
+
+  /**
+   * 上传
+   * @param uploadRequestList uploadRequestList
+   * @return {@link List<UploadResponse>}
+   */
+  public List<UploadResponse> upload(List<UploadRequest> uploadRequestList) {
+    return execute(ossClient -> {
+      List<UploadResponse> uploadResponseList = Lists.newArrayList();
+      uploadRequestList.forEach(uploadRequest -> {
+        UploadResponse uploadResponse = UploadResponse.builder()
+            .bucketName(uploadRequest.getBucketName())
+            .keyName(uploadRequest.getKeyName())
+            .status(UploadResponse.UpStatus.SUCCESS).build();
+        try {
+          ObjectMetadata objectMetadata = new ObjectMetadata();
+          objectMetadata.setUserMetadata(uploadRequest.getUserMetadata());
+          ossClient.putObject(uploadRequest.getBucketName(), uploadRequest.getKeyName(),
+              uploadRequest.getInputStream(), objectMetadata);
+        } catch (Exception e) {
+          log.error(e.getMessage(), e);
+          uploadResponse.setStatus(UploadResponse.UpStatus.FAILED);
+        }
+        uploadResponseList.add(uploadResponse);
+      });
+      return uploadResponseList;
     });
   }
 
