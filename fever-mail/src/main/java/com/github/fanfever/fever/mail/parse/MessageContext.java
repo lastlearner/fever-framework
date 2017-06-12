@@ -8,6 +8,7 @@ import java.util.Properties;
  * @date 2017/4/28
  */
 public class MessageContext {
+  private MessageContext() {}
   public static Properties initializeProperties() {
     Properties properties = new Properties();
     properties.put("mail.host", "smtp.udesk.cn");

@@ -10,6 +10,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * Mail model.
+ * <p> 优先使用{@link SimpleEmail}
  * @author scott.he
  * @date 2017/4/17
  */
