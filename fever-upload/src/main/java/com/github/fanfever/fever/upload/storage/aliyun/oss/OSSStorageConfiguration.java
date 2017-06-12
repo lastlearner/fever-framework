@@ -294,7 +294,7 @@ public class OSSStorageConfiguration {
    * @return
    */
   public Map<String, String> tokens(final String dir) {
-    String host = "http://" + bucketName + "." + endpoint;
+    String host = "https://" + bucketName + "." + endpoint;
     OSSClient client = this.ossClient();
     try {
       long expireTime = 30;
