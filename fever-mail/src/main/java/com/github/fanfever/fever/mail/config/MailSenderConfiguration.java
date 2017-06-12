@@ -1,12 +1,13 @@
 package com.github.fanfever.fever.mail.config;
 
 import com.github.fanfever.fever.mail.model.Mail;
-import com.github.fanfever.fever.mail.model.SimpleEmail;
 import com.github.fanfever.fever.mail.util.Assert;
-import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.protocol.HttpContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +18,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.mail.Message;
 import java.util.Map;
 
 /**
@@ -44,7 +44,7 @@ public class MailSenderConfiguration {
   public Object send(Mail mail) {
     Assert.notNull(mail, "mail");
     mail.validate();
-    MultiValueMap<String, String> postParameters = new LinkedMultiValueMap<>();
+    MultiValueMap<String, String> postParameters = new LinkedMultiValueMap<String, String>();
     postParameters.add("subject", mail.getMailBody().getSubject());
     postParameters.add("to", StringUtils.join(mail.getMailReceiver().getTo().iterator(), ";"));
     postParameters.add("cc", StringUtils.join(mail.getMailReceiver().getCc().iterator(), ";"));
@@ -72,7 +72,7 @@ public class MailSenderConfiguration {
    */
   public Object send(Map<String, String> mail) {
     Assert.notNull(mail, "mail");
-    MultiValueMap<String, String> postParameters = new LinkedMultiValueMap<>();
+    MultiValueMap<String, String> postParameters = new LinkedMultiValueMap<String, String>();
     for(Map.Entry<String, String> entry : mail.entrySet()) {
       postParameters.add(entry.getKey(), entry.getValue());
     }
@@ -87,10 +87,10 @@ public class MailSenderConfiguration {
    */
   public Object send(MultiValueMap<String, String> postParameters) {
     Assert.notNull(postParameters, "postParameters");
-    if(!postParameters.containsKey(API_USER))
-      postParameters.add(API_USER, apiUser);
-    if(!postParameters.containsKey(API_KEY))
-      postParameters.add(API_KEY, apiKey);
+    if(!postParameters.containsKey("apiUser"))
+      postParameters.add("apiUser", apiUser);
+    if(!postParameters.containsKey("apiKey"))
+      postParameters.add("apiKey", apiKey);
     //region HttpHeader
     HttpHeaders headers = new HttpHeaders();
     MediaType type = MediaType.parseMediaType("application/x-www-form-urlencoded;charset=UTF-8");
@@ -98,68 +98,18 @@ public class MailSenderConfiguration {
     headers.add("Accept", MediaType.APPLICATION_JSON.toString());
     //endregion
 
-    HttpEntity<MultiValueMap<String, String>> requestEntity  = new HttpEntity<>(postParameters, headers);
+    HttpEntity<MultiValueMap<String, String>> requestEntity  = new HttpEntity<MultiValueMap<String, String>>(postParameters, headers);
     return this.restTemplate().postForObject(sendUrl, requestEntity, Object.class);
-  }
-
-  private final static String SEPARATOR = ";";
-  private final static String API_USER = "apiUser";
-  private final static String API_KEY = "apiKey";
-
-  /**
-   * 发送邮件: 新项目优先使用此方法，为统一入口，后期 {@link MailSenderConfiguration#send(Mail)} 与
-   * {@link MailSenderConfiguration#send(Map)} 会弃用 {@link Deprecated}
-   *
-   * @param simpleEmail mail {@link SimpleEmail}
-   * @return {@link Object}
-   */
-  public Object send(SimpleEmail simpleEmail) {
-    //region validate
-    Preconditions.checkNotNull(simpleEmail, "simpleEmail不能为空").validate();
-    //endregion
-
-    MultiValueMap<String, String> postParameters = new LinkedMultiValueMap<>();
-    postParameters.add("from", simpleEmail.getFrom());
-    postParameters.add("fromName", simpleEmail.getFromName());
-    postParameters.add("subject", simpleEmail.getSubject());
-    postParameters.add("to", StringUtils
-        .join(simpleEmail.splitRecipients(Message.RecipientType.TO).iterator(), SEPARATOR));
-    postParameters.add("cc", StringUtils
-        .join(simpleEmail.splitRecipients(Message.RecipientType.CC).iterator(), SEPARATOR));
-    postParameters.add("bcc", StringUtils
-        .join(simpleEmail.splitRecipients(Message.RecipientType.BCC).iterator(), SEPARATOR));
-    postParameters.add("html", StringUtils
-        .isBlank(simpleEmail.getTextHtml()) ? simpleEmail.getText() : simpleEmail.getTextHtml());
-    simpleEmail.getAdditionalInformation()
-        .entrySet()
-        .forEach(entry -> postParameters.add(entry.getKey(), entry.getValue()));
-
-    return doSend(postParameters);
-  }
-
-  private Object doSend(MultiValueMap<String, String> postParameters) {
-    Preconditions.checkNotNull(postParameters, "发送参数不能为空!");
-    if(!postParameters.containsKey(API_USER))
-      postParameters.add(API_USER, apiUser);
-    if(!postParameters.containsKey(API_KEY))
-      postParameters.add(API_KEY, apiKey);
-
-    HttpHeaders httpHeaders = new HttpHeaders();
-    MediaType mediaType = MediaType.parseMediaType("application/x-www-form-urlencoded;charset=UTF-8");
-    httpHeaders.setContentType(mediaType);
-    httpHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-    return this.restTemplate().postForObject(sendUrl, new HttpEntity<MultiValueMap<String, String>>(postParameters, httpHeaders), Object.class);
   }
 
   private RestTemplate restTemplate() {
     HttpClient httpClient = HttpClientBuilder
         .create()
-        .setKeepAliveStrategy(/*new ConnectionKeepAliveStrategy() {
+        .setKeepAliveStrategy(new ConnectionKeepAliveStrategy() {
           public long getKeepAliveDuration(HttpResponse httpResponse, HttpContext httpContext) {
-            return 5l * 1000;
+            return 5 * 1000;
           }
-        }*/(httpResponse,httpContext) -> 5l * 1000).build();
+        }).build();
     HttpComponentsClientHttpRequestFactory clientHttpRequestFactory =
         new HttpComponentsClientHttpRequestFactory(httpClient);
     clientHttpRequestFactory.setConnectTimeout(3000);
