@@ -52,28 +52,6 @@ public class OSSStorageConfiguration {
 
   /**
    * 下载
-   * @param bucket 存储空间
-   * @param key 对象名
-   * @return
-   */
-  /*public ResponseModel download(final String bucket, final String key) {
-    return execute(new OSSStorageCallback<ResponseModel>() {
-      public ResponseModel execute(OSSClient ossClient) {
-        boolean exists = ossClient.doesObjectExist(bucket, key);
-        if(!exists)
-          return new ResponseModel(false, ResponseModel.Operation.DOWNLOAD);
-
-        OSSObject object = ossClient.getObject(bucket, key);
-        return new ResponseModel(object.getObjectContent(),
-            true,
-            object.getObjectMetadata().getUserMetadata(),
-            object.getObjectMetadata().getRawMetadata(), ResponseModel.Operation.DOWNLOAD);
-      }
-    });
-  }*/
-
-  /**
-   * 下载
    * @param bucket 存储桶
    * @param key 对象名
    * @return {@link DownloadResponse}
@@ -126,22 +104,6 @@ public class OSSStorageConfiguration {
    * @param bucket 存储空间
    * @param key 对象名
    * @param inputStream 流
-   * @return
-   */
-  /*public ResponseModel upload(final String bucket, final String key, final InputStream inputStream) {
-    return execute(new OSSStorageCallback<ResponseModel>() {
-      public ResponseModel execute(OSSClient ossClient) {
-        ossClient.putObject(bucket, key, inputStream);
-        return new ResponseModel(false, ResponseModel.Operation.UPLOAD);
-      }
-    });
-  }*/
-
-  /**
-   * 上传
-   * @param bucket 存储空间
-   * @param key 对象名
-   * @param inputStream 流
    * @return {@link UploadResponse}
    */
   public UploadResponse upload(final String bucket, final String key, final InputStream inputStream) {
@@ -153,24 +115,6 @@ public class OSSStorageConfiguration {
           .status(UploadResponse.UpStatus.SUCCESS).build();
     });
   }
-
-  /**
-   * 上传
-   * @param bucket 存储空间
-   * @param key 对象名
-   * @param inputStream 流
-   * @param objectMetadata 元数据
-   * @return
-   */
-  /*public ResponseModel upload(final String bucket, final String key, final InputStream inputStream, final ObjectMetadata
-      objectMetadata) {
-    return execute(new OSSStorageCallback<ResponseModel>() {
-      public ResponseModel execute(OSSClient ossClient) {
-        ossClient.putObject(bucket, key, inputStream, objectMetadata);
-        return new ResponseModel(false, ResponseModel.Operation.UPLOAD);
-      }
-    });
-  }*/
 
   /**
    * 上传
@@ -190,31 +134,6 @@ public class OSSStorageConfiguration {
           .status(UploadResponse.UpStatus.SUCCESS).build();
     });
   }
-
-  /**
-   * 上传
-   * @param bucket 存储空间
-   * @param multipartFiles 文件列表
-   * @return
-   */
-  /*public ResponseModel upload(final String bucket, final MultipartFile[] multipartFiles) {
-    return execute(new OSSStorageCallback<ResponseModel>() {
-      public ResponseModel execute(OSSClient ossClient) {
-        for(MultipartFile file : multipartFiles) {
-          ObjectMetadata objectMetadata = new ObjectMetadata();
-          initializeMetadata(objectMetadata, file);
-          try {
-            ossClient.putObject(bucket, file.getOriginalFilename(), file.getInputStream(),
-                objectMetadata);
-          } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-          }
-        }
-        return new ResponseModel(false, ResponseModel.Operation.UPLOAD);
-      }
-    });
-  }*/
 
   /**
    * 上传
@@ -355,24 +274,6 @@ public class OSSStorageConfiguration {
       /*if(ossClient != null)
         ossClient.shutdown();*/
     }
-  }
-
-  /**
-   * 元数据
-   * @param objectMetadata
-   * @param multipartFile
-   */
-  private void initializeMetadata(ObjectMetadata objectMetadata, MultipartFile multipartFile) {
-    //region 元数据-用户自定义UserMetadata
-    objectMetadata.addUserMetadata("name", multipartFile.getName());
-    objectMetadata.addUserMetadata("contentType", multipartFile.getContentType());
-    objectMetadata.addUserMetadata("originalFilename", multipartFile.getOriginalFilename());
-    objectMetadata.addUserMetadata("size", String.valueOf(multipartFile.getSize()));
-    //endregion
-
-    //region 元数据-非用户自定义Metadata
-    objectMetadata.setContentType(multipartFile.getContentType());
-    //endregion
   }
 
 }
