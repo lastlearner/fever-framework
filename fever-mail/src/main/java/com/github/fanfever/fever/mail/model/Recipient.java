@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * 收件人、抄送人、密送人
  * @author scott he
  * @date 2017/4/27
  */

@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
+ * MailContent.
+ * <p> 优先使用{@link SimpleEmail}
  * @author scott.he
  * @date 2017/4/17
  */

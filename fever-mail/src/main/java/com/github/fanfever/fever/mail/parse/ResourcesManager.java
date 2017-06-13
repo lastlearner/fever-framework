@@ -56,6 +56,12 @@ public class ResourcesManager {
     return absolutelyPath;
   }
 
+  private Resources resourcesType;
+  public ResourcesManager withResourcesType(Resources resourcesType) {
+    this.resourcesType = resourcesType;
+    return this;
+  }
+
   public enum Resources {
     IMAGE,
     DOCUMENT;

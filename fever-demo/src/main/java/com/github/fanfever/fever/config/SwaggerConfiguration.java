@@ -55,7 +55,7 @@ public class SwaggerConfiguration {
 	}
 
 	private ApiInfo apiInfo() {
-		ApiInfo apiInfo = new ApiInfo("CRM OPEN API", "Secure RESTful Services with Maven(Guide) and Spring Boot", "0.0.1-SNAPSHOT", null,
+		ApiInfo apiInfo = new ApiInfo("CRM OPEN API", "Secure RESTful Services with Maven(Guide) and Spring Boot", "0.0.2-SNAPSHOT", null,
 				new Contact("zhangfan", "https://github.com/fanfever", "fanfeveryahoo@gmail.com"), "", "");
 		return apiInfo;
 	}

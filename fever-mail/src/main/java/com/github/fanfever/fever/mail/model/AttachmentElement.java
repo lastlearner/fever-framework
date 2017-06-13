@@ -7,22 +7,23 @@ import lombok.Setter;
 
 import javax.activation.DataSource;
 import java.io.InputStream;
-import java.io.Serializable;
 
 /**
- * 嵌入资源
+ * 附件
  * @author scott he
- * @date 2017/4/28
+ * @date 2017/6/10
  */
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmbeddedImage implements Serializable {
-  private String embeddedId;
-  private String imageName;
-  private String originalImageName;
-  private String imagePath;
-  private DataSource dataSource;
+public class AttachmentElement {
+  private String attachmentId;
+  private String attachmentName;
+  private String originalAttachmentName;
+  private String attachmentPath;
   private InputStream inputStream;
+  private DataSource dataSource;
+  private int size;
+  private boolean isEmbeddedResources;
 }
