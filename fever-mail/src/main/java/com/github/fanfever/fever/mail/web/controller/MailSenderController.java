@@ -3,6 +3,8 @@ package com.github.fanfever.fever.mail.web.controller;
 import com.github.fanfever.fever.mail.config.MailSenderConfiguration;
 import com.github.fanfever.fever.mail.model.AttachmentElement;
 import com.github.fanfever.fever.mail.model.SimpleEmail;
+import com.github.fanfever.fever.mail.util.JsonHelper;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.Message;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author scott.he
@@ -38,8 +43,9 @@ public class MailSenderController {
     simpleEmail.setFromName("Scott He");
     simpleEmail.setSubject("产品会议");
     simpleEmail.addRecipient("scott.he@foxmail.com", Message.RecipientType.TO);
+    simpleEmail.addRecipient("scott.he@foxmail.com", Message.RecipientType.CC);
     simpleEmail.addRecipient("hedongfang@udesk.cn", Message.RecipientType.BCC);
-    simpleEmail.setTextHtml("各位好，现定于明天下午三点，在西五楼302开会，请安排好时间准时参加。收到请回复，谢谢！");
+    simpleEmail.setTextHtml("测试邮件 - \n 各位好，现定于明天下午三点，在西五楼302开会，请安排好时间准时参加。收到请回复，谢谢！");
     //处理附件
     if (ArrayUtils.isNotEmpty(fileList)) {
       for(MultipartFile file : fileList) {
@@ -59,7 +65,18 @@ public class MailSenderController {
       }
     }
     simpleEmail.setContainAttachment(true);
-    //Object object = mailSender.send(simpleEmail);
-    return new ResponseEntity<>(/*object.toString()*/"", HttpStatus.OK);
+
+    Map<String, List<String>> xsmtpapi = new HashMap<>();
+    List<String> addressList = Lists.newArrayList(
+        "scott.he@foxmail.com",
+        "zhangfan@udesk.cn",
+        "yangxi@udesk.cn",
+        "hedongfang@udesk.cn");
+    xsmtpapi.put("to", addressList);
+    simpleEmail.addAdditionalInformation("xsmtpapi", JsonHelper.serialize.convert(xsmtpapi));
+
+    /*Object object = mailSender.send(simpleEmail);
+    return new ResponseEntity<>(object.toString(), HttpStatus.OK);*/
+    return new ResponseEntity<>("", HttpStatus.OK);
   }
 }

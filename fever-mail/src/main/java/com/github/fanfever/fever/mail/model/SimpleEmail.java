@@ -142,6 +142,10 @@ public class SimpleEmail implements Serializable {
 
   public List<AttachmentElement> getAttachmentElements() { return attachmentElements; }
 
+  public void addAdditionalInformation(String key, String value) {
+    additionalInformation.put(key, value);
+  }
+
   /**
    * 分隔 收件人、抄送人、密送人
    * @param type {@link Message.RecipientType}
