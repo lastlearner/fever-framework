@@ -1,5 +1,8 @@
 package com.github.fanfever.fever.mail.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.github.fanfever.fever.mail.util.JsonHelper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -7,8 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.mail.Message;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * SimpleEmail
@@ -27,6 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Setter
 @Getter
 @NoArgsConstructor
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SimpleEmail implements Serializable {
   /**
    * 发件人地址: 发送邮件时不能为空
@@ -107,7 +111,7 @@ public class SimpleEmail implements Serializable {
   /**
    * 是否包含附件，发送邮件时可以为空
    */
-  private boolean containAttachment;
+  private boolean containAttachment = false;
   /**
    * 自定义键值对: 如指定当前邮件发送时使用的apiUser / apiKey ，or other message
    */
@@ -118,7 +122,7 @@ public class SimpleEmail implements Serializable {
   }
 
   public List<Recipient> getRecipients() {
-    return Collections.unmodifiableList(recipients);
+    return recipients;
   }
 
   public void addHeader(String key, String value) {
@@ -126,16 +130,16 @@ public class SimpleEmail implements Serializable {
   }
 
   public Map<String, String> getHeaders() {
-    return Collections.unmodifiableMap(headers);
+    return headers;
   }
 
   public void addEmbeddedImage(EmbeddedImage... embeddedImage) { Collections.addAll(embeddedImages, embeddedImage); }
 
-  public List<EmbeddedImage> getEmbeddedImages() { return Collections.unmodifiableList(embeddedImages); }
+  public List<EmbeddedImage> getEmbeddedImages() { return embeddedImages; }
 
   public void addAttachmentElement(AttachmentElement... attachmentElement) { Collections.addAll(attachmentElements, attachmentElement); }
 
-  public List<AttachmentElement> getAttachmentElements() { return Collections.unmodifiableList(attachmentElements); }
+  public List<AttachmentElement> getAttachmentElements() { return attachmentElements; }
 
   /**
    * 分隔 收件人、抄送人、密送人
@@ -183,10 +187,32 @@ public class SimpleEmail implements Serializable {
   public void addRecipient(List<String> stringList, Message.RecipientType recipientType) {
     if (CollectionUtils.isNotEmpty(stringList)) {
       stringList.forEach(entry ->
-          getRecipients().add(new Recipient(entry.substring(0, entry.lastIndexOf('@')), entry,
+          recipients.add(new Recipient(entry.substring(0, entry.lastIndexOf('@')), entry,
               recipientType))
       );
     }
+  }
+
+  /**
+   * revert simpleEmail to map
+   * @return {@link Map<String, String>}
+   */
+  public Map<String, String> getParameters() {
+    Map<String, String> parameters = new HashMap<>();
+    parameters.put("from", from);
+    parameters.put("fromName", fromName);
+    parameters.put("to", splitRecipients(Message.RecipientType.TO).stream().collect(Collectors
+        .joining(",")));
+    parameters.put("cc", splitRecipients(Message.RecipientType.CC).stream().collect(Collectors
+        .joining(",")));
+    parameters.put("bcc", splitRecipients(Message.RecipientType.BCC).stream().collect(Collectors
+        .joining(",")));
+    parameters.put("subject", subject);
+    parameters.put("html", StringUtils.isBlank(textHtml) ? text : textHtml);
+    parameters.put("replyTo", replyTo.stream().collect(Collectors.joining(",")));
+    parameters.put("headers", JsonHelper.serialize.convert(headers));
+    parameters.putAll(additionalInformation);
+    return parameters;
   }
 
   public void validate() {
@@ -196,8 +222,11 @@ public class SimpleEmail implements Serializable {
         "收件人至少一个!");
     if (isNeedReply())
       Preconditions.checkArgument(!getReplyTo().isEmpty(), "确保正常收到回复，replyTo不能为空!");
-    Preconditions.checkArgument(StringUtils.isNotBlank("".concat(getText()).concat(getTextHtml())),
-        "邮件正文不能为空!");
+    Preconditions.checkArgument(
+        StringUtils.isNotBlank(
+            "".concat(getText() == null ? "" : getText())
+            .concat(getTextHtml() == null ? "" : getTextHtml())
+        ), "邮件正文不能为空!");
   }
 
 }

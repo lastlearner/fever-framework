@@ -1,12 +1,10 @@
 package com.github.fanfever.fever.mail.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.activation.DataSource;
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * 附件
@@ -15,15 +13,18 @@ import java.io.InputStream;
  */
 @Setter
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttachmentElement {
+public class AttachmentElement implements Serializable {
   private String attachmentId;
-  private String attachmentName;
-  private String originalAttachmentName;
+  private String name;
+  private String originalFileName;
   private String attachmentPath;
   private InputStream inputStream;
   private DataSource dataSource;
-  private int size;
+  private long size;
+  private boolean empty;
+  private byte[] bytes;
   private boolean isEmbeddedResources;
 }

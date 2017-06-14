@@ -1,6 +1,7 @@
 package com.github.fanfever.fever.mail.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ import java.util.Objects;
  */
 @Setter
 @Getter
+@Builder
 @AllArgsConstructor
 public class Recipient implements Serializable {
   private String name;
@@ -45,4 +47,5 @@ public class Recipient implements Serializable {
     }
     return false;
   }
+
 }

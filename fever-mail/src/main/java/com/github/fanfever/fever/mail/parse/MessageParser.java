@@ -15,7 +15,10 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -340,7 +343,7 @@ public class MessageParser {
       DataHandler dataHandler = part.getDataHandler();
       String name = dataHandler.getName();
       String suffix = name.substring(name.lastIndexOf('.'), name.length());
-      attachmentElement.setOriginalAttachmentName(name);
+      attachmentElement.setOriginalFileName(name);
       String[] contentIds = part.getHeader("Content-ID");
       if (contentIds != null) {
         String contentId = contentIds[0];
@@ -349,10 +352,10 @@ public class MessageParser {
         if(contentId.endsWith(">"))
           contentId = contentId.substring(0, contentId.length() - 1);
         attachmentElement.setAttachmentId("cid:" + contentId);
-        attachmentElement.setAttachmentName(contentId + suffix);
+        attachmentElement.setName(contentId + suffix);
         attachmentElement.setEmbeddedResources(true);
       } else {
-        attachmentElement.setAttachmentName(System.currentTimeMillis() + suffix);
+        attachmentElement.setName(System.currentTimeMillis() + suffix);
         attachmentElement.setEmbeddedResources(false);
       }
       attachmentElement.setDataSource(dataHandler.getDataSource());
