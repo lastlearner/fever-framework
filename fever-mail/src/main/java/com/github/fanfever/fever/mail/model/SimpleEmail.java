@@ -53,7 +53,8 @@ public class SimpleEmail implements Serializable {
    */
   private boolean needReply = false;
   /**
-   * 邮件回复地址列表: 已发送邮件，目标收件人在回复时，默认回复地址为此列表地址，若确认当前邮件需要回复，发送邮件时不能为空
+   * 邮件回复地址列表: 最多3个
+   * note: 已发送邮件，目标收件人在回复时，默认回复地址为此列表地址，若确认当前邮件需要回复，可通过此字段配置回复地址，为空时默认回复到from
    */
   private List<String> replyTo = Lists.newArrayList();
   /**
