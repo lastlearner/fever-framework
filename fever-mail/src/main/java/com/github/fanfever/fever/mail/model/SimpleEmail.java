@@ -117,6 +117,10 @@ public class SimpleEmail implements Serializable {
    * 自定义键值对: 如指定当前邮件发送时使用的apiUser / apiKey ，or other message
    */
   private Map<String, String> additionalInformation = new HashMap<>();
+  /**
+   * 是否分别发送
+   */
+  private boolean isSeparatorSend = false;
 
   public void addRecipient(Recipient... recipient) {
     Collections.addAll(recipients, recipient);
@@ -273,8 +277,8 @@ public class SimpleEmail implements Serializable {
   public void validate() {
     Preconditions.checkArgument(StringUtils.isNotBlank(getFrom()), "发件人地址不能为空!");
     Preconditions.checkArgument(StringUtils.isNotBlank(getSubject()), "邮件主题不能为空!");
-    Preconditions.checkArgument(!splitRecipients(Message.RecipientType.TO).isEmpty(),
-        "收件人至少一个!");
+    if (isSeparatorSend)
+      Preconditions.checkArgument(!splitRecipients(Message.RecipientType.TO).isEmpty(),"收件人至少一个!");
     if (isNeedReply())
       Preconditions.checkArgument(!getReplyTo().isEmpty(), "确保正常收到回复，replyTo不能为空!");
     Preconditions.checkArgument(
