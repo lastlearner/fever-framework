@@ -31,6 +31,9 @@ import java.util.Set;
  *  "settings" : {
  *      "analysis": {
  *          "analyzer": {
+ *              "ngram": {
+ *                  "tokenizer": "ngram"
+ *              },
  *              "ik_smart": {
  *                  "tokenizer": "ik_smart"
  *              },
@@ -54,6 +57,15 @@ import java.util.Set;
  *              }
  *          },
  *          "tokenizer": {
+ *              "ngram": {
+ *                  "type": "ngram",
+ *                  "min_gram": 1,
+ *                  "max_gram": 9,
+ *                  "token_chars": [
+ *                  "letter",
+ *                  "digit"
+ *              ]
+ *              },
  *              "pinyin_analyzer": {
  *                  "type": "pinyin",
  *                  "keep_full_pinyin" : false,

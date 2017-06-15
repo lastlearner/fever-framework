@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fanfever.fever.command.request.DocumentCommandRequest;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequestBuilder;
 import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
@@ -64,7 +65,7 @@ public class DocumentCommand {
 
     /**
      * @param documentCommandRequestList {@link DocumentCommandRequest}
-     * @param isRefresh 是否刷新
+     * @param isRefresh                  是否刷新
      * @return true if the execute should be success; otherwise false
      */
     public boolean execute(final List<DocumentCommandRequest> documentCommandRequestList, boolean isRefresh) {
@@ -89,7 +90,9 @@ public class DocumentCommand {
         if (isRefresh) {
             BulkItemResponse[] bulkItemResponseArray = bulkResponse.getItems();
             Set<String> indexSet = Arrays.stream(bulkItemResponseArray).filter(i -> !i.isFailed()).map(BulkItemResponse::getIndex).collect(Collectors.toSet());
-            refreshWrapper(indexSet).get();
+            if (CollectionUtils.isNotEmpty(indexSet)) {
+                refreshWrapper(indexSet).get();
+            }
         }
         return bulkResponse.hasFailures();
     }
