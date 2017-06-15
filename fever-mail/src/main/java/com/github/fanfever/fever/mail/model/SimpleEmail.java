@@ -277,7 +277,7 @@ public class SimpleEmail implements Serializable {
   public void validate() {
     Preconditions.checkArgument(StringUtils.isNotBlank(getFrom()), "发件人地址不能为空!");
     Preconditions.checkArgument(StringUtils.isNotBlank(getSubject()), "邮件主题不能为空!");
-    if (isSeparatorSend)
+    if (!isSeparatorSend)
       Preconditions.checkArgument(!splitRecipients(Message.RecipientType.TO).isEmpty(),"收件人至少一个!");
     if (isNeedReply())
       Preconditions.checkArgument(!getReplyTo().isEmpty(), "确保正常收到回复，replyTo不能为空!");
