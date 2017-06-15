@@ -77,6 +77,23 @@ public class MailSenderController {
 
     /*Object object = mailSender.send(simpleEmail);
     return new ResponseEntity<>(object.toString(), HttpStatus.OK);*/
+
+    //to
+    for (int i = 0; i < 150; i ++) {
+      simpleEmail.addRecipient("scott.he-" + (i + 1) + "@foxmail.com", Message.RecipientType.TO);
+    }
+    //cc
+    for (int i = 0; i < 150; i ++) {
+      simpleEmail.addRecipient("scott.he-" + (i + 1) + "@foxmail.com", Message.RecipientType.CC);
+    }
+    //bcc
+    for (int i = 0; i < 150; i ++) {
+      simpleEmail.addRecipient("scott.he-" + (i + 1) + "@foxmail.com", Message.RecipientType.BCC);
+    }
+    log.info("rebuild start");
+    simpleEmail.rebuildRecipientList(100);
+    log.info("rebuild end");
+
     return new ResponseEntity<>("", HttpStatus.OK);
   }
 }

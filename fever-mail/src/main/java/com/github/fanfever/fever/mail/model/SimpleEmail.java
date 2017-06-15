@@ -220,6 +220,56 @@ public class SimpleEmail implements Serializable {
     return parameters;
   }
 
+  /**
+   * <p>重建收件人、抄送人、密送人.
+   * 若收件人、抄送人、密送人个数大于指定数量，按顺序忽略指定数目以后的地址
+   *
+   * @param num 限定收件人、抄送人、密送人的数量
+   */
+  public void rebuildRecipientList(int num) {
+    List<String> toList = splitRecipients(Message.RecipientType.TO);
+    List<String> ccList = splitRecipients(Message.RecipientType.CC);
+    List<String> bccList = splitRecipients(Message.RecipientType.BCC);
+
+    if (toList.size() > num || ccList.size() > num || bccList.size() > num) {
+      List<Recipient> list = Lists.newArrayList();
+      if (toList.size() > num) {
+        toList = toList.subList(0, num);
+      }
+      toList.forEach(to -> {
+        list.add(Recipient.builder()
+            .name(to.substring(0, to.lastIndexOf('@')))
+            .address(to)
+            .recipientType(Message.RecipientType.TO)
+            .build()
+        );
+      });
+      if (ccList.size() > num) {
+        ccList = ccList.subList(0, num);
+      }
+      ccList.forEach(cc -> {
+        list.add(Recipient.builder()
+            .name(cc.substring(0, cc.lastIndexOf('@')))
+            .address(cc)
+            .recipientType(Message.RecipientType.CC)
+            .build()
+        );
+      });
+      if (bccList.size() > num) {
+        bccList = bccList.subList(0, num);
+      }
+      bccList.forEach(bcc -> {
+        list.add(Recipient.builder()
+            .name(bcc.substring(0, bcc.lastIndexOf('@')))
+            .address(bcc)
+            .recipientType(Message.RecipientType.BCC)
+            .build()
+        );
+      });
+      setRecipients(list);
+    }
+  }
+
   public void validate() {
     Preconditions.checkArgument(StringUtils.isNotBlank(getFrom()), "发件人地址不能为空!");
     Preconditions.checkArgument(StringUtils.isNotBlank(getSubject()), "邮件主题不能为空!");
