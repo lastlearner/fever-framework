@@ -31,8 +31,8 @@ import java.util.Set;
  *  "settings" : {
  *      "analysis": {
  *          "analyzer": {
- *              "ngram": {
- *                  "tokenizer": "ngram"
+ *              "ngram_filter": {
+ *                  "tokenizer": "ngram_filter"
  *              },
  *              "ik_smart": {
  *                  "tokenizer": "ik_smart"
@@ -57,10 +57,10 @@ import java.util.Set;
  *              }
  *          },
  *          "tokenizer": {
- *              "ngram": {
+ *              "ngram_filter": {
  *                  "type": "ngram",
  *                  "min_gram": 1,
- *                  "max_gram": 9,
+ *                  "max_gram": 1,
  *                  "token_chars": [
  *                  "letter",
  *                  "digit"
@@ -236,6 +236,10 @@ public class IndexCommand {
      *           "raw" : {
      *              "type" : "keyword" #未经处理，可用于排序分组
      *           },
+     *           "ngram_filter" : {
+     *              "type" : "text",
+     *              "analyzer": "ngram_filter" #用于精确短语过滤，不用考虑评分
+     *           }
      *           "ik_max_word" : {
      *               "type" : "text",
      *               "analyzer": "ik_max_word" #中华人民共和国国歌”拆分为“中华人民共和国,中华人民,中华,华人,人民共和国,人民,人,民,共和国,共和,和,国国,国歌”

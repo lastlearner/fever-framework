@@ -32,6 +32,18 @@ curl -XPUT 'localhost:9200/_template/template_1
   "settings": {
     "analysis": {
         "analyzer": {
+          "ngram_filter": {
+            "type": "custom",
+            "tokenizer": "ngram_filter"
+          },
+          "ngram_search": {
+            "type": "custom",
+            "tokenizer": "ngram_search"
+            "filter" ["lowercase", "stop", kstem"]
+          },
+          "ik_smart": {
+            "tokenizer": "ik_smart"
+          },
           "ik_smart": {
             "tokenizer": "ik_smart"
           },
@@ -55,6 +67,18 @@ curl -XPUT 'localhost:9200/_template/template_1
           }
         },
         "tokenizer": {
+          "ngram_filter": {
+            "type": "nGram",
+            "min_gram": 1,
+            "max_gram": 1,
+            "token_chars": ["letter", "digit"]
+          },
+          "ngram_search": {
+            "type": "nGram",
+            "min_gram": 1,
+            "max_gram": 7,
+            "token_chars": ["letter", "digit"]
+          },
           "pinyin_analyzer": {
             "type": "pinyin",
             "keep_full_pinyin" : false,
@@ -112,3 +136,83 @@ curl -XPOST 'localhost:9200/index/_search?pretty' -d ' { "query": { "match_all":
 Character Filter(字符过滤器)去掉里面的HTML标记等 -》
 Tokenizer(分词器)提取多个(Token)词源 -》
 Token Filter(词元处理器)转成小写等处理为Term(词)，文档中包含了几个这样的Term被称为Frequency(词频)。 引擎会建立Term和原文档的Inverted Index(倒排索引)， 这样就能根据Term很快到找到源文档了 -》
+
+### Ngram
+```
+PUT /test_index
+{
+   "settings": {
+      "number_of_shards": 1,
+      "analysis": {
+         "tokenizer": {
+            "ngram_tokenizer": {
+               "type": "nGram",
+               "min_gram": 1, #最小匹配，如果需要单字搜索则需设为1
+               "max_gram": 4 #如果仅为过滤则可设为1，设大应用于搜索，排分机制有关
+               "token_chars": [ "letter", "digit" ] #包括哪些
+            }
+         },
+         "analyzer": {
+            "ngram_tokenizer_analyzer": {
+               "type": "custom",
+               "tokenizer": "ngram_tokenizer",
+               "filter": [
+                            "lowercase" #转为小写
+                         ]
+            }
+         }
+      }
+   },
+   "mappings": {
+      "doc": {
+         "properties": {
+            "text_field": {
+               "type": "string",
+               "term_vector": "yes", #建立词频的多维向量空间
+               "analyzer": "ngram_tokenizer_analyzer"
+            }
+         }
+      }
+   }
+}
+```
+#### Ngram Token Filter
+```
+DELETE /test_index
+PUT /test_index
+{
+   "settings": {
+      "number_of_shards": 1,
+      "analysis": {
+         "filter": {
+            "ngram_filter": {
+               "type": "nGram",
+               "min_gram": 4,
+               "max_gram": 4
+            }
+         },
+         "analyzer": {
+            "ngram_filter_analyzer": {
+               "type": "custom",
+               "tokenizer": "standard",
+               "filter": [
+                  "lowercase",
+                  "ngram_filter"
+               ]
+            }
+         }
+      }
+   },
+   "mappings": {
+      "doc": {
+         "properties": {
+            "text_field": {
+               "type": "string",
+               "term_vector": "yes",
+               "analyzer": "ngram_filter_analyzer"
+            }
+         }
+      }
+   }
+}
+```
