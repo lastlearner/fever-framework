@@ -84,6 +84,8 @@
         <!-- ELASTICSEARCH -->
         <elasticsearch.version>5.2.1</elasticsearch.version>
         <log4j.version>2.8.1</log4j.version>
+        <!-- REMOVE HTML -->
+        <jsoup.version>1.10.2</jsoup.version>
         <!-- MQ -->
         <spring-cloud-aws-messaging.verion>1.1.3.RELEASE</spring-cloud-aws-messaging.verion>
         <rocketmq.version>4.0.0-incubating</rocketmq.version>
@@ -349,6 +351,13 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
                 <version>${log4j.version}</version>
+            </dependency>
+
+            <!-- REMOVE HTML -->
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
             </dependency>
 
             <!-- MQ -->
