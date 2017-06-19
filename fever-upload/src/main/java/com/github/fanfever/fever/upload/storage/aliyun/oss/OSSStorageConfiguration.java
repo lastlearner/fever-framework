@@ -81,22 +81,7 @@ public class OSSStorageConfiguration {
    * @return {@link DownloadResponse}
    */
   public DownloadResponse download(DownloadRequest downloadRequest) {
-    return execute(ossClient -> {
-      boolean exists = ossClient.doesObjectExist(downloadRequest.getBucketName(), downloadRequest.getKeyName());
-      if (!exists)
-        return new DownloadResponse().withExists(false);
-
-      OSSObject object = ossClient.getObject(downloadRequest.getBucketName(), downloadRequest.getKeyName());
-
-      return DownloadResponse.builder()
-          .bucketName(downloadRequest.getBucketName())
-          .keyName(downloadRequest.getKeyName())
-          .exists(true)
-          .inputStream(object.getObjectContent())
-          .userMetadata(object.getObjectMetadata().getUserMetadata())
-          .metadata(object.getObjectMetadata().getRawMetadata())
-          .status(DownloadResponse.DownStatus.SUCCESS).build();
-    });
+    return download(downloadRequest.getBucketName(), downloadRequest.getKeyName());
   }
 
   /**
