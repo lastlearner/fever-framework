@@ -12,6 +12,7 @@
 		<module>fever-common</module>
 		<module>fever-web</module>
 		<module>fever-elasticsearch</module>
+		<module>fever-search</module>
 		<module>fever-batch</module>
 		<module>fever-migration</module>
 		<!--<module>fever-demo</module>-->
