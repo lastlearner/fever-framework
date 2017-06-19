@@ -86,7 +86,7 @@ public class OSSStorageConfiguration {
       if (!exists)
         return new DownloadResponse().withExists(false);
 
-      OSSObject object = ossClient.getObject(downloadRequest.getKeyName(), downloadRequest.getKeyName());
+      OSSObject object = ossClient.getObject(downloadRequest.getBucketName(), downloadRequest.getKeyName());
 
       return DownloadResponse.builder()
           .bucketName(downloadRequest.getBucketName())
