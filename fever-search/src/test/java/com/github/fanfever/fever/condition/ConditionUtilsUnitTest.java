@@ -36,8 +36,8 @@ public class ConditionUtilsUnitTest {
         //javaBean
         WaitValidBean bean = WaitValidBean.builder().strings("google").bigDecimals(new BigDecimal(1)).build();
         //conditions
-        MemoryConditionRequest condition1 = new MemoryConditionRequest(bean, "strings", ValueType.TEXT, Operator.IS_NOT_NULL, null);
-        MemoryConditionRequest condition2 = new MemoryConditionRequest(bean, "bigDecimals", ValueType.NUMERIC, Operator.IS, 1);
+        MemoryConditionRequest condition1 = MemoryConditionRequest.of(bean, "strings", ValueType.TEXT, Operator.IS_NOT_NULL, null);
+        MemoryConditionRequest condition2 = MemoryConditionRequest.of(bean, "bigDecimals", ValueType.NUMERIC, Operator.IS, 1);
 
         boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(condition1, condition2));
         assertThat(result, is(true));
@@ -46,9 +46,9 @@ public class ConditionUtilsUnitTest {
     @Test
     public void databaseConditionWrapperTest() throws Exception {
         //conditions
-        DataBaseConditionRequest condition1 = new DataBaseConditionRequest("id", ValueType.NUMERIC, Operator.IS, 1);
-        DataBaseConditionRequest condition2 = new DataBaseConditionRequest("realname", ValueType.TEXT, Operator.IS, "google");
-        DataBaseConditionRequest condition3 = new DataBaseConditionRequest("email", ValueType.TEXT, Operator.NOT, "2@test.cn");
+        DataBaseConditionRequest condition1 = DataBaseConditionRequest.of("id", ValueType.NUMERIC, Operator.IS, 1, null);
+        DataBaseConditionRequest condition2 = DataBaseConditionRequest.of("realname", ValueType.TEXT, Operator.IS, "google", null);
+        DataBaseConditionRequest condition3 = DataBaseConditionRequest.of("email", ValueType.TEXT, Operator.NOT, "2@test.cn", null);
 
         //mysql
         Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(DataSource.MYSQL, Lists.newArrayList(condition1, condition2, condition3));
@@ -66,9 +66,9 @@ public class ConditionUtilsUnitTest {
     @Test
     public void queryWrapperTest() throws Exception {
         //conditions
-        DataBaseConditionRequest condition1 = new DataBaseConditionRequest("id", ValueType.NUMERIC, Operator.IS, "1");
-        DataBaseConditionRequest condition2 = new DataBaseConditionRequest("realname", ValueType.TEXT, Operator.IS, "google");
-        DataBaseConditionRequest condition3 = new DataBaseConditionRequest("createTime", ValueType.TIME, Operator.IS, LocalDateTime.now());
+        DataBaseConditionRequest condition1 = DataBaseConditionRequest.of("id", ValueType.NUMERIC, Operator.IS, "1", null);
+        DataBaseConditionRequest condition2 = DataBaseConditionRequest.of("realname", ValueType.TEXT, Operator.IS, "google", null);
+        DataBaseConditionRequest condition3 = DataBaseConditionRequest.of("createTime", ValueType.TIME, Operator.IS, LocalDateTime.now(), null);
 
         //conditionsWrapper
         Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(DataSource.MYSQL, Lists.newArrayList(condition1, condition2, condition3));

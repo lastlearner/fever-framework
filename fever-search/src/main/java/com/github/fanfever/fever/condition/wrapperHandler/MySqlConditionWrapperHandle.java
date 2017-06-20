@@ -304,6 +304,6 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
     }
 
     static String tableAlias(BaseConditionRequest condition) {
-        return Optional.ofNullable(((DataBaseConditionRequest) condition).getTableAlias()).map(i -> i + ".").orElse("");
+        return Optional.ofNullable(((DataBaseConditionRequest) condition).getAlias()).map(i -> i + ".").orElse("");
     }
 }

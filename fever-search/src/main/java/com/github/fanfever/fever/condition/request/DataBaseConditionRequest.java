@@ -2,8 +2,9 @@ package com.github.fanfever.fever.condition.request;
 
 import com.github.fanfever.fever.condition.operator.Operator;
 import com.github.fanfever.fever.condition.type.ValueType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 /**
  * Created by fanfever on 2017/6/20.
@@ -11,16 +12,20 @@ import lombok.Data;
  * Url https://github.com/fanfever
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class DataBaseConditionRequest extends BaseConditionRequest {
 
-    private String tableAlias;
+    /**
+     * mysql使用
+     */
+    private String alias;
 
-    public DataBaseConditionRequest(String fieldName, ValueType valueType, Operator operator, Object value) {
+    private DataBaseConditionRequest(String alias, String fieldName, ValueType valueType, Operator operator, Object value) {
         super(fieldName, valueType, operator, value);
+        this.alias = alias;
     }
 
-    public DataBaseConditionRequest(String tableAlias, String fieldName, ValueType valueType, Operator operator, Object value) {
-        this(fieldName, valueType, operator, value);
-        this.tableAlias = tableAlias;
+    public static DataBaseConditionRequest of(@NonNull String fieldName, @NonNull ValueType valueType, @NonNull Operator operator, Object value, String alias) {
+        return new DataBaseConditionRequest(alias, fieldName, valueType, operator, value);
     }
 }
