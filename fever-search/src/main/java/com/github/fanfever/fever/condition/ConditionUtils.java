@@ -13,6 +13,7 @@ import com.github.fanfever.fever.util.FormulaUtil;
 import com.google.common.collect.Maps;
 import lombok.NonNull;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.SpelEvaluationException;
@@ -258,24 +259,34 @@ public class ConditionUtils {
     }
 
     /**
-     * ES数据权限条件包装
+     * ES包含任意条件包装
      *
      * @param dataSource    support elasticsearch
      * @param conditionList {@link DataBaseConditionRequest}
      * @return like (companyId=1) and (name like data)
      */
-    public static String elasticSearchPermissionConditionWrapper(@NonNull final DataSource dataSource, @NonNull final List<DataBaseConditionRequest> conditionList) {
+    public static String elasticSearchMinimumShouldMatchConditionWrapper(@NonNull final DataSource dataSource, @NonNull final List<DataBaseConditionRequest> conditionList) {
         checkArgument(dataSource.equals(DataSource.ELASTICSEARCH));
-        BoolQueryBuilder boolQueryBuilder = boolQuery().boost(0.0F);
+        BoolQueryBuilder boolQueryBuilder = boolQuery();
         conditionList.forEach(i -> {
             if (i.getValue() instanceof List) {
-                boolQueryBuilder.should(termsQuery(i.getFieldName(), (List) i.getValue()).boost(0.0F));
+                boolQueryBuilder.should(termsQuery(i.getFieldName(), (List) i.getValue()));
             } else {
-                boolQueryBuilder.should(termQuery(i.getFieldName(), i.getValue()).boost(0.0F));
+                boolQueryBuilder.should(termQuery(i.getFieldName(), i.getValue()));
             }
         });
         boolQueryBuilder.minimumShouldMatch(1);
         return boolQuery().must(boolQueryBuilder).toString();
+    }
+
+    /**
+     * ES去除评分
+     *
+     * @param conditionStr    support elasticsearch
+     * @return replace boost 1.0 -> 0.0
+     */
+    public static String elasticSearchRemoveBoost(@NonNull String conditionStr) {
+        return StringUtils.replace(conditionStr, "\"boost\" : 1.0", "\"boost\" : 0.0");
     }
 
     /**
@@ -473,11 +484,7 @@ public class ConditionUtils {
     }
 
     private static boolean checkFormulaFormat(@NonNull String formula) {
-        if (checkBracket(formula)) {
-            return formula.matches("\\s*\\(*\\s*([1-9]\\d*)(\\s+([Aa][Nn][Dd]|[Oo][Rr])\\s+\\(*\\s*([1-9]\\d*)\\s*\\)*)*\\s*\\)*\\s*");
-        } else {
-            return false;
-        }
+        return checkBracket(formula) && formula.matches("\\s*\\(*\\s*([1-9]\\d*)(\\s+([Aa][Nn][Dd]|[Oo][Rr])\\s+\\(*\\s*([1-9]\\d*)\\s*\\)*)*\\s*\\)*\\s*");
     }
 
     private static String handleFormulaBeforeCheck(@NonNull String formula) {
