@@ -6,6 +6,7 @@ import com.github.fanfever.fever.condition.request.DataBaseConditionRequest;
 import com.github.fanfever.fever.condition.request.MemoryConditionRequest;
 import com.github.fanfever.fever.condition.type.ValueType;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.jayway.jsonpath.JsonPath;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,6 +76,19 @@ public class ConditionUtilsUnitTest {
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(3), "$.bool"), notNullValue());
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(4), "$.bool"), notNullValue());
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(5), "$.bool"), notNullValue());
+    }
+
+    @Test
+    public void databaseCombineConditionWrapper() throws Exception{
+
+        Map<Integer, String> snippetConditionMap = Maps.newHashMapWithExpectedSize(3);
+        snippetConditionMap.put(1, "(text = 'text')");
+        snippetConditionMap.put(3, "(time = '2017-01-01 00:00:00')");
+        snippetConditionMap.put(5, "(array = '1,2')");
+
+
+        String result = ConditionUtils.databaseCombineConditionWrapper(MYSQL, "1 and 3 or 5", snippetConditionMap);
+        assertThat(result, is("(text = 'text') AND (time = '2017-01-01 00:00:00') OR (array = '1,2')"));
     }
 
     @Test
