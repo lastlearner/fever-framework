@@ -139,6 +139,42 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
         };
     }
 
+    static ConditionWrapperHandle prefixContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                return "";
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle prefixNotContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                return "";
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle suffixContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                return "";
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle suffixNotContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                return "";
+            }
+            return notFoundOperation();
+        };
+    }
+
     static ConditionWrapperHandle isNullHandle() {
         return condition -> getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("IS NULL OR").add(condition.getFieldName()).add("= ''").toString();
     }

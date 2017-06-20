@@ -188,6 +188,66 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         };
     }
 
+    static ConditionWrapperHandle prefixContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                List value = Lists.newArrayList(((String) getValue(condition)).split(","));
+                for (int i = 0; i < value.size(); i++) {
+                    if (String.valueOf(value.get(i)).startsWith(condition.getValueStr())) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle prefixNotContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                List value = Lists.newArrayList(((String) getValue(condition)).split(","));
+                for (int i = 0; i < value.size(); i++) {
+                    if (String.valueOf(value.get(i)).startsWith(condition.getValueStr())) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle suffixContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                List value = Lists.newArrayList(((String) getValue(condition)).split(","));
+                for (int i = 0; i < value.size(); i++) {
+                    if (String.valueOf(value.get(i)).endsWith(condition.getValueStr())) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle suffixNotContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                List value = Lists.newArrayList(((String) getValue(condition)).split(","));
+                for (int i = 0; i < value.size(); i++) {
+                    if (String.valueOf(value.get(i)).endsWith(condition.getValueStr())) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return notFoundOperation();
+        };
+    }
+
     static ConditionWrapperHandle isNullHandle() {
         return condition -> {
             Object value = getValue(condition);

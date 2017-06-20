@@ -203,7 +203,7 @@ public enum Operator {
     SUFFIX_CONTAINS_ANY("suffix_contains_any", new ValueType[]{ValueType.ARRAY}),
 
     /**
-     * 任意结尾不等一
+     * 任意结尾不等于
      */
     SUFFIX_NOT_CONTAINS_ANY("suffix_not_contains_any", new ValueType[]{ValueType.ARRAY});
 

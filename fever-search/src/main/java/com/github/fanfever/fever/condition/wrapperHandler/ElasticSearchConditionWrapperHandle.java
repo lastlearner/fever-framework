@@ -1,12 +1,8 @@
 package com.github.fanfever.fever.condition.wrapperHandler;
 
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
-
-import java.util.List;
 
 import static com.github.fanfever.fever.condition.type.ValueType.*;
-import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
@@ -142,6 +138,50 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(matchPhraseQuery(condition.getFieldName() + RAW, i)));
                 return tempBoolQuery.toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle prefixContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.should(matchPhrasePrefixQuery(condition.getFieldName() + ANALYZER, i)));
+                return tempBoolQuery.minimumShouldMatch(1).toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle prefixNotContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(matchPhrasePrefixQuery(condition.getFieldName() + ANALYZER, i)));
+                return tempBoolQuery.minimumShouldMatch(1).toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle suffixContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.should(termQuery(condition.getFieldName() + RAW, "*" + i)));
+                return tempBoolQuery.minimumShouldMatch(1).toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle suffixNotContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(termQuery(condition.getFieldName() + RAW, "*" + i)));
+                return tempBoolQuery.minimumShouldMatch(1).toString();
             }
             return notFoundOperation();
         };

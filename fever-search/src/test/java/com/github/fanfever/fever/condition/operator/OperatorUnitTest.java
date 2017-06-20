@@ -378,7 +378,111 @@ public class OperatorUnitTest {
     public void databaseNotContainsAnyTest() throws Exception {
         //conditions
 
-        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, NOT_CONTAINS_ANY, "google,microsoft", null);
+        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, NOT_CONTAINS_ANY, "google,micro", null);
+
+        //mysql
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
+        assertThat(mysqlConditionWrapperMap, hasEntry(1, ""));
+
+        //elasticSearch
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
+    }
+
+    @Test
+    public void memoryPrefixContainsAnyTest() throws Exception {
+        //javaBean
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("google,microsoft").build();
+        //conditions
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, PREFIX_CONTAINS_ANY, "mic");
+
+        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void databasePrefixContainsAnyTest() throws Exception {
+        //conditions
+
+        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, PREFIX_CONTAINS_ANY, "google1", null);
+
+        //mysql
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
+        assertThat(mysqlConditionWrapperMap, hasEntry(1, ""));
+
+        //elasticSearch
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
+    }
+
+    @Test
+    public void memoryPrefixNotContainsAnyTest() throws Exception {
+        //javaBean
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("google,microsoft").build();
+        //conditions
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, PREFIX_NOT_CONTAINS_ANY, "mic");
+
+        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void databasePrefixNotContainsAnyTest() throws Exception {
+        //conditions
+
+        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, PREFIX_NOT_CONTAINS_ANY, "google2", null);
+
+        //mysql
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
+        assertThat(mysqlConditionWrapperMap, hasEntry(1, ""));
+
+        //elasticSearch
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
+    }
+
+    @Test
+    public void memorySuffixContainsAnyTest() throws Exception {
+        //javaBean
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("google,microsoft").build();
+        //conditions
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, SUFFIX_CONTAINS_ANY, "gle");
+
+        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void databaseSuffixContainsAnyTest() throws Exception {
+        //conditions
+
+        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, SUFFIX_CONTAINS_ANY, "google3", null);
+
+        //mysql
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
+        assertThat(mysqlConditionWrapperMap, hasEntry(1, ""));
+
+        //elasticSearch
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
+    }
+
+    @Test
+    public void memorySuffixNotContainsAnyTest() throws Exception {
+        //javaBean
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("google,microsoft").build();
+        //conditions
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, SUFFIX_NOT_CONTAINS_ANY, "oft");
+
+        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void databaseSuffixNotContainsAnyTest() throws Exception {
+        //conditions
+
+        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, SUFFIX_NOT_CONTAINS_ANY, "google4", null);
 
         //mysql
         Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
