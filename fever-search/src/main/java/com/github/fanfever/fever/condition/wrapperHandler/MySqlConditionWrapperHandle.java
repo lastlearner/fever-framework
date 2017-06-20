@@ -20,25 +20,13 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
     }
 
     static ConditionWrapperHandle iSHandle() {
-        return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
-                notFoundOperation();
-            } else {
-                return getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("=").add("'" + condition.getValue() + "'").toString();
-            }
-            return notFoundOperation();
-        };
+        return condition ->
+                getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("=").add("'" + condition.getValue() + "'").toString();
     }
 
     static ConditionWrapperHandle notHandle() {
-        return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
-                notFoundOperation();
-            } else {
-                return getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("<>").add("'" + condition.getValue() + "'").toString();
-            }
-            return notFoundOperation();
-        };
+        return condition ->
+                getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("<>").add("'" + condition.getValue() + "'").toString();
     }
 
     static ConditionWrapperHandle prefixContainsHandle() {
@@ -89,9 +77,7 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             if (condition.getValueType().equals(LONG_TEXT) || condition.getValueType().equals(RICH_TEXT)) {
                 return "";
-            } else if (condition.getValueType().equals(ARRAY)) {
-                return getJoiner().add("FIND_IN_SET").add("(" + tableAlias(condition) + condition.getFieldName() + ", '" + condition.getValue() + "')").toString();
-            } else if (condition.getValueType().equals(TEXT)) {
+            }else if (condition.getValueType().equals(TEXT)) {
                 return getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("LIKE").add("'" + "%" + condition.getValueStr() + "%" + "'").toString();
             }
             return notFoundOperation();
@@ -102,10 +88,52 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             if (condition.getValueType().equals(LONG_TEXT) || condition.getValueType().equals(RICH_TEXT)) {
                 return "";
-            } else if (condition.getValueType().equals(ARRAY)) {
-                return getJoiner().add("NOT").add("FIND_IN_SET").add("(" + tableAlias(condition) + condition.getFieldName() + ", '" + condition.getValue() + "')").toString();
-            } else if (condition.getValueType().equals(TEXT)) {
+            }else if (condition.getValueType().equals(TEXT)) {
                 return getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("NOT").add("LIKE").add("'" + "%" + condition.getValueStr() + "%" + "'").toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle isAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                StringJoiner sj = new StringJoiner(" OR ", "(", ")");
+                for (int i = 0; i < condition.getValueArray().size(); i++) {
+                    sj.add("FIND_IN_SET('" + condition.getValueArray().get(i) + "', " + condition.getFieldName() + ")");
+                }
+                return sj.toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                StringJoiner sj = new StringJoiner(" AND ", "(", ")");
+                for (int i = 0; i < condition.getValueArray().size(); i++) {
+                    sj.add("NOT FIND_IN_SET('" + condition.getValueArray().get(i) + "', " + condition.getFieldName() + ")");
+                }
+                return sj.toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle containsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                return "";
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                return "";
             }
             return notFoundOperation();
         };

@@ -49,6 +49,10 @@ public class ConditionUtils {
         mysqlConditionWrapperHandleMap.put(Operator.SUFFIX_NOT_CONTAINS, MySqlConditionWrapperHandle.suffixNotContainsHandle());
         mysqlConditionWrapperHandleMap.put(Operator.CONTAINS, MySqlConditionWrapperHandle.containsHandle());
         mysqlConditionWrapperHandleMap.put(Operator.NOT_CONTAINS, MySqlConditionWrapperHandle.notContainsHandle());
+        mysqlConditionWrapperHandleMap.put(Operator.IS_ANY, MySqlConditionWrapperHandle.isAnyHandle());
+        mysqlConditionWrapperHandleMap.put(Operator.NOT_ANY, MySqlConditionWrapperHandle.notAnyHandle());
+        mysqlConditionWrapperHandleMap.put(Operator.CONTAINS_ANY, MySqlConditionWrapperHandle.containsAnyHandle());
+        mysqlConditionWrapperHandleMap.put(Operator.NOT_CONTAINS_ANY, MySqlConditionWrapperHandle.notContainsAnyHandle());
         mysqlConditionWrapperHandleMap.put(Operator.IS_NULL, MySqlConditionWrapperHandle.isNullHandle());
         mysqlConditionWrapperHandleMap.put(Operator.IS_NOT_NULL, MySqlConditionWrapperHandle.isNotNullHandle());
         mysqlConditionWrapperHandleMap.put(Operator.GREATER_THAN, MySqlConditionWrapperHandle.greaterThanHandle());
@@ -84,6 +88,10 @@ public class ConditionUtils {
         elasticSearchConditionWrapperHandleMap.put(Operator.SUFFIX_NOT_CONTAINS, ElasticSearchConditionWrapperHandle.suffixNotContainsHandle());
         elasticSearchConditionWrapperHandleMap.put(Operator.CONTAINS, ElasticSearchConditionWrapperHandle.containsHandle());
         elasticSearchConditionWrapperHandleMap.put(Operator.NOT_CONTAINS, ElasticSearchConditionWrapperHandle.notContainsHandle());
+        elasticSearchConditionWrapperHandleMap.put(Operator.IS_ANY, ElasticSearchConditionWrapperHandle.isAnyHandle());
+        elasticSearchConditionWrapperHandleMap.put(Operator.NOT_ANY, ElasticSearchConditionWrapperHandle.notAnyHandle());
+        elasticSearchConditionWrapperHandleMap.put(Operator.CONTAINS_ANY, ElasticSearchConditionWrapperHandle.containsAnyHandle());
+        elasticSearchConditionWrapperHandleMap.put(Operator.NOT_CONTAINS_ANY, ElasticSearchConditionWrapperHandle.notContainsAnyHandle());
         elasticSearchConditionWrapperHandleMap.put(Operator.IS_NULL, ElasticSearchConditionWrapperHandle.isNullHandle());
         elasticSearchConditionWrapperHandleMap.put(Operator.IS_NOT_NULL, ElasticSearchConditionWrapperHandle.isNotNullHandle());
         elasticSearchConditionWrapperHandleMap.put(Operator.GREATER_THAN, ElasticSearchConditionWrapperHandle.greaterThanHandle());
@@ -119,6 +127,10 @@ public class ConditionUtils {
         javaBeanConditionWrapperHandleMap.put(Operator.SUFFIX_NOT_CONTAINS, JavaBeanConditionWrapperHandle.suffixNotContainsHandle());
         javaBeanConditionWrapperHandleMap.put(Operator.CONTAINS, JavaBeanConditionWrapperHandle.containsHandle());
         javaBeanConditionWrapperHandleMap.put(Operator.NOT_CONTAINS, JavaBeanConditionWrapperHandle.notContainsHandle());
+        javaBeanConditionWrapperHandleMap.put(Operator.IS_ANY, JavaBeanConditionWrapperHandle.isAnyHandle());
+        javaBeanConditionWrapperHandleMap.put(Operator.NOT_ANY, JavaBeanConditionWrapperHandle.notAnyHandle());
+        javaBeanConditionWrapperHandleMap.put(Operator.CONTAINS_ANY, JavaBeanConditionWrapperHandle.containsAnyHandle());
+        javaBeanConditionWrapperHandleMap.put(Operator.NOT_CONTAINS_ANY, JavaBeanConditionWrapperHandle.notContainsAnyHandle());
         javaBeanConditionWrapperHandleMap.put(Operator.IS_NULL, JavaBeanConditionWrapperHandle.isNullHandle());
         javaBeanConditionWrapperHandleMap.put(Operator.IS_NOT_NULL, JavaBeanConditionWrapperHandle.isNotNullHandle());
         javaBeanConditionWrapperHandleMap.put(Operator.GREATER_THAN, JavaBeanConditionWrapperHandle.greaterThanHandle());

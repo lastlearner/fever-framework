@@ -1,6 +1,12 @@
 package com.github.fanfever.fever.condition.wrapperHandler;
 
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.TermQueryBuilder;
+
+import java.util.List;
+
 import static com.github.fanfever.fever.condition.type.ValueType.*;
+import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
@@ -18,26 +24,28 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
         return condition -> {
             if (condition.getValueType().equals(ARRAY)) {
-                notFoundOperation();
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.must(termQuery(condition.getFieldName() + RAW, i)));
+                return tempBoolQuery.toString();
             } else if (isText(condition.getValueType())) {
                 return boolQuery().must(termQuery(condition.getFieldName() + RAW, condition.getValueStr())).toString();
             } else {
                 return boolQuery().must(termQuery(condition.getFieldName(), condition.getValue())).toString();
             }
-            return notFoundOperation();
         };
     }
 
     static ConditionWrapperHandle notHandle() {
         return condition -> {
             if (condition.getValueType().equals(ARRAY)) {
-                notFoundOperation();
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(termQuery(condition.getFieldName() + RAW, i)));
+                return tempBoolQuery.toString();
             } else if (isText(condition.getValueType())) {
                 return boolQuery().mustNot(termQuery(condition.getFieldName() + RAW, condition.getValueStr())).toString();
             } else {
                 return boolQuery().mustNot(termQuery(condition.getFieldName(), (condition.getValue()))).toString();
             }
-            return notFoundOperation();
         };
     }
 
@@ -79,9 +87,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle containsHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
-                return boolQuery().must(termsQuery(condition.getFieldName() + RAW, condition.getValueArray())).toString();
-            } else if (isText(condition.getValueType())) {
+            if (isText(condition.getValueType())) {
                 return boolQuery().must(matchPhraseQuery(condition.getFieldName() + ANALYZER, condition.getValueStr())).toString();
             }
             return notFoundOperation();
@@ -90,10 +96,52 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle notContainsHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
-                return boolQuery().mustNot(termsQuery(condition.getFieldName() + RAW, condition.getValueArray())).toString();
-            } else if (isText(condition.getValueType())) {
+            if (isText(condition.getValueType())) {
                 return boolQuery().mustNot(matchPhraseQuery(condition.getFieldName() + ANALYZER, condition.getValueStr())).toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle isAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.should(termQuery(condition.getFieldName() + RAW, i)));
+                return tempBoolQuery.minimumShouldMatch(1).toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(termQuery(condition.getFieldName() + RAW, i)));
+                return tempBoolQuery.toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle containsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.should(matchPhraseQuery(condition.getFieldName() + ANALYZER, i)));
+                return tempBoolQuery.minimumShouldMatch(1).toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notContainsAnyHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(ARRAY)) {
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(matchPhraseQuery(condition.getFieldName() + RAW, i)));
+                return tempBoolQuery.toString();
             }
             return notFoundOperation();
         };

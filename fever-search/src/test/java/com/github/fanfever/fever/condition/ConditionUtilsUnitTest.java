@@ -17,6 +17,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.fanfever.fever.DataSource.ELASTICSEARCH;
+import static com.github.fanfever.fever.DataSource.MYSQL;
+import static com.github.fanfever.fever.condition.operator.Operator.*;
+import static com.github.fanfever.fever.condition.type.ValueType.*;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -34,47 +38,56 @@ public class ConditionUtilsUnitTest {
     @Test
     public void memoryValidateTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().strings("google").bigDecimals(new BigDecimal(1)).build();
+        WaitValidBean bean = WaitValidBean.builder().strings("fever").bigDecimals(new BigDecimal(1)).localDateTimes(LocalDateTime.of(2017, 1, 1, 1, 1)).build();
         //conditions
-        MemoryConditionRequest condition1 = MemoryConditionRequest.of(bean, "strings", ValueType.TEXT, Operator.IS_NOT_NULL, null);
-        MemoryConditionRequest condition2 = MemoryConditionRequest.of(bean, "bigDecimals", ValueType.NUMERIC, Operator.IS, 1);
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "strings", TEXT, IS, "fever");
+        MemoryConditionRequest bigDecimal = MemoryConditionRequest.of(bean, "bigDecimals", NUMERIC, NOT, 2);
+        MemoryConditionRequest localDateTime = MemoryConditionRequest.of(bean, "localDateTimes", TIME, IS, LocalDateTime.of(2017, 1, 1, 1, 1));
 
-        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(condition1, condition2));
+        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string, bigDecimal, localDateTime));
         assertThat(result, is(true));
     }
 
     @Test
     public void databaseConditionWrapperTest() throws Exception {
         //conditions
-        DataBaseConditionRequest condition1 = DataBaseConditionRequest.of("id", ValueType.NUMERIC, Operator.IS, 1, null);
-        DataBaseConditionRequest condition2 = DataBaseConditionRequest.of("realname", ValueType.TEXT, Operator.IS, "google", null);
-        DataBaseConditionRequest condition3 = DataBaseConditionRequest.of("email", ValueType.TEXT, Operator.NOT, "2@test.cn", null);
+
+        //is
+        DataBaseConditionRequest text = DataBaseConditionRequest.of("text", TEXT, IS, "text", null);
+        DataBaseConditionRequest longText = DataBaseConditionRequest.of("longText", LONG_TEXT, NOT, "longText", null);
+        DataBaseConditionRequest time = DataBaseConditionRequest.of("time", TIME, IS, "2017-01-01 00:00:00", null);
+        DataBaseConditionRequest numeric = DataBaseConditionRequest.of("numeric", NUMERIC, IS, 1, null);
+        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, IS, "1,2", null);
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(DataSource.MYSQL, Lists.newArrayList(condition1, condition2, condition3));
-        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(id = '1')"));
-        assertThat(mysqlConditionWrapperMap, hasEntry(2, "(realname = 'google')"));
-        assertThat(mysqlConditionWrapperMap, hasEntry(3, "(email <> '2@test.cn')"));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(text, longText, time, numeric, array));
+        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(text = 'text')"));
+        assertThat(mysqlConditionWrapperMap, hasEntry(2, "(longText <> 'longText')"));
+        assertThat(mysqlConditionWrapperMap, hasEntry(3, "(time = '2017-01-01 00:00:00')"));
+        assertThat(mysqlConditionWrapperMap, hasEntry(4, "(numeric = '1')"));
+        assertThat(mysqlConditionWrapperMap, hasEntry(5, "(array = '1,2')"));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(DataSource.ELASTICSEARCH, Lists.newArrayList(condition1, condition2, condition3));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(text, longText, time, numeric, array));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$.bool"), notNullValue());
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(2), "$.bool"), notNullValue());
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(3), "$.bool"), notNullValue());
+        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(4), "$.bool"), notNullValue());
+        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(5), "$.bool"), notNullValue());
     }
 
     @Test
     public void queryWrapperTest() throws Exception {
         //conditions
-        DataBaseConditionRequest condition1 = DataBaseConditionRequest.of("id", ValueType.NUMERIC, Operator.IS, "1", null);
-        DataBaseConditionRequest condition2 = DataBaseConditionRequest.of("realname", ValueType.TEXT, Operator.IS, "google", null);
-        DataBaseConditionRequest condition3 = DataBaseConditionRequest.of("createTime", ValueType.TIME, Operator.IS, LocalDateTime.now(), null);
+        DataBaseConditionRequest condition1 = DataBaseConditionRequest.of("id", ValueType.NUMERIC, IS, "1", null);
+        DataBaseConditionRequest condition2 = DataBaseConditionRequest.of("realname", TEXT, IS, "google", null);
+        DataBaseConditionRequest condition3 = DataBaseConditionRequest.of("createTime", ValueType.TIME, IS, LocalDateTime.now(), null);
 
         //conditionsWrapper
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(DataSource.MYSQL, Lists.newArrayList(condition1, condition2, condition3));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(condition1, condition2, condition3));
 
         //conditionsWrapper
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(DataSource.ELASTICSEARCH, Lists.newArrayList(condition1, condition2, condition3));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(condition1, condition2, condition3));
 
     }
 
@@ -114,8 +127,6 @@ public class ConditionUtilsUnitTest {
     @Data
     @Builder
     private static class WaitValidBean {
-        private Integer integers;
-        private double doubles;
         private BigDecimal bigDecimals;
         private String strings;
         private LocalDateTime localDateTimes;

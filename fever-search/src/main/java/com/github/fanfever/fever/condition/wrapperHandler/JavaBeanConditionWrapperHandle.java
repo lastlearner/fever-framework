@@ -3,6 +3,7 @@ package com.github.fanfever.fever.condition.wrapperHandler;
 import com.github.fanfever.fever.condition.request.BaseConditionRequest;
 import com.github.fanfever.fever.condition.request.MemoryConditionRequest;
 import com.github.fanfever.fever.util.ReflectionUtils;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,36 +27,26 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle iSHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
-                notFoundOperation();
-            }
             Object value = getValue(condition);
-            if (value instanceof String) {
-                return condition.getValue().equals(value);
-            } else if (value instanceof BigDecimal) {
-                return 0 == (new BigDecimal(value.toString())).compareTo(new BigDecimal(condition.getValue().toString()));
+            if (value instanceof BigDecimal) {
+                return 0 == ((BigDecimal) value).compareTo(new BigDecimal(condition.getValue().toString()));
             } else if (value instanceof LocalDateTime) {
                 return ((LocalDateTime) value).isEqual((LocalDateTime) condition.getValue());
             } else {
-                return notFoundOperation();
+                return condition.getValue().equals(value);
             }
         };
     }
 
     static ConditionWrapperHandle notHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
-                notFoundOperation();
-            }
             Object value = getValue(condition);
-            if (value instanceof String) {
-                return !condition.getValue().equals(value);
-            } else if (value instanceof BigDecimal) {
-                return 0 != ((BigDecimal) value).compareTo((BigDecimal) condition.getValue());
+            if (value instanceof BigDecimal) {
+                return 0 != ((BigDecimal) value).compareTo(new BigDecimal(condition.getValue().toString()));
             } else if (value instanceof LocalDateTime) {
                 return !((LocalDateTime) value).isEqual((LocalDateTime) condition.getValue());
             } else {
-                return notFoundOperation();
+                return !condition.getValue().equals(value);
             }
         };
     }
@@ -120,27 +111,78 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle containsHandle() {
         return condition -> {
             Object value = getValue(condition);
-            if (condition.getValueType().equals(ARRAY)) {
-                if (value instanceof List) {
-                    return ((List) value).contains(condition.getValue());
-                }
-            } else if (isText(condition.getValueType()) && value instanceof String) {
+            if (isText(condition.getValueType()) && value instanceof String) {
                 return String.valueOf(value).contains(condition.getValueStr());
             }
             return notFoundOperation();
         };
     }
 
-
     static ConditionWrapperHandle notContainsHandle() {
         return condition -> {
             Object value = getValue(condition);
-            if (condition.getValueType().equals(ARRAY)) {
-                if (value instanceof List) {
-                    return !((List) value).contains(condition.getValue());
-                }
-            } else if (isText(condition.getValueType()) && value instanceof String) {
+            if (isText(condition.getValueType()) && value instanceof String) {
                 return !String.valueOf(value).contains(condition.getValueStr());
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle isAnyHandle() {
+        return condition -> {
+            List value = Lists.newArrayList(((String) getValue(condition)).split(","));
+            if (condition.getValueType().equals(ARRAY)) {
+                for (int i = 0; i < condition.getValueArray().size(); i++) {
+                    if (value.contains(condition.getValueArray().get(i))) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notAnyHandle() {
+        return condition -> {
+            List value = Lists.newArrayList(((String) getValue(condition)).split(","));
+            if (condition.getValueType().equals(ARRAY)) {
+                for (int i = 0; i < condition.getValueArray().size(); i++) {
+                    if (value.contains(condition.getValueArray().get(i))) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle containsAnyHandle() {
+        return condition -> {
+            Object value = getValue(condition);
+            if (condition.getValueType().equals(ARRAY)) {
+                for (int i = 0; i < condition.getValueArray().size(); i++) {
+                    if (String.valueOf(value).contains(condition.getValueArray().get(i))) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notContainsAnyHandle() {
+        return condition -> {
+            Object value = getValue(condition);
+            if (condition.getValueType().equals(ARRAY)) {
+                for (int i = 0; i < condition.getValueArray().size(); i++) {
+                    if (String.valueOf(value).contains(condition.getValueArray().get(i))) {
+                        return false;
+                    }
+                }
+                return true;
             }
             return notFoundOperation();
         };
