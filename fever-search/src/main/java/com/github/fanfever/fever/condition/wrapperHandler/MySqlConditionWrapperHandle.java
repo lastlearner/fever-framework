@@ -176,11 +176,23 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
     }
 
     static ConditionWrapperHandle isNullHandle() {
-        return condition -> getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("IS NULL OR").add(condition.getFieldName()).add("= ''").toString();
+        return condition -> {
+            if (isText(condition.getValueType())) {
+                return getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("IS NULL OR").add(condition.getFieldName()).add("= ''").toString();
+            }else{
+                return getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("IS NULL").toString();
+            }
+        };
     }
 
     static ConditionWrapperHandle isNotNullHandle() {
-        return condition -> getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("IS NOT NULL OR").add(condition.getFieldName()).add("<> ''").toString();
+        return condition -> {
+            if (isText(condition.getValueType())) {
+                return getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("IS NOT NULL OR").add(condition.getFieldName()).add("<> ''").toString();
+            }else{
+                return getJoiner().add(tableAlias(condition) + condition.getFieldName()).add("IS NOT NULL").toString();
+            }
+        };
     }
 
     static ConditionWrapperHandle greaterThanHandle() {

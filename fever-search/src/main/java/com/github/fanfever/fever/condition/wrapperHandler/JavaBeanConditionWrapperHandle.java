@@ -278,7 +278,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             Object value = getValue(condition);
             if (condition.getValueType().equals(NUMERIC) && value instanceof BigDecimal) {
-                return 0 < ((BigDecimal) value).compareTo((BigDecimal) condition.getValue());
+                return 0 < ((BigDecimal) value).compareTo(new BigDecimal(condition.getValueStr()));
             } else if (condition.getValueType().equals(TIME) && value instanceof LocalDateTime) {
                 return 0 < ((LocalDateTime) value).compareTo((LocalDateTime) condition.getValue());
             } else {
@@ -291,9 +291,9 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             Object value = getValue(condition);
             if (condition.getValueType().equals(NUMERIC) && value instanceof BigDecimal) {
-                return 0 < ((BigDecimal) value).compareTo((BigDecimal) condition.getValue());
+                return 0 <= ((BigDecimal) value).compareTo(new BigDecimal(condition.getValueStr()));
             } else if (condition.getValueType().equals(TIME) && value instanceof LocalDateTime) {
-                return 0 < ((LocalDateTime) value).compareTo((LocalDateTime) condition.getValue());
+                return 0 <= ((LocalDateTime) value).compareTo((LocalDateTime) condition.getValue());
             } else {
                 return notFoundOperation();
             }
@@ -304,7 +304,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             Object value = getValue(condition);
             if (condition.getValueType().equals(NUMERIC) && value instanceof BigDecimal) {
-                return 0 > ((BigDecimal) value).compareTo((BigDecimal) condition.getValue());
+                return 0 > ((BigDecimal) value).compareTo(new BigDecimal(condition.getValueStr()));
             } else if (condition.getValueType().equals(TIME) && value instanceof LocalDateTime) {
                 return 0 > ((LocalDateTime) value).compareTo((LocalDateTime) condition.getValue());
             } else {
@@ -317,7 +317,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             Object value = getValue(condition);
             if (condition.getValueType().equals(NUMERIC) && value instanceof BigDecimal) {
-                return 0 >= ((BigDecimal) value).compareTo((BigDecimal) condition.getValue());
+                return 0 >= ((BigDecimal) value).compareTo(new BigDecimal(condition.getValueStr()));
             } else if (condition.getValueType().equals(TIME) && value instanceof LocalDateTime) {
                 return 0 >= ((LocalDateTime) value).compareTo((LocalDateTime) condition.getValue());
             } else {

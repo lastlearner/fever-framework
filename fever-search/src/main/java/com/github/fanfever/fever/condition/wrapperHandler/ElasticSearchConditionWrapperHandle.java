@@ -192,9 +192,8 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
             if (isText(condition.getValueType()) || isMultiValue(condition.getValueType())) {
                 return boolQuery().must(boolQuery().should(termQuery(condition.getFieldName() + RAW, "")).should(boolQuery().mustNot(existsQuery(condition.getFieldName()))).minimumShouldMatch("1")).toString();
             } else {
-                boolQuery().mustNot(existsQuery(condition.getFieldName()));
+                return boolQuery().mustNot(existsQuery(condition.getFieldName()));
             }
-            return notFoundOperation();
         };
     }
 
@@ -203,9 +202,8 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
             if (isText(condition.getValueType())) {
                 return boolQuery().must(existsQuery(condition.getFieldName())).mustNot(termQuery(condition.getFieldName() + RAW, "")).toString();
             } else {
-                boolQuery().must(existsQuery(condition.getFieldName()));
+                return boolQuery().must(existsQuery(condition.getFieldName()));
             }
-            return notFoundOperation();
         };
     }
 
