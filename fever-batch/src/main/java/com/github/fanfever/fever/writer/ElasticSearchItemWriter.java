@@ -19,14 +19,14 @@ import java.util.stream.Collectors;
  * Url https://github.com/fanfever
  */
 @AllArgsConstructor
-public class ElasticSearchItemWriter implements ItemWriter<BaseDocument> {
+public class ElasticSearchItemWriter<T extends BaseDocument> implements ItemWriter<T> {
 
     private final String INDEX;
     private final String TYPE;
     private final DocumentCommand documentCommand;
 
     @Override
-    public void write(List<? extends BaseDocument> itemList) throws Exception {
+    public void write(List<? extends T> itemList) throws Exception {
         documentCommand.execute(itemList.stream().map(i -> DocumentCommandRequest.of(DocumentCommandType.UPSERT,INDEX,TYPE, i.getId())).collect(Collectors.toList()));
     }
 }
