@@ -19,7 +19,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
     static ConditionWrapperHandle iSHandle() {
 
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.must(termQuery(condition.getFieldName() + RAW, i)));
                 return tempBoolQuery.toString();
@@ -33,7 +33,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle notHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(termQuery(condition.getFieldName() + RAW, i)));
                 return tempBoolQuery.toString();
@@ -101,7 +101,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle isAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.should(termQuery(condition.getFieldName() + RAW, i)));
                 return tempBoolQuery.minimumShouldMatch(1).toString();
@@ -112,7 +112,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle notAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(termQuery(condition.getFieldName() + RAW, i)));
                 return tempBoolQuery.toString();
@@ -123,7 +123,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle containsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.should(matchPhraseQuery(condition.getFieldName() + ANALYZER, i)));
                 return tempBoolQuery.minimumShouldMatch(1).toString();
@@ -134,7 +134,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle notContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(matchPhraseQuery(condition.getFieldName() + RAW, i)));
                 return tempBoolQuery.toString();
@@ -145,7 +145,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle prefixContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.should(matchPhrasePrefixQuery(condition.getFieldName() + ANALYZER, i)));
                 return tempBoolQuery.minimumShouldMatch(1).toString();
@@ -156,7 +156,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle prefixNotContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(matchPhrasePrefixQuery(condition.getFieldName() + ANALYZER, i)));
                 return tempBoolQuery.minimumShouldMatch(1).toString();
@@ -167,7 +167,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle suffixContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.should(termQuery(condition.getFieldName() + RAW, "*" + i)));
                 return tempBoolQuery.minimumShouldMatch(1).toString();
@@ -178,7 +178,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle suffixNotContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(termQuery(condition.getFieldName() + RAW, "*" + i)));
                 return tempBoolQuery.minimumShouldMatch(1).toString();
@@ -189,7 +189,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
 
     static ConditionWrapperHandle isNullHandle() {
         return condition -> {
-            if (isText(condition.getValueType())) {
+            if (isText(condition.getValueType()) || isMultiValue(condition.getValueType())) {
                 return boolQuery().must(boolQuery().should(termQuery(condition.getFieldName() + RAW, "")).should(boolQuery().mustNot(existsQuery(condition.getFieldName()))).minimumShouldMatch("1")).toString();
             } else {
                 boolQuery().mustNot(existsQuery(condition.getFieldName()));

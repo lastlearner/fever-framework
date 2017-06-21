@@ -8,9 +8,13 @@ import lombok.NonNull;
  * Url https://github.com/fanfever
  */
 public enum ValueType {
-    TEXT, LONG_TEXT, RICH_TEXT, NUMERIC, TIME, ARRAY;
+    TEXT, LONG_TEXT, RICH_TEXT, NUMERIC, TIME, COMMA_SPLIT, ARRAY;
 
     public static boolean isText(@NonNull ValueType valueType){
         return valueType.equals(TEXT) || valueType.equals(LONG_TEXT) || valueType.equals(RICH_TEXT);
+    }
+
+    public static boolean isMultiValue(@NonNull ValueType valueType){
+        return valueType.equals(COMMA_SPLIT) || valueType.equals(ARRAY);
     }
 }

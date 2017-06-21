@@ -131,7 +131,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle isAnyHandle() {
         return condition -> {
             List value = Lists.newArrayList(((String) getValue(condition)).split(","));
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 for (int i = 0; i < condition.getValueArray().size(); i++) {
                     if (value.contains(condition.getValueArray().get(i))) {
                         return true;
@@ -146,7 +146,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle notAnyHandle() {
         return condition -> {
             List value = Lists.newArrayList(((String) getValue(condition)).split(","));
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 for (int i = 0; i < condition.getValueArray().size(); i++) {
                     if (value.contains(condition.getValueArray().get(i))) {
                         return false;
@@ -161,7 +161,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle containsAnyHandle() {
         return condition -> {
             Object value = getValue(condition);
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 for (int i = 0; i < condition.getValueArray().size(); i++) {
                     if (String.valueOf(value).contains(condition.getValueArray().get(i))) {
                         return true;
@@ -176,7 +176,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle notContainsAnyHandle() {
         return condition -> {
             Object value = getValue(condition);
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 for (int i = 0; i < condition.getValueArray().size(); i++) {
                     if (String.valueOf(value).contains(condition.getValueArray().get(i))) {
                         return false;
@@ -190,7 +190,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle prefixContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 List value = Lists.newArrayList(((String) getValue(condition)).split(","));
                 for (int i = 0; i < value.size(); i++) {
                     if (String.valueOf(value.get(i)).startsWith(condition.getValueStr())) {
@@ -205,7 +205,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle prefixNotContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 List value = Lists.newArrayList(((String) getValue(condition)).split(","));
                 for (int i = 0; i < value.size(); i++) {
                     if (String.valueOf(value.get(i)).startsWith(condition.getValueStr())) {
@@ -220,7 +220,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle suffixContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 List value = Lists.newArrayList(((String) getValue(condition)).split(","));
                 for (int i = 0; i < value.size(); i++) {
                     if (String.valueOf(value.get(i)).endsWith(condition.getValueStr())) {
@@ -235,7 +235,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle suffixNotContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 List value = Lists.newArrayList(((String) getValue(condition)).split(","));
                 for (int i = 0; i < value.size(); i++) {
                     if (String.valueOf(value.get(i)).endsWith(condition.getValueStr())) {

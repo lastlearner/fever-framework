@@ -32,14 +32,14 @@ public class OperatorUnitTest {
     @Test
     public void memoryIsTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("1,2").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("1,2").build();
         //conditions
         MemoryConditionRequest string = MemoryConditionRequest.of(bean, "string", TEXT, IS, "fever");
         MemoryConditionRequest bigDecimal = MemoryConditionRequest.of(bean, "bigDecimal", NUMERIC, IS, 1);
         MemoryConditionRequest localDateTime = MemoryConditionRequest.of(bean, "localDateTime", TIME, IS, LocalDateTime.of(2017, 1, 1, 1, 1));
-        MemoryConditionRequest array = MemoryConditionRequest.of(bean, "array", ARRAY, IS, "1,2");
+        MemoryConditionRequest comma_split = MemoryConditionRequest.of(bean, "comma_split", ARRAY, IS, "1,2");
 
-        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string, bigDecimal, localDateTime, array));
+        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string, bigDecimal, localDateTime, comma_split));
         assertThat(result, is(true));
     }
 
@@ -51,18 +51,18 @@ public class OperatorUnitTest {
         DataBaseConditionRequest longText = DataBaseConditionRequest.of("longText", LONG_TEXT, IS, "longText", null);
         DataBaseConditionRequest time = DataBaseConditionRequest.of("time", TIME, IS, "2017-01-01 00:00:00", null);
         DataBaseConditionRequest numeric = DataBaseConditionRequest.of("numeric", NUMERIC, IS, 1, null);
-        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, IS, "1,2", null);
+        DataBaseConditionRequest comma_split = DataBaseConditionRequest.of("comma_split", ARRAY, IS, "1,2", null);
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(text, longText, time, numeric, array));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(text, longText, time, numeric, comma_split));
         assertThat(mysqlConditionWrapperMap, hasEntry(1, "(text = 'text')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(2, "(longText = 'longText')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(3, "(time = '2017-01-01 00:00:00')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(4, "(numeric = '1')"));
-        assertThat(mysqlConditionWrapperMap, hasEntry(5, "(array = '1,2')"));
+        assertThat(mysqlConditionWrapperMap, hasEntry(5, "(comma_split = '1,2')"));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(text, longText, time, numeric, array));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(text, longText, time, numeric, comma_split));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(2), "$..value"), notNullValue());
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(3), "$..value"), notNullValue());
@@ -73,14 +73,14 @@ public class OperatorUnitTest {
     @Test
     public void memoryNotTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("1,2").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("1,2").build();
         //conditions
         MemoryConditionRequest string = MemoryConditionRequest.of(bean, "string", TEXT, NOT, "feve");
         MemoryConditionRequest bigDecimal = MemoryConditionRequest.of(bean, "bigDecimal", NUMERIC, NOT, 2);
         MemoryConditionRequest localDateTime = MemoryConditionRequest.of(bean, "localDateTime", TIME, NOT, LocalDateTime.of(2017, 1, 1, 1, 2));
-        MemoryConditionRequest array = MemoryConditionRequest.of(bean, "array", ARRAY, NOT, "1");
+        MemoryConditionRequest comma_split = MemoryConditionRequest.of(bean, "comma_split", ARRAY, NOT, "1");
 
-        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string, bigDecimal, localDateTime, array));
+        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string, bigDecimal, localDateTime, comma_split));
         assertThat(result, is(true));
     }
 
@@ -92,18 +92,18 @@ public class OperatorUnitTest {
         DataBaseConditionRequest longText = DataBaseConditionRequest.of("longText", LONG_TEXT, NOT, "longText", null);
         DataBaseConditionRequest time = DataBaseConditionRequest.of("time", TIME, NOT, "2017-01-01 00:00:00", null);
         DataBaseConditionRequest numeric = DataBaseConditionRequest.of("numeric", NUMERIC, NOT, 1, null);
-        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, NOT, "1,2", null);
+        DataBaseConditionRequest comma_split = DataBaseConditionRequest.of("comma_split", ARRAY, NOT, "1,2", null);
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(text, longText, time, numeric, array));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(text, longText, time, numeric, comma_split));
         assertThat(mysqlConditionWrapperMap, hasEntry(1, "(text <> 'text')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(2, "(longText <> 'longText')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(3, "(time <> '2017-01-01 00:00:00')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(4, "(numeric <> '1')"));
-        assertThat(mysqlConditionWrapperMap, hasEntry(5, "(array <> '1,2')"));
+        assertThat(mysqlConditionWrapperMap, hasEntry(5, "(comma_split <> '1,2')"));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(text, longText, time, numeric, array));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(text, longText, time, numeric, comma_split));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(2), "$..value"), notNullValue());
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(3), "$..value"), notNullValue());
@@ -114,7 +114,7 @@ public class OperatorUnitTest {
     @Test
     public void memoryPrefixContainsTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("1,2").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("1,2").build();
         //conditions
         MemoryConditionRequest string = MemoryConditionRequest.of(bean, "string", TEXT, PREFIX_CONTAINS, "fe");
 
@@ -143,7 +143,7 @@ public class OperatorUnitTest {
     @Test
     public void memoryPrefixNotContainsTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("1,2").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("1,2").build();
         //conditions
         MemoryConditionRequest string = MemoryConditionRequest.of(bean, "string", TEXT, PREFIX_NOT_CONTAINS, "ef");
 
@@ -172,7 +172,7 @@ public class OperatorUnitTest {
     @Test
     public void memorySuffixContainsTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("1,2").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("1,2").build();
         //conditions
         MemoryConditionRequest string = MemoryConditionRequest.of(bean, "string", TEXT, SUFFIX_CONTAINS, "er");
 
@@ -201,7 +201,7 @@ public class OperatorUnitTest {
     @Test
     public void memorySuffixNotContainsTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("1,2").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("1,2").build();
         //conditions
         MemoryConditionRequest string = MemoryConditionRequest.of(bean, "string", TEXT, SUFFIX_NOT_CONTAINS, "re");
 
@@ -230,7 +230,7 @@ public class OperatorUnitTest {
     @Test
     public void memoryContainsTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("1,2").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("1,2").build();
         //conditions
         MemoryConditionRequest string = MemoryConditionRequest.of(bean, "string", TEXT, CONTAINS, "ve");
 
@@ -259,7 +259,7 @@ public class OperatorUnitTest {
     @Test
     public void memoryNotContainsTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("1,2").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("1,2").build();
         //conditions
         MemoryConditionRequest string = MemoryConditionRequest.of(bean, "string", TEXT, NOT_CONTAINS, "re");
 
@@ -288,9 +288,9 @@ public class OperatorUnitTest {
     @Test
     public void memoryIsAnyTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("1,2,3").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("1,2,3").build();
         //conditions
-        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, IS_ANY, "1,4");
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "comma_split", ARRAY, IS_ANY, "1,4");
 
         boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
         assertThat(result, is(true));
@@ -300,23 +300,23 @@ public class OperatorUnitTest {
     public void databaseIsAnyTest() throws Exception {
         //conditions
 
-        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, IS_ANY, "1,2", null);
+        DataBaseConditionRequest comma_split = DataBaseConditionRequest.of("comma_split", ARRAY, IS_ANY, "1,2", null);
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
-        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(FIND_IN_SET('1', array) OR FIND_IN_SET('2', array))"));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(comma_split));
+        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(FIND_IN_SET('1', comma_split) OR FIND_IN_SET('2', comma_split))"));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(comma_split));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
     }
 
     @Test
     public void memoryNotAnyTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("1,2,3,4").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("1,2,3,4").build();
         //conditions
-        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, NOT_ANY, "1,5");
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "comma_split", ARRAY, NOT_ANY, "1,5");
 
         boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
         assertThat(result, is(false));
@@ -326,23 +326,23 @@ public class OperatorUnitTest {
     public void databaseNotAnyTest() throws Exception {
         //conditions
 
-        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, NOT_ANY, "1,2", null);
+        DataBaseConditionRequest comma_split = DataBaseConditionRequest.of("comma_split", ARRAY, NOT_ANY, "1,2", null);
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
-        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(NOT FIND_IN_SET('1', array) AND NOT FIND_IN_SET('2', array))"));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(comma_split));
+        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(NOT FIND_IN_SET('1', comma_split) AND NOT FIND_IN_SET('2', comma_split))"));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(comma_split));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
     }
 
     @Test
     public void memoryContainsAnyTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("google,microsoft").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("google,microsoft").build();
         //conditions
-        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, CONTAINS_ANY, "gle,tfo");
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "comma_split", ARRAY, CONTAINS_ANY, "gle,tfo");
 
         boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
         assertThat(result, is(true));
@@ -352,23 +352,23 @@ public class OperatorUnitTest {
     public void databaseContainsAnyTest() throws Exception {
         //conditions
 
-        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, CONTAINS_ANY, "google,microsoft", null);
+        DataBaseConditionRequest comma_split = DataBaseConditionRequest.of("comma_split", ARRAY, CONTAINS_ANY, "google,microsoft", null);
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(comma_split));
         assertThat(mysqlConditionWrapperMap, hasEntry(1, ""));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(comma_split));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
     }
 
     @Test
     public void memoryNotContainsAnyTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("google,microsoft").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("google,microsoft").build();
         //conditions
-        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, NOT_CONTAINS_ANY, "gle,tfo");
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "comma_split", ARRAY, NOT_CONTAINS_ANY, "gle,tfo");
 
         boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
         assertThat(result, is(false));
@@ -378,23 +378,23 @@ public class OperatorUnitTest {
     public void databaseNotContainsAnyTest() throws Exception {
         //conditions
 
-        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, NOT_CONTAINS_ANY, "google,micro", null);
+        DataBaseConditionRequest comma_split = DataBaseConditionRequest.of("comma_split", ARRAY, NOT_CONTAINS_ANY, "google,micro", null);
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(comma_split));
         assertThat(mysqlConditionWrapperMap, hasEntry(1, ""));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(comma_split));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
     }
 
     @Test
     public void memoryPrefixContainsAnyTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("google,microsoft").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("google,microsoft").build();
         //conditions
-        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, PREFIX_CONTAINS_ANY, "mic");
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "comma_split", ARRAY, PREFIX_CONTAINS_ANY, "mic");
 
         boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
         assertThat(result, is(true));
@@ -404,23 +404,23 @@ public class OperatorUnitTest {
     public void databasePrefixContainsAnyTest() throws Exception {
         //conditions
 
-        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, PREFIX_CONTAINS_ANY, "google1", null);
+        DataBaseConditionRequest comma_split = DataBaseConditionRequest.of("comma_split", ARRAY, PREFIX_CONTAINS_ANY, "google1", null);
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(comma_split));
         assertThat(mysqlConditionWrapperMap, hasEntry(1, ""));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(comma_split));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
     }
 
     @Test
     public void memoryPrefixNotContainsAnyTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("google,microsoft").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("google,microsoft").build();
         //conditions
-        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, PREFIX_NOT_CONTAINS_ANY, "mic");
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "comma_split", ARRAY, PREFIX_NOT_CONTAINS_ANY, "mic");
 
         boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
         assertThat(result, is(false));
@@ -430,23 +430,23 @@ public class OperatorUnitTest {
     public void databasePrefixNotContainsAnyTest() throws Exception {
         //conditions
 
-        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, PREFIX_NOT_CONTAINS_ANY, "google2", null);
+        DataBaseConditionRequest comma_split = DataBaseConditionRequest.of("comma_split", ARRAY, PREFIX_NOT_CONTAINS_ANY, "google2", null);
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(comma_split));
         assertThat(mysqlConditionWrapperMap, hasEntry(1, ""));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(comma_split));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
     }
 
     @Test
     public void memorySuffixContainsAnyTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("google,microsoft").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("google,microsoft").build();
         //conditions
-        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, SUFFIX_CONTAINS_ANY, "gle");
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "comma_split", ARRAY, SUFFIX_CONTAINS_ANY, "gle");
 
         boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
         assertThat(result, is(true));
@@ -456,23 +456,23 @@ public class OperatorUnitTest {
     public void databaseSuffixContainsAnyTest() throws Exception {
         //conditions
 
-        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, SUFFIX_CONTAINS_ANY, "google3", null);
+        DataBaseConditionRequest comma_split = DataBaseConditionRequest.of("comma_split", ARRAY, SUFFIX_CONTAINS_ANY, "google3", null);
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(comma_split));
         assertThat(mysqlConditionWrapperMap, hasEntry(1, ""));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(comma_split));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
     }
 
     @Test
     public void memorySuffixNotContainsAnyTest() throws Exception {
         //javaBean
-        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).array("google,microsoft").build();
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.of(2017, 1, 1, 1, 1)).comma_split("google,microsoft").build();
         //conditions
-        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "array", ARRAY, SUFFIX_NOT_CONTAINS_ANY, "oft");
+        MemoryConditionRequest string = MemoryConditionRequest.of(bean, "comma_split", ARRAY, SUFFIX_NOT_CONTAINS_ANY, "oft");
 
         boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string));
         assertThat(result, is(false));
@@ -482,14 +482,14 @@ public class OperatorUnitTest {
     public void databaseSuffixNotContainsAnyTest() throws Exception {
         //conditions
 
-        DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, SUFFIX_NOT_CONTAINS_ANY, "google4", null);
+        DataBaseConditionRequest comma_split = DataBaseConditionRequest.of("comma_split", ARRAY, SUFFIX_NOT_CONTAINS_ANY, "google4", null);
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(array));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(comma_split));
         assertThat(mysqlConditionWrapperMap, hasEntry(1, ""));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(array));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(comma_split));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
     }
 
@@ -499,6 +499,6 @@ public class OperatorUnitTest {
         private BigDecimal bigDecimal;
         private String string;
         private LocalDateTime localDateTime;
-        private String array;
+        private String comma_split;
     }
 }

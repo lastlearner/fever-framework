@@ -97,7 +97,7 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle isAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 StringJoiner sj = new StringJoiner(" OR ", "(", ")");
                 for (int i = 0; i < condition.getValueArray().size(); i++) {
                     sj.add("FIND_IN_SET('" + condition.getValueArray().get(i) + "', " + condition.getFieldName() + ")");
@@ -110,7 +110,7 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle notAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 StringJoiner sj = new StringJoiner(" AND ", "(", ")");
                 for (int i = 0; i < condition.getValueArray().size(); i++) {
                     sj.add("NOT FIND_IN_SET('" + condition.getValueArray().get(i) + "', " + condition.getFieldName() + ")");
@@ -123,7 +123,7 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle containsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 return "";
             }
             return notFoundOperation();
@@ -132,7 +132,7 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle notContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 return "";
             }
             return notFoundOperation();
@@ -141,7 +141,7 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle prefixContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 return "";
             }
             return notFoundOperation();
@@ -150,7 +150,7 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle prefixNotContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 return "";
             }
             return notFoundOperation();
@@ -159,7 +159,7 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle suffixContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 return "";
             }
             return notFoundOperation();
@@ -168,7 +168,7 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle suffixNotContainsAnyHandle() {
         return condition -> {
-            if (condition.getValueType().equals(ARRAY)) {
+            if (isMultiValue(condition.getValueType())) {
                 return "";
             }
             return notFoundOperation();
