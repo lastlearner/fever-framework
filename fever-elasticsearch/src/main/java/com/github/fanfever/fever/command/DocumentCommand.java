@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fanfever.fever.command.request.DocumentCommandRequest;
 import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequestBuilder;
@@ -27,19 +28,14 @@ import java.util.stream.Collectors;
  * elasticsearch version 5.2.1
  *
  * @author fanfever
- * @email fanfeveryahoo@gmail.com
- * @url https://github.com/fanfever
- * @date 2017年5月3日
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class DocumentCommand {
 
-    @Autowired
-    private Client elasticsearchClient;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final Client elasticsearchClient;
+    private final ObjectMapper objectMapper;
 
     /**
      * 创建更新删除document，默认刷新
@@ -70,8 +66,7 @@ public class DocumentCommand {
      */
     public boolean execute(final List<DocumentCommandRequest> documentCommandRequestList, boolean isRefresh) {
         BulkRequestBuilder bulkRequestBuilder = elasticsearchClient.prepareBulk();
-        for (int i = 0; i < documentCommandRequestList.size(); i++) {
-            DocumentCommandRequest documentCommandRequest = documentCommandRequestList.get(i);
+        for (DocumentCommandRequest documentCommandRequest : documentCommandRequestList) {
             switch (documentCommandRequest.getCommandType()) {
                 case SAVE:
                     bulkRequestBuilder.add(createWrapper(documentCommandRequest));

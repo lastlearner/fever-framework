@@ -13,6 +13,11 @@
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.fanfever</groupId>
+            <artifactId>fever-elasticsearch</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
         <!-- BATCH -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
