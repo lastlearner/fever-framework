@@ -82,6 +82,9 @@ public class DocumentCommand {
                 case DELETE:
                     bulkRequestBuilder.add(deleteWrapper(documentCommandRequest));
                     break;
+                case UPSERT:
+                    bulkRequestBuilder.add(upsertWrapper(documentCommandRequest));
+                    break;
                 default:
                     throw new AssertionError("operation is not exists!");
             }
@@ -103,6 +106,10 @@ public class DocumentCommand {
 
     private UpdateRequestBuilder updateWrapper(final DocumentCommandRequest documentCommandRequest) {
         return elasticsearchClient.prepareUpdate(documentCommandRequest.getIndex(), documentCommandRequest.getType(), documentCommandRequest.getId()).setDoc(serializeDocument(documentCommandRequest.getDocument()));
+    }
+
+    private UpdateRequestBuilder upsertWrapper(final DocumentCommandRequest documentCommandRequest) {
+        return elasticsearchClient.prepareUpdate(documentCommandRequest.getIndex(), documentCommandRequest.getType(), documentCommandRequest.getId()).setDoc(serializeDocument(documentCommandRequest.getDocument())).setUpsert(serializeDocument(documentCommandRequest.getDocument()));
     }
 
     private DeleteRequestBuilder deleteWrapper(final DocumentCommandRequest documentCommandRequest) {

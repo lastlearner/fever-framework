@@ -6,5 +6,5 @@ package com.github.fanfever.fever.command.enums;
  * Url https://github.com/fanfever
  */
 public enum DocumentCommandType {
-    SAVE, UPDATE, DELETE
+    SAVE, UPDATE, DELETE, UPSERT;
 }
