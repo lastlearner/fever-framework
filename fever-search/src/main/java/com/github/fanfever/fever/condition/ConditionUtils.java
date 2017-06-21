@@ -253,7 +253,7 @@ public class ConditionUtils {
     public static String elasticSearchSearchConditionWrapper(@NonNull final DataSource dataSource, @NonNull final List<DataBaseConditionRequest> conditionList) {
         checkArgument(dataSource.equals(DataSource.ELASTICSEARCH));
         BoolQueryBuilder boolQueryBuilder = boolQuery();
-        conditionList.forEach(i -> boolQueryBuilder.should(wildcardQuery(i.getFieldName() + ".raw", "*" + (i.getValueStr()).trim() + "*")));
+        conditionList.forEach(i -> boolQueryBuilder.should(matchQuery(i.getFieldName() + ".index_analyzer", i.getValueStr())));
         boolQueryBuilder.minimumShouldMatch(1);
         return boolQuery().must(boolQueryBuilder).toString();
     }

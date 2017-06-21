@@ -338,7 +338,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle yesterdayHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-                return ((LocalDateTime) getValue(condition)).toLocalDate().minusDays(1L).isEqual(LocalDate.now());
+                return ((LocalDateTime) getValue(condition)).toLocalDate().plusDays(1L).isEqual(LocalDate.now());
             }
             return notFoundOperation();
         };
@@ -347,7 +347,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle tomorrowHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-                return ((LocalDateTime) getValue(condition)).toLocalDate().plusDays(1L).isEqual(LocalDate.now());
+                return ((LocalDateTime) getValue(condition)).toLocalDate().minusDays(1L).isEqual(LocalDate.now());
             }
             return notFoundOperation();
         };
