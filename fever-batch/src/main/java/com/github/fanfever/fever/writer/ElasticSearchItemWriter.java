@@ -1,9 +1,5 @@
 package com.github.fanfever.fever.writer;
 
-import com.github.fanfever.fever.command.enums.DocumentCommandType;
-import com.github.fanfever.fever.command.request.DocumentCommandRequest;
-import com.github.fanfever.fever.dto.BaseDocument;
-import com.google.common.collect.Lists;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.InitializingBean;
 
