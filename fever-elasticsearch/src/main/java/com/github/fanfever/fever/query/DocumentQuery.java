@@ -35,12 +35,16 @@ public class DocumentQuery {
         return wrapper(index, type, queryBuilder, 0, 1000, true, false).get();
     }
 
-    public SearchResponse execute(String index, String type, QueryBuilder queryBuilder, int from, int size) {
-        return wrapper(index, type, queryBuilder, from, size, false, false).get();
+    public SearchResponse execute(String index, String type, QueryBuilder queryBuilder, boolean isFetchSource) {
+        return wrapper(index, type, queryBuilder, 0, 1000, true, isFetchSource).get();
     }
 
-    public SearchResponse execute(String index, String type, QueryBuilder queryBuilder, int from, int size, boolean isExplain) {
-        return wrapper(index, type, queryBuilder, from, size, isExplain, false).get();
+    public SearchResponse execute(String index, String type, QueryBuilder queryBuilder, int from, int size, boolean isFetchSource) {
+        return wrapper(index, type, queryBuilder, from, size, false, isFetchSource).get();
+    }
+
+    public SearchResponse execute(String index, String type, QueryBuilder queryBuilder, int from, int size, boolean isExplain, boolean isFetchSource) {
+        return wrapper(index, type, queryBuilder, from, size, isExplain, isFetchSource).get();
     }
 
     public SearchResponse execute(String[] indexArray, String[] typeArray, QueryBuilder queryBuilder, int from, int size, boolean isExplain) {
