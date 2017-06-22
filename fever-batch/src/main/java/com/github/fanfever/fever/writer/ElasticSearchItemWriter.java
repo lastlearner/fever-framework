@@ -26,7 +26,7 @@ public class ElasticSearchItemWriter<T extends BaseDocument> implements ItemWrit
     @Override
     public void write(List<? extends T> itemList) throws Exception {
         if (CollectionUtils.isNotEmpty(itemList)) {
-            documentCommand.execute(itemList.stream().map(i -> DocumentCommandRequest.of(DocumentCommandType.UPSERT, INDEX, TYPE, i.getId())).collect(Collectors.toList()));
+            documentCommand.execute(itemList.stream().map(i -> DocumentCommandRequest.of(DocumentCommandType.UPSERT, INDEX, TYPE, i.getId()).setDocument(i)).collect(Collectors.toList()));
         }
     }
 }
