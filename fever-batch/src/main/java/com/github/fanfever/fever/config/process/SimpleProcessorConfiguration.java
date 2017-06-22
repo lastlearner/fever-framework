@@ -17,18 +17,18 @@ import com.github.fanfever.fever.item.User;
  * @url https://github.com/fanfever
  * @date 2016年8月10日
  */
-@Configuration
+//@Configuration
 public class SimpleProcessorConfiguration {
 
-	@Bean
-	@StepScope
+//	@Bean
+//	@StepScope
 	public SimpleProcessor simpleProcessor() {
 		return new SimpleProcessor();
 	}
 
 	public class SimpleProcessor implements ItemProcessor<User, User> {
 
-		@Autowired
+//		@Autowired
 		RestTemplate restTemplate;
 
 		@Override

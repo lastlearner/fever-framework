@@ -13,11 +13,11 @@ import com.github.fanfever.fever.item.User;
  * @url https://github.com/fanfever
  * @date 2016年8月10日
  */
-@Configuration
+//@Configuration
 public class ScheduleProcessorConfiguration {
 
-	@Bean
-	@StepScope
+//	@Bean
+//	@StepScope
 	public ScheduleProcessor ScheduleProcessor() {
 		return new ScheduleProcessor();
 	}

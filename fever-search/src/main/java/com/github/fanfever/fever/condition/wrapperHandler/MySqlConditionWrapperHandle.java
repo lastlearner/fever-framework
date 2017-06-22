@@ -270,7 +270,7 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle lastSevenDayHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-                return getJoiner().add("DATE(" + tableAlias(condition) + condition.getFieldName() + ")").add(">=").add("DATE(NOW() - INTERVAL 7 DAY)").add("AND").add("DATE(" + tableAlias(condition) + condition.getFieldName() + ")").add("<=").add("DATE(NOW())").toString();
+                return getJoiner().add("DATE(" + tableAlias(condition) + condition.getFieldName() + ")").add("<=").add("DATE(NOW())").add("AND").add("DATE(" + tableAlias(condition) + condition.getFieldName() + ")").add(">=").add("DATE(NOW() - INTERVAL 7 DAY)").toString();
             }
             return notFoundOperation();
         };

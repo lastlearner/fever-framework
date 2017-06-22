@@ -22,31 +22,31 @@ import com.github.fanfever.fever.listener.StepSkipListener;
  * @url https://github.com/fanfever
  * @date 2016年8月10日
  */
-@Configuration
+//@Configuration
 public class SimpleJobConfiguration extends BaseJobConfiguration {
 
-	@Autowired
-	@Qualifier("simpleReader")
-	private JdbcPagingItemReader<User> reader;
-
-	@Autowired
-	private SimpleProcessor processor;
-
-	@Autowired
-	@Qualifier("simpleWriter")
-	private JdbcBatchItemWriter<User> writer;
-
-	@Bean
-	public Job simpleJob() {
-		return jobBuilderFactory.get("simpleJob").incrementer(new RunIdIncrementer())
-				.listener(new JobCompletionNotificationListener()).flow(simpleJobStep1()).end().build();
-	}
-
-	@Bean
-	public Step simpleJobStep1() {
-		return stepBuilderFactory.get("simpleJobStep1").<User, User>chunk(10).faultTolerant().retry(Exception.class)
-				.retryLimit(2).listener(new StepRetryListener()).skip(Exception.class).skipLimit(100)
-				.listener(new StepSkipListener<>()).reader(reader).processor(processor).writer(writer).build();
-	}
+//	@Autowired
+//	@Qualifier("simpleReader")
+//	private JdbcPagingItemReader<User> reader;
+//
+//	@Autowired
+//	private SimpleProcessor processor;
+//
+//	@Autowired
+//	@Qualifier("simpleWriter")
+//	private JdbcBatchItemWriter<User> writer;
+//
+//	@Bean
+//	public Job simpleJob() {
+//		return jobBuilderFactory.get("simpleJob").incrementer(new RunIdIncrementer())
+//				.listener(new JobCompletionNotificationListener()).flow(simpleJobStep1()).end().build();
+//	}
+//
+//	@Bean
+//	public Step simpleJobStep1() {
+//		return stepBuilderFactory.get("simpleJobStep1").<User, User>chunk(10).faultTolerant().retry(Exception.class)
+//				.retryLimit(2).listener(new StepRetryListener()).skip(Exception.class).skipLimit(100)
+//				.listener(new StepSkipListener<>()).reader(reader).processor(processor).writer(writer).build();
+//	}
 
 }

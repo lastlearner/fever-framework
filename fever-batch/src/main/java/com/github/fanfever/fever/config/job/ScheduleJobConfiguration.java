@@ -28,39 +28,39 @@ import com.github.fanfever.fever.listener.JobCompletionNotificationListener;
  * @url https://github.com/fanfever
  * @date 2016年8月10日
  */
-@Component
+//@Component
 public class ScheduleJobConfiguration extends BaseJobConfiguration {
 
-	@Autowired
-	private JobLauncher jobLauncher;
-
-	@Autowired
-	@Qualifier("scheduleReader")
-	private JdbcPagingItemReader<User> reader;
-
-	@Autowired
-	private ScheduleProcessor processor;
-
-	@Autowired
-	@Qualifier("scheduleWriter")
-	private JdbcBatchItemWriter<User> writer;
-
-//	@Scheduled(fixedDelay = 9999)
-	public void run() throws JobExecutionAlreadyRunningException, JobRestartException,
-			JobInstanceAlreadyCompleteException, JobParametersInvalidException {
-		JobParametersBuilder builder = new JobParametersBuilder();
-		builder.addDate("date", new Date());
-		jobLauncher.run(scheduleJob(), builder.toJobParameters());
-	}
-
-	private Job scheduleJob() {
-		return jobBuilderFactory.get("scheduleJob").incrementer(new RunIdIncrementer()).preventRestart()
-				.flow(scheduleJobStep1()).end().build();
-	}
-
-	private Step scheduleJobStep1() {
-		return stepBuilderFactory.get("simpleJobStep1").listener(new JobCompletionNotificationListener())
-				.<User, User>chunk(10).reader(reader).processor(processor).writer(writer).build();
-	}
+//	@Autowired
+//	private JobLauncher jobLauncher;
+//
+//	@Autowired
+//	@Qualifier("scheduleReader")
+//	private JdbcPagingItemReader<User> reader;
+//
+//	@Autowired
+//	private ScheduleProcessor processor;
+//
+//	@Autowired
+//	@Qualifier("scheduleWriter")
+//	private JdbcBatchItemWriter<User> writer;
+//
+////	@Scheduled(fixedDelay = 9999)
+//	public void run() throws JobExecutionAlreadyRunningException, JobRestartException,
+//			JobInstanceAlreadyCompleteException, JobParametersInvalidException {
+//		JobParametersBuilder builder = new JobParametersBuilder();
+//		builder.addDate("date", new Date());
+//		jobLauncher.run(scheduleJob(), builder.toJobParameters());
+//	}
+//
+//	private Job scheduleJob() {
+//		return jobBuilderFactory.get("scheduleJob").incrementer(new RunIdIncrementer()).preventRestart()
+//				.flow(scheduleJobStep1()).end().build();
+//	}
+//
+//	private Step scheduleJobStep1() {
+//		return stepBuilderFactory.get("simpleJobStep1").listener(new JobCompletionNotificationListener())
+//				.<User, User>chunk(10).reader(reader).processor(processor).writer(writer).build();
+//	}
 
 }

@@ -773,57 +773,109 @@ public class OperatorUnitTest {
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
     }
 
-//    @Test
-//    public void memoryNextSevenDayTest() throws Exception {
-//        //javaBean
-//        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.now()).comma_split("1,2").build();
-//        //conditions
-//        MemoryConditionRequest localDateTime = MemoryConditionRequest.of(bean, "localDateTime", TIME, NEXT_SEVEN_DAY, LocalDateTime.now().minusDays(6L));
-//
-//        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(localDateTime));
-//        assertThat(result, is(true));
-//    }
-//
-//    @Test
-//    public void databaseNextSevenDayTest() throws Exception {
-//        //conditions
-//
-//        DataBaseConditionRequest time = DataBaseConditionRequest.of("time", TIME, NEXT_SEVEN_DAY, null, null);
-//
-//        //mysql
-//        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(time));
-//        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(DATE(time) = DATE(NOW() + INTERVAL 1 DAY))"));
-//
-//        //elasticSearch
-//        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(time));
-//        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
-//    }
-//
-//    @Test
-//    public void memoryLastSevenDayTest() throws Exception {
-//        //javaBean
-//        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.now().plusDays(1L)).comma_split("1,2").build();
-//        //conditions
-//        MemoryConditionRequest localDateTime = MemoryConditionRequest.of(bean, "localDateTime", TIME, TOMORROW, null);
-//
-//        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(localDateTime));
-//        assertThat(result, is(true));
-//    }
-//
-//    @Test
-//    public void databaseLastSevenDayTest() throws Exception {
-//        //conditions
-//
-//        DataBaseConditionRequest time = DataBaseConditionRequest.of("time", TIME, TOMORROW, null, null);
-//
-//        //mysql
-//        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(time));
-//        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(DATE(time) = DATE(NOW() + INTERVAL 1 DAY))"));
-//
-//        //elasticSearch
-//        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(time));
-//        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
-//    }
+    @Test
+    public void memoryNextSevenDayTest() throws Exception {
+        //javaBean
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.now().plusDays(7L)).comma_split("1,2").build();
+        //conditions
+        MemoryConditionRequest localDateTime = MemoryConditionRequest.of(bean, "localDateTime", TIME, NEXT_SEVEN_DAY, null);
+
+        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(localDateTime));
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void databaseNextSevenDayTest() throws Exception {
+        //conditions
+
+        DataBaseConditionRequest time = DataBaseConditionRequest.of("time", TIME, NEXT_SEVEN_DAY, null, null);
+
+        //mysql
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(time));
+        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(DATE(time) >= DATE(NOW()) AND DATE(time) <= DATE(NOW() + INTERVAL 7 DAY))"));
+
+        //elasticSearch
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(time));
+        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
+    }
+
+    @Test
+    public void memoryLastSevenDayTest() throws Exception {
+        //javaBean
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.now().minusDays(7L)).comma_split("1,2").build();
+        //conditions
+        MemoryConditionRequest localDateTime = MemoryConditionRequest.of(bean, "localDateTime", TIME, LAST_SEVEN_DAY, null);
+
+        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(localDateTime));
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void databaseLastSevenDayTest() throws Exception {
+        //conditions
+
+        DataBaseConditionRequest time = DataBaseConditionRequest.of("time", TIME, LAST_SEVEN_DAY, null, null);
+
+        //mysql
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(time));
+        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(DATE(time) <= DATE(NOW()) AND DATE(time) >= DATE(NOW() - INTERVAL 7 DAY))"));
+
+        //elasticSearch
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(time));
+        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
+    }
+
+    @Test
+    public void memoryBeforeTest() throws Exception {
+        //javaBean
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.now().minusDays(1L)).comma_split("1,2").build();
+        //conditions
+        MemoryConditionRequest localDateTime = MemoryConditionRequest.of(bean, "localDateTime", TIME, BEFORE, null);
+
+        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(localDateTime));
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void databaseBeforeTest() throws Exception {
+        //conditions
+
+        DataBaseConditionRequest time = DataBaseConditionRequest.of("time", TIME, BEFORE, null, null);
+
+        //mysql
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(time));
+        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(DATE(time) <= DATE(NOW()))"));
+
+        //elasticSearch
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(time));
+        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
+    }
+
+    @Test
+    public void memoryAfterTest() throws Exception {
+        //javaBean
+        WaitValidBean bean = WaitValidBean.builder().string("fever").bigDecimal(new BigDecimal(1)).localDateTime(LocalDateTime.now().plusDays(1L)).comma_split("1,2").build();
+        //conditions
+        MemoryConditionRequest localDateTime = MemoryConditionRequest.of(bean, "localDateTime", TIME, AFTER, null);
+
+        boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(localDateTime));
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void databaseAfterTest() throws Exception {
+        //conditions
+
+        DataBaseConditionRequest time = DataBaseConditionRequest.of("time", TIME, AFTER, null, null);
+
+        //mysql
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(time));
+        assertThat(mysqlConditionWrapperMap, hasEntry(1, "(DATE(time) >= DATE(NOW()))"));
+
+        //elasticSearch
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(time));
+        assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$..value"), notNullValue());
+    }
 
     @Data
     @Builder

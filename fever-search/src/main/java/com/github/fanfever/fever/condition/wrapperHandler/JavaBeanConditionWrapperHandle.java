@@ -10,7 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.Locale;
 
 import static com.github.fanfever.fever.condition.type.ValueType.*;
 
@@ -357,7 +359,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
                 LocalDate date = ((LocalDateTime) getValue(condition)).toLocalDate();
-                return date.isAfter(LocalDate.now()) && date.isBefore(LocalDate.now().plusDays(7L));
+                return date.isAfter(LocalDate.now()) && date.isBefore(LocalDate.now().plusDays(8L));
             }
             return notFoundOperation();
         };
@@ -367,7 +369,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
                 LocalDate date = ((LocalDateTime) getValue(condition)).toLocalDate();
-                return date.isAfter(LocalDate.now().minusDays(7L)) && date.isBefore(LocalDate.now());
+                return date.isAfter(LocalDate.now().minusDays(8L)) && date.isBefore(LocalDate.now());
             }
             return notFoundOperation();
         };
@@ -376,7 +378,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle beforeHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-                return ((LocalDateTime) getValue(condition)).toLocalDate().isBefore(LocalDate.now());
+                return ((LocalDateTime) getValue(condition)).toLocalDate().isBefore(LocalDate.now()) || ((LocalDateTime) getValue(condition)).toLocalDate().isEqual(LocalDate.now());
             }
             return notFoundOperation();
         };
@@ -385,7 +387,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle afterHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-                return ((LocalDateTime) getValue(condition)).toLocalDate().isAfter(LocalDate.now());
+                return ((LocalDateTime) getValue(condition)).toLocalDate().isAfter(LocalDate.now()) || ((LocalDateTime) getValue(condition)).toLocalDate().isEqual(LocalDate.now());
             }
             return notFoundOperation();
         };
@@ -394,7 +396,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle thisWeekHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-                return ((LocalDateTime) getValue(condition)).toLocalDate().isAfter(LocalDate.now());
+                LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
+                return LocalDate.now().with(WeekFields.of(Locale.CHINA).dayOfWeek(), 1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().with(WeekFields.of(Locale.CHINA).dayOfWeek(), 7).atStartOfDay().toLocalDate().isAfter(value);
             }
             return notFoundOperation();
         };
@@ -403,7 +406,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle lastWeekHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-                return ((LocalDateTime) getValue(condition)).toLocalDate().isEqual(LocalDate.now());
+                LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
+                return LocalDate.now().minusWeeks(1L).with(WeekFields.of(Locale.CHINA).dayOfWeek(), 1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().minusWeeks(1L).with(WeekFields.of(Locale.CHINA).dayOfWeek(), 7).atStartOfDay().toLocalDate().isAfter(value);
             }
             return notFoundOperation();
         };
@@ -412,7 +416,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle nextWeekHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-                return ((LocalDateTime) getValue(condition)).toLocalDate().isEqual(LocalDate.now());
+                LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
+                return LocalDate.now().plusWeeks(1L).with(WeekFields.of(Locale.CHINA).dayOfWeek(), 1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().plusWeeks(1L).with(WeekFields.of(Locale.CHINA).dayOfWeek(), 7).atStartOfDay().toLocalDate().isAfter(value);
             }
             return notFoundOperation();
         };
@@ -421,7 +426,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle thisMonthHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-//                return getJoiner().add("YEAR(" + condition.getObjectName() + "." + condition.getFieldName() + ")").add("=").add("YEAR(NOW())").add("AND").add("MONTH(" + condition.getObjectName() + "." + condition.getFieldName() + ")").add("=").add("MONTH(NOW())").toString();
+                LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
+                return LocalDate.now().withDayOfMonth(1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).atStartOfDay().toLocalDate().isAfter(value);
             }
             return notFoundOperation();
         };
@@ -430,7 +436,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle lastMonthHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-//                return getJoiner().add("YEAR(" + condition.getObjectName() + "." + condition.getFieldName() + ")").add("=").add("YEAR(NOW())").add("AND").add("MONTH(" + condition.getObjectName() + "." + condition.getFieldName() + ")").add("=").add("MONTH(NOW() - INTERVAL 1 MONTH)").toString();
+                LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
+                return LocalDate.now().minusMonths(1L).withDayOfMonth(1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().minusMonths(1L).withDayOfMonth(LocalDate.now().lengthOfMonth()).atStartOfDay().toLocalDate().isAfter(value);
             }
             return notFoundOperation();
         };
@@ -439,7 +446,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle nextMonthHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-//                return getJoiner().add("YEAR(" + condition.getObjectName() + "." + condition.getFieldName() + ")").add("=").add("YEAR(NOW())").add("AND").add("MONTH(" + condition.getObjectName() + "." + condition.getFieldName() + ")").add("=").add("MONTH(NOW() + INTERVAL 1 MONTH)").toString();
+                LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
+                return LocalDate.now().plusMonths(1L).withDayOfMonth(1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().plusMonths(1L).withDayOfMonth(LocalDate.now().lengthOfMonth()).atStartOfDay().toLocalDate().isAfter(value);
             }
             return notFoundOperation();
         };
@@ -448,7 +456,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle thisYearHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-//                return getJoiner().add("YEAR(" + condition.getObjectName() + "." + condition.getFieldName() + ")").add("=").add("YEAR(NOW())").toString();
+                LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
+                return LocalDate.now().withDayOfYear(1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().withDayOfYear(LocalDate.now().lengthOfYear()).atStartOfDay().toLocalDate().isAfter(value);
             }
             return notFoundOperation();
         };
@@ -457,7 +466,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle lastYearHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-//                return getJoiner().add("YEAR(" + condition.getObjectName() + "." + condition.getFieldName() + ")").add("=").add("YEAR(NOW() - INTERVAL 1 YEAR)").toString();
+                LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
+                return LocalDate.now().minusYears(1L).withDayOfYear(1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().minusYears(1L).withDayOfYear(LocalDate.now().lengthOfYear()).atStartOfDay().toLocalDate().isAfter(value);
             }
             return notFoundOperation();
         };
@@ -466,7 +476,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
     static ConditionWrapperHandle nextYearHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-//                return getJoiner().add("YEAR(" + condition.getObjectName() + "." + condition.getFieldName() + ")").add("=").add("YEAR(NOW() + INTERVAL 1 YEAR)").toString();
+                LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
+                return LocalDate.now().plusYears(1L).withDayOfYear(1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().plusYears(1L).withDayOfYear(LocalDate.now().lengthOfYear()).atStartOfDay().toLocalDate().isAfter(value);
             }
             return notFoundOperation();
         };

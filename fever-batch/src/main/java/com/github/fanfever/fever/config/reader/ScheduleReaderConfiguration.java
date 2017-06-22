@@ -25,14 +25,14 @@ import com.google.common.collect.Maps;
  * JpaPagingItemReader
  * @see https://github.com/muumin/spring-boot-batch-sample
  */
-@Configuration
+//@Configuration
 public class ScheduleReaderConfiguration {
 
-	@Autowired
+//	@Autowired
 	public DataSource dataSource;
 
-	@Bean
-	@StepScope
+//	@Bean
+//	@StepScope
 	public JdbcPagingItemReader<User> scheduleReader() {
 		MySqlPagingQueryProvider queryProvider = new MySqlPagingQueryProvider();
 		queryProvider.setSelectClause("id, username, sex, create_time, version");

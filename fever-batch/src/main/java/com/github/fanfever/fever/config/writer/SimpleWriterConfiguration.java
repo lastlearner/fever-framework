@@ -18,14 +18,14 @@ import com.github.fanfever.fever.item.User;
  * @url https://github.com/fanfever
  * @date 2016年8月5日
  */
-@Configuration
+//@Configuration
 public class SimpleWriterConfiguration {
 
-	@Autowired
+//	@Autowired
 	public DataSource dataSource;
 
-	@Bean
-	@StepScope
+//	@Bean
+//	@StepScope
 	public JdbcBatchItemWriter<User> simpleWriter() {
 		JdbcBatchItemWriter<User> writer = new JdbcBatchItemWriter<User>();
 		writer.setDataSource(dataSource);
