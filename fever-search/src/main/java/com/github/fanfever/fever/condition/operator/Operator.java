@@ -1,12 +1,13 @@
 package com.github.fanfever.fever.condition.operator;
 
 import com.github.fanfever.fever.condition.type.ValueType;
-import com.github.fanfever.fever.exception.BadRequestException;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
+
+import static com.github.fanfever.fever.condition.type.ValueType.*;
 
 /**
  * Created by fanfever on 2017/5/6.
@@ -19,215 +20,211 @@ public enum Operator {
     /**
      * 等于
      */
-    IS("is", new ValueType[]{ValueType.TEXT, ValueType.LONG_TEXT, ValueType.TIME, ValueType.NUMERIC, ValueType.ARRAY}),
+    IS("is", TEXT, LONG_TEXT, TIME, NUMERIC, COMMA_SPLIT, ARRAY),
 
 
     /**
      * 不等于
      */
-    NOT("not", new ValueType[]{ValueType.TEXT, ValueType.LONG_TEXT, ValueType.TIME, ValueType.NUMERIC, ValueType.ARRAY}),
+    NOT("not", TEXT, LONG_TEXT, TIME, NUMERIC, COMMA_SPLIT, ARRAY),
 
     /**
      * 开头等于
      */
-    PREFIX_CONTAINS("prefix_contains", new ValueType[]{ValueType.TEXT, ValueType.LONG_TEXT}),
+    PREFIX_CONTAINS("prefix_contains", TEXT, LONG_TEXT),
 
     /**
      * 开头不等于
      */
-    PREFIX_NOT_CONTAINS("prefix_not_contains", new ValueType[]{ValueType.TEXT, ValueType.LONG_TEXT}),
+    PREFIX_NOT_CONTAINS("prefix_not_contains", TEXT, LONG_TEXT),
 
     /**
      * 结尾等于
      */
-    SUFFIX_CONTAINS("suffix_contains", new ValueType[]{ValueType.TEXT, ValueType.LONG_TEXT}),
+    SUFFIX_CONTAINS("suffix_contains", TEXT, LONG_TEXT),
 
     /**
      * 结尾不等于
      */
-    SUFFIX_NOT_CONTAINS("suffix_not_contains", new ValueType[]{ValueType.TEXT, ValueType.LONG_TEXT}),
+    SUFFIX_NOT_CONTAINS("suffix_not_contains", TEXT, LONG_TEXT),
 
     /**
      * 包含
      */
-    CONTAINS("contains", new ValueType[]{ValueType.TEXT, ValueType.LONG_TEXT}),
+    CONTAINS("contains", TEXT, LONG_TEXT),
 
     /**
      * 不包含
      */
-    NOT_CONTAINS("not_contains", new ValueType[]{ValueType.TEXT, ValueType.LONG_TEXT}),
+    NOT_CONTAINS("not_contains", TEXT, LONG_TEXT),
 
     /**
      * 包含任意
      */
-    CONTAINS_ANY("contains_any", new ValueType[]{ValueType.ARRAY}),
+    CONTAINS_ANY("contains_any", COMMA_SPLIT, ARRAY),
 
     /**
      * 不包含任意
      */
-    NOT_CONTAINS_ANY("not_contains_any", new ValueType[]{ValueType.ARRAY}),
+    NOT_CONTAINS_ANY("not_contains_any", COMMA_SPLIT, ARRAY),
 
     /**
      * 为空
      */
-    IS_NULL("is_null", new ValueType[]{ValueType.TEXT, ValueType.LONG_TEXT, ValueType.TIME, ValueType.NUMERIC, ValueType.ARRAY}),
+    IS_NULL("is_null", TEXT, LONG_TEXT, TIME, NUMERIC, COMMA_SPLIT, ARRAY),
 
     /**
      * 不为空
      */
-    IS_NOT_NULL("is_not_null", new ValueType[]{ValueType.TEXT, ValueType.LONG_TEXT, ValueType.TIME, ValueType.NUMERIC, ValueType.ARRAY}),
+    IS_NOT_NULL("is_not_null", TEXT, LONG_TEXT, TIME, NUMERIC, COMMA_SPLIT, ARRAY),
 
     /**
      * 大于
      */
-    GREATER_THAN("greater_than", new ValueType[]{ValueType.TIME, ValueType.NUMERIC}),
+    GREATER_THAN("greater_than", TIME, NUMERIC),
 
     /**
      * 大于等于
      */
-    GREATER_THAN_EQ("greater_than_eq", new ValueType[]{ValueType.TIME, ValueType.NUMERIC}),
+    GREATER_THAN_EQ("greater_than_eq", TIME, NUMERIC),
 
     /**
      * 小于
      */
-    LESS_THAN("less_than", new ValueType[]{ValueType.TIME, ValueType.NUMERIC}),
+    LESS_THAN("less_than", TIME, NUMERIC),
 
     /**
      * 小于等于
      */
-    LESS_THAN_EQ("less_than_eq", new ValueType[]{ValueType.TIME, ValueType.NUMERIC}),
+    LESS_THAN_EQ("less_than_eq", TIME, NUMERIC),
 
     /**
      * 今天
      */
-    TODAY("today", new ValueType[]{ValueType.TIME}),
+    TODAY("today", TIME),
 
     /**
      * 昨天
      */
-    YESTERDAY("yesterday", new ValueType[]{ValueType.TIME}),
+    YESTERDAY("yesterday", TIME),
 
     /**
      * 明天
      */
-    TOMORROW("tomorrow", new ValueType[]{ValueType.TIME}),
+    TOMORROW("tomorrow", TIME),
 
     /**
      * 今后7天
      */
-    NEXT_SEVEN_DAY("next_seven_day", new ValueType[]{ValueType.TIME}),
+    NEXT_SEVEN_DAY("next_seven_day", TIME),
 
     /**
      * 最近7天
      */
-    LAST_SEVEN_DAY("last_seven_day", new ValueType[]{ValueType.TIME}),
+    LAST_SEVEN_DAY("last_seven_day", TIME),
 
     /**
      * 早于（包含当天）
      */
-    BEFORE("before", new ValueType[]{ValueType.TIME}),
+    BEFORE("before", TIME),
 
     /**
      * 晚于（包含当天）
      */
-    AFTER("after", new ValueType[]{ValueType.TIME}),
+    AFTER("after", TIME),
 
     /**
      * 本周
      */
-    THIS_WEEK("this_week", new ValueType[]{ValueType.TIME}),
+    THIS_WEEK("this_week", TIME),
 
     /**
      * 上周
      */
-    LAST_WEEK("last_week", new ValueType[]{ValueType.TIME}),
+    LAST_WEEK("last_week", TIME),
 
     /**
      * 下周
      */
-    NEXT_WEEK("next_week", new ValueType[]{ValueType.TIME}),
+    NEXT_WEEK("next_week", TIME),
 
     /**
      * 本月
      */
-    THIS_MONTH("this_month", new ValueType[]{ValueType.TIME}),
+    THIS_MONTH("this_month", TIME),
 
     /**
      * 上月
      */
-    LAST_MONTH("last_month", new ValueType[]{ValueType.TIME}),
+    LAST_MONTH("last_month", TIME),
 
     /**
      * 下月
      */
-    NEXT_MONTH("next_month", new ValueType[]{ValueType.TIME}),
+    NEXT_MONTH("next_month", TIME),
 
     /**
      * 今年
      */
-    THIS_YEAR("this_year", new ValueType[]{ValueType.TIME}),
+    THIS_YEAR("this_year", TIME),
 
     /**
      * 去年
      */
-    LAST_YEAR("last_year", new ValueType[]{ValueType.TIME}),
+    LAST_YEAR("last_year", TIME),
 
     /**
      * 明年
      */
-    NEXT_YEAR("next_year", new ValueType[]{ValueType.TIME}),
+    NEXT_YEAR("next_year", TIME),
 
     /**
      * 任意等于
      */
-    IS_ANY("is_any", new ValueType[]{ValueType.ARRAY}),
+    IS_ANY("is_any", COMMA_SPLIT, ARRAY),
 
     /**
      * 任意不等于
      */
-    NOT_ANY("not_any", new ValueType[]{ValueType.ARRAY}),
+    NOT_ANY("not_any", COMMA_SPLIT, ARRAY),
 
     /**
      * 任意开头等于
      */
-    PREFIX_CONTAINS_ANY("prefix_contains_any", new ValueType[]{ValueType.ARRAY}),
+    PREFIX_CONTAINS_ANY("prefix_contains_any", COMMA_SPLIT, ARRAY),
 
     /**
      * 任意开头不等于
      */
-    PREFIX_NOT_CONTAINS_ANY("prefix_not_contains_any", new ValueType[]{ValueType.ARRAY}),
+    PREFIX_NOT_CONTAINS_ANY("prefix_not_contains_any", COMMA_SPLIT, ARRAY),
 
     /**
      * 任意结尾等于
      */
-    SUFFIX_CONTAINS_ANY("suffix_contains_any", new ValueType[]{ValueType.ARRAY}),
+    SUFFIX_CONTAINS_ANY("suffix_contains_any", COMMA_SPLIT, ARRAY),
 
     /**
      * 任意结尾不等于
      */
-    SUFFIX_NOT_CONTAINS_ANY("suffix_not_contains_any", new ValueType[]{ValueType.ARRAY});
+    SUFFIX_NOT_CONTAINS_ANY("suffix_not_contains_any", COMMA_SPLIT, ARRAY);
 
     @Getter
     private final String value;
 
-    private ValueType[] valueType = null;
+    @Getter
+    private final ValueType[] valueTypes;
 
-    Operator(@NonNull final String value) {
+    Operator(@NonNull final String value, final ValueType... valueTypes) {
         this.value = value;
+        this.valueTypes = valueTypes;
     }
 
-    Operator(@NonNull final String value, final ValueType[] valueTypes) {
-        this.value = value;
-        this.valueType = valueTypes;
+    public static Operator getByValue(@NonNull final String value) {
+        return Arrays.stream(Operator.values()).filter(i -> i.value.equals(value)).findFirst().orElseThrow(() -> new AssertionError("not support operator! "));
     }
 
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    public static Operator getEnumByValue(@NonNull final String value){
-        return Arrays.stream(Operator.values()).filter(i -> i.value.equals(value)).findFirst().orElseThrow(() -> new AssertionError("not support operator type! "));
+    public static boolean isSupport(@NonNull ValueType valueType, @NonNull Operator operator) {
+        return Stream.of(Operator.values()).anyMatch(i -> i.equals(operator) && Stream.of(i.getValueTypes()).anyMatch(j -> j.equals(valueType)));
     }
 
 }

@@ -3,6 +3,7 @@ package com.github.fanfever.fever.condition.operator;
 import com.github.fanfever.fever.condition.ConditionUtils;
 import com.github.fanfever.fever.condition.request.DataBaseConditionRequest;
 import com.github.fanfever.fever.condition.request.MemoryConditionRequest;
+import com.github.fanfever.fever.condition.type.ValueType;
 import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.Builder;
@@ -28,6 +29,12 @@ import static org.junit.Assert.assertThat;
  * Url https://github.com/fanfever
  */
 public class OperatorUnitTest {
+
+    @Test
+    public void isSupport() throws Exception {
+        assertThat(Operator.isSupport(COMMA_SPLIT, IS), is(true));
+        assertThat(Operator.isSupport(COMMA_SPLIT, BEFORE), is(false));
+    }
 
     @Test
     public void memoryIsTest() throws Exception {
