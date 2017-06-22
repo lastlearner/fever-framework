@@ -194,8 +194,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             if (isMultiValue(condition.getValueType())) {
                 List value = Lists.newArrayList(((String) getValue(condition)).split(","));
-                for (int i = 0; i < value.size(); i++) {
-                    if (String.valueOf(value.get(i)).startsWith(condition.getValueStr())) {
+                for (Object aValue : value) {
+                    if (String.valueOf(aValue).startsWith(condition.getValueStr())) {
                         return true;
                     }
                 }
@@ -209,8 +209,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             if (isMultiValue(condition.getValueType())) {
                 List value = Lists.newArrayList(((String) getValue(condition)).split(","));
-                for (int i = 0; i < value.size(); i++) {
-                    if (String.valueOf(value.get(i)).startsWith(condition.getValueStr())) {
+                for (Object aValue : value) {
+                    if (String.valueOf(aValue).startsWith(condition.getValueStr())) {
                         return false;
                     }
                 }
@@ -224,8 +224,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             if (isMultiValue(condition.getValueType())) {
                 List value = Lists.newArrayList(((String) getValue(condition)).split(","));
-                for (int i = 0; i < value.size(); i++) {
-                    if (String.valueOf(value.get(i)).endsWith(condition.getValueStr())) {
+                for (Object aValue : value) {
+                    if (String.valueOf(aValue).endsWith(condition.getValueStr())) {
                         return true;
                     }
                 }
@@ -239,8 +239,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             if (isMultiValue(condition.getValueType())) {
                 List value = Lists.newArrayList(((String) getValue(condition)).split(","));
-                for (int i = 0; i < value.size(); i++) {
-                    if (String.valueOf(value.get(i)).endsWith(condition.getValueStr())) {
+                for (Object aValue : value) {
+                    if (String.valueOf(aValue).endsWith(condition.getValueStr())) {
                         return false;
                     }
                 }
