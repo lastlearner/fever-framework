@@ -5,10 +5,8 @@ import com.github.fanfever.fever.command.enums.DocumentCommandType;
 import com.github.fanfever.fever.command.request.BaseDocument;
 import com.github.fanfever.fever.command.request.DocumentCommandRequest;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.ReflectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +25,8 @@ public class ElasticSearchItemWriter<T extends BaseDocument> implements ItemWrit
 
     @Override
     public void write(List<? extends T> itemList) throws Exception {
-        documentCommand.execute(itemList.stream().map(i -> DocumentCommandRequest.of(DocumentCommandType.UPSERT,INDEX,TYPE, i.getId())).collect(Collectors.toList()));
+        if (CollectionUtils.isNotEmpty(itemList)) {
+            documentCommand.execute(itemList.stream().map(i -> DocumentCommandRequest.of(DocumentCommandType.UPSERT, INDEX, TYPE, i.getId())).collect(Collectors.toList()));
+        }
     }
 }
