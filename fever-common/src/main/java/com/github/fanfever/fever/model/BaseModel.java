@@ -39,6 +39,20 @@ public class BaseModel implements Serializable {
 	// 语言代码（查询参数）
 	protected transient String languageCode;
 
+	public String getCreateUserUsername(){
+		if(null != createUserId && 0 == createUserId){
+			return "系统";
+		}
+		return this.createUserUsername;
+	}
+
+	public String getUpdateUserUsername(){
+		if(null != updateUserId && 0 == updateUserId){
+			return "系统";
+		}
+		return this.updateUserUsername;
+	}
+
 	public BaseModel() {
 		super();
 		this.deleteFlag = DeleteFlag.NORMAL.getValue();
