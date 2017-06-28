@@ -34,6 +34,8 @@ import java.util.Map;
 @Component
 public class OSSStorageConfiguration {
   //region Properties
+  @Value("${oss.protocol}")
+  private String protocol;
   @Value("${oss.endpoint}")
   private String endpoint;
   @Value("${oss.accessKeyId}")
@@ -198,7 +200,7 @@ public class OSSStorageConfiguration {
    * @return
    */
   public Map<String, String> tokens(final String dir) {
-    String host = "https://" + bucketName + "." + endpoint;
+    String host = protocol + "://" + bucketName + "." + endpoint;
     OSSClient client = this.ossClient();
     try {
       long expireTime = 30;
@@ -234,13 +236,15 @@ public class OSSStorageConfiguration {
   /**
    * 获取指定对象的外链地址.
    *
-   * 格式: bucket + "." + endpoint + "/" + key
+   * 格式: https:// + bucket + "." + endpoint + "/" + key
    * @param bucket 存储空间
    * @param key 对象名称
    * @return
    */
   public String chain(String bucket, String key) {
     return new StringBuffer()
+        .append(protocol)
+        .append("://")
         .append(bucket)
         .append(".")
         .append(endpoint)
