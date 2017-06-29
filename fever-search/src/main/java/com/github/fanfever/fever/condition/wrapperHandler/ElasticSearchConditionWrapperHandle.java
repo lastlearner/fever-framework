@@ -336,7 +336,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
     static ConditionWrapperHandle thisMonthHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-                return boolQuery().must(rangeQuery(condition.getFieldName()).gte("now/m").lt("now+1m/m")).toString();
+                return boolQuery().must(rangeQuery(condition.getFieldName()).gte("now/M").lt("now+1M/M")).toString();
             }
             return notFoundOperation();
         };
@@ -345,7 +345,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
     static ConditionWrapperHandle lastMonthHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-                return boolQuery().must(rangeQuery(condition.getFieldName()).gte("now-1m/m").lt("now/m")).toString();
+                return boolQuery().must(rangeQuery(condition.getFieldName()).gte("now-1M/M").lt("now/M")).toString();
             }
             return notFoundOperation();
         };
@@ -354,7 +354,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
     static ConditionWrapperHandle nextMonthHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
-                return boolQuery().must(rangeQuery(condition.getFieldName()).gte("now+1m/m").lt("now+2m/m")).toString();
+                return boolQuery().must(rangeQuery(condition.getFieldName()).gte("now+1M/M").lt("now+2M/M")).toString();
             }
             return notFoundOperation();
         };
