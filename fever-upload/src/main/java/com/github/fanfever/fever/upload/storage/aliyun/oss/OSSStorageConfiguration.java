@@ -15,6 +15,7 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +33,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
+@Lazy
 public class OSSStorageConfiguration {
   //region Properties
   @Value("${oss.protocol}")
@@ -48,6 +50,10 @@ public class OSSStorageConfiguration {
 
   //region OSSClient
   private OSSClient ossClient() {
+    return ossClient(endpoint);
+  }
+
+  private OSSClient ossClient(String endpoint) {
     return new OSSClient(endpoint, accessKeyId, accessKeySecret);
   }
   //endregion
@@ -197,20 +203,30 @@ public class OSSStorageConfiguration {
 
   /**
    * OSS Tokens Info
-   * @return
+   * @param dir 文件夹
    */
   public Map<String, String> tokens(final String dir) {
-    String host = protocol + "://" + bucketName + "." + endpoint;
-    OSSClient client = this.ossClient();
+    return tokens(dir, bucketName, endpoint);
+  }
+
+  /**
+   * OSS Tokens Info (其中, customBucket - customEndpoint 一一对应, 否则生成的token不可用)
+   * @param dir 文件夹
+   * @param customBucket 自定义bucket
+   * @param customEndpoint 自定义endpoint
+   */
+  public Map<String, String> tokens(final String dir, final String customBucket, final String customEndpoint) {
+    String host = protocol + "://" + customBucket + "." + customEndpoint;
+    OSSClient client = this.ossClient(customEndpoint);
     try {
       long expireTime = 30;
       long expireEndTime = System.currentTimeMillis() + expireTime * 1000;
       Date expiration = new Date(expireEndTime);
-      PolicyConditions policyConds = new PolicyConditions();
-      policyConds.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, 1048576000);
-      policyConds.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_KEY, dir);
+      PolicyConditions policyConditions = new PolicyConditions();
+      policyConditions.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, 1048576000);
+      policyConditions.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_KEY, dir);
 
-      String postPolicy = client.generatePostPolicy(expiration, policyConds);
+      String postPolicy = client.generatePostPolicy(expiration, policyConditions);
       byte[] binaryData = postPolicy.getBytes("utf-8");
       String encodedPolicy = BinaryUtil.toBase64String(binaryData);
       String postSignature = client.calculatePostSignature(postPolicy);

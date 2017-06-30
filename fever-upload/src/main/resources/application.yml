@@ -12,6 +12,7 @@ cloud.aws:
   s3:
     bucketName: staging-km-storage
 oss:
+  protocol: https
   endpoint: oss-cn-beijing.aliyuncs.com
   accessKeyId: LTAI8NLRZ2OyATLy
   accessKeySecret: rbWUPwRPONFS0ARRzLRxJvVOzvs6me
