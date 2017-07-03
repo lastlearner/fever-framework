@@ -407,7 +407,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
                 LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
-                return LocalDate.now().minusWeeks(1L).with(WeekFields.of(Locale.CHINA).dayOfWeek(), 1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().minusWeeks(1L).with(WeekFields.of(Locale.CHINA).dayOfWeek(), 7).atStartOfDay().toLocalDate().isAfter(value);
+                return LocalDate.now().minusWeeks(1L).with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().minusWeeks(1L).with(WeekFields.of(Locale.CHINA).dayOfWeek(), 7).atStartOfDay().toLocalDate().isAfter(value);
             }
             return notFoundOperation();
         };
@@ -417,7 +417,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         return condition -> {
             if (condition.getValueType().equals(TIME)) {
                 LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
-                return LocalDate.now().plusWeeks(1L).with(WeekFields.of(Locale.CHINA).dayOfWeek(), 1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().plusWeeks(1L).with(WeekFields.of(Locale.CHINA).dayOfWeek(), 7).atStartOfDay().toLocalDate().isAfter(value);
+                return LocalDate.now().plusWeeks(1L).with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().plusWeeks(1L).with(WeekFields.of(Locale.CHINA).dayOfWeek(), 7).atStartOfDay().toLocalDate().isAfter(value);
             }
             return notFoundOperation();
         };
