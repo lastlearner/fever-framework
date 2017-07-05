@@ -6,10 +6,11 @@ import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by fanfever on 2017/5/10.
@@ -37,18 +38,17 @@ public abstract class BaseConditionRequest {
             return Collections.emptyList();
         }
         if (value instanceof List) {
-            return (List) value;
+            return ((List<?>) value).stream().map(String::valueOf).collect(Collectors.toList());
         }
         if (value instanceof Set) {
-            return Lists.newArrayList((Set) value);
+            return ((Set<?>) value).stream().map(String::valueOf).collect(Collectors.toList());
         }
         if (value instanceof Object[]) {
-            return Lists.newArrayList((String[]) value);
+            return Arrays.stream((Object[])value).map(String::valueOf).collect(Collectors.toList());
         }
         if (value instanceof String) {
             return Lists.newArrayList(String.valueOf(value).split(","));
         }
         throw new AssertionError();
     }
-
 }

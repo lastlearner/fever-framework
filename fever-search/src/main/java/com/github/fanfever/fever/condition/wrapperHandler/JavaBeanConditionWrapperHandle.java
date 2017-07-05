@@ -24,7 +24,13 @@ import static com.github.fanfever.fever.condition.type.ValueType.*;
 public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
 
     static Object getValue(BaseConditionRequest condition) {
-        return ReflectionUtils.invokeGetter(((MemoryConditionRequest) condition).getMemoryObject(), condition.getFieldName());
+        Object value = ReflectionUtils.invokeGetter(((MemoryConditionRequest) condition).getMemoryObject(), condition.getFieldName());
+        if(value == null){
+            return value;
+        }else if(value instanceof BigDecimal){
+            return ((BigDecimal) value).stripTrailingZeros();
+        }
+        return value;
     }
 
     static ConditionWrapperHandle iSHandle() {
@@ -132,61 +138,49 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle isAnyHandle() {
         return condition -> {
-            List value = Lists.newArrayList(((String) getValue(condition)).split(","));
-            if (isMultiValue(condition.getValueType())) {
-                for (int i = 0; i < condition.getValueArray().size(); i++) {
-                    if (value.contains(condition.getValueArray().get(i))) {
-                        return true;
-                    }
+            List value = Lists.newArrayList((String.valueOf(getValue(condition))).split(","));
+            for (int i = 0; i < condition.getValueArray().size(); i++) {
+                if (value.contains(condition.getValueArray().get(i))) {
+                    return true;
                 }
-                return false;
             }
-            return notFoundOperation();
+            return false;
         };
     }
 
     static ConditionWrapperHandle notAnyHandle() {
         return condition -> {
-            List value = Lists.newArrayList(((String) getValue(condition)).split(","));
-            if (isMultiValue(condition.getValueType())) {
-                for (int i = 0; i < condition.getValueArray().size(); i++) {
-                    if (value.contains(condition.getValueArray().get(i))) {
-                        return false;
-                    }
+            List value = Lists.newArrayList((String.valueOf(getValue(condition))).split(","));
+            for (int i = 0; i < condition.getValueArray().size(); i++) {
+                if (value.contains(condition.getValueArray().get(i))) {
+                    return false;
                 }
-                return true;
             }
-            return notFoundOperation();
+            return true;
         };
     }
 
     static ConditionWrapperHandle containsAnyHandle() {
         return condition -> {
             Object value = getValue(condition);
-            if (isMultiValue(condition.getValueType())) {
-                for (int i = 0; i < condition.getValueArray().size(); i++) {
-                    if (String.valueOf(value).contains(condition.getValueArray().get(i))) {
-                        return true;
-                    }
+            for (int i = 0; i < condition.getValueArray().size(); i++) {
+                if (String.valueOf(value).contains(condition.getValueArray().get(i))) {
+                    return true;
                 }
-                return false;
             }
-            return notFoundOperation();
+            return false;
         };
     }
 
     static ConditionWrapperHandle notContainsAnyHandle() {
         return condition -> {
             Object value = getValue(condition);
-            if (isMultiValue(condition.getValueType())) {
-                for (int i = 0; i < condition.getValueArray().size(); i++) {
-                    if (String.valueOf(value).contains(condition.getValueArray().get(i))) {
-                        return false;
-                    }
+            for (int i = 0; i < condition.getValueArray().size(); i++) {
+                if (String.valueOf(value).contains(condition.getValueArray().get(i))) {
+                    return false;
                 }
-                return true;
             }
-            return notFoundOperation();
+            return true;
         };
     }
 
