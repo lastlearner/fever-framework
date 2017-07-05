@@ -24,6 +24,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.github.fanfever.fever.condition.type.ValueType.isMultiValue;
+import static com.github.fanfever.fever.condition.type.ValueType.isText;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -253,7 +255,7 @@ public class ConditionUtils {
     public static String elasticSearchSearchConditionWrapper(@NonNull final DataSource dataSource, @NonNull final List<DataBaseConditionRequest> conditionList) {
         checkArgument(dataSource.equals(DataSource.ELASTICSEARCH));
         BoolQueryBuilder boolQueryBuilder = boolQuery();
-        conditionList.forEach(i -> boolQueryBuilder.should(matchQuery(i.getFieldName() + ".index_analyzer", i.getValueStr())));
+        conditionList.forEach(i -> boolQueryBuilder.should(matchQuery(isText(i.getValueType()) ? i.getFieldName() + ".index_analyzer" : i.getFieldName(), i.getValueStr())));
         boolQueryBuilder.minimumShouldMatch(1);
         return boolQuery().must(boolQueryBuilder).toString();
     }
