@@ -50,6 +50,7 @@ public class SimpleEmail implements Serializable {
   private String subject;
   /**
    * 是否需要回复: true -> {@link SimpleEmail#replyTo}不能为空
+   * @since 0.0.2
    */
   private boolean needReply = false;
   /**
@@ -115,10 +116,12 @@ public class SimpleEmail implements Serializable {
   private boolean containAttachment = false;
   /**
    * 自定义键值对: 如指定当前邮件发送时使用的apiUser / apiKey ，or other message
+   * @since 0.0.2
    */
   private Map<String, String> additionalInformation = new HashMap<>();
   /**
    * 是否分别发送
+   * @since 0.0.2
    */
   private boolean isSeparatorSend = false;
 

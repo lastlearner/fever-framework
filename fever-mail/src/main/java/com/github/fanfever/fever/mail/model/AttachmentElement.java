@@ -10,6 +10,7 @@ import java.io.Serializable;
  * 附件
  * @author scott he
  * @date 2017/6/10
+ * @since 0.0.2
  */
 @Setter
 @Getter
