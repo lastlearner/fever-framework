@@ -100,7 +100,14 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
             if (isMultiValue(condition.getValueType())) {
                 StringJoiner sj = new StringJoiner(" OR ", "(", ")");
                 for (int i = 0; i < condition.getValueArray().size(); i++) {
-                    sj.add("FIND_IN_SET('" + condition.getValueArray().get(i) + "', " + condition.getFieldName() + ")");
+                    sj.add("FIND_IN_SET('" + condition.getValueArray().get(i) + "', " + tableAlias(condition) + condition.getFieldName() + ")");
+                }
+                return sj.toString();
+            }
+            if (condition.getValueType().equals(NUMERIC)) {
+                StringJoiner sj = new StringJoiner(" OR ", "(", ")");
+                for (int i = 0; i < condition.getValueArray().size(); i++) {
+                    sj.add(tableAlias(condition) + condition.getFieldName()).add("=").add(condition.getValueArray().get(i));
                 }
                 return sj.toString();
             }
@@ -113,7 +120,14 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
             if (isMultiValue(condition.getValueType())) {
                 StringJoiner sj = new StringJoiner(" AND ", "(", ")");
                 for (int i = 0; i < condition.getValueArray().size(); i++) {
-                    sj.add("NOT FIND_IN_SET('" + condition.getValueArray().get(i) + "', " + condition.getFieldName() + ")");
+                    sj.add("NOT FIND_IN_SET('" + condition.getValueArray().get(i) + "', " + tableAlias(condition) + condition.getFieldName() + ")");
+                }
+                return sj.toString();
+            }
+            if (condition.getValueType().equals(NUMERIC)) {
+                StringJoiner sj = new StringJoiner(" AND ", "(", ")");
+                for (int i = 0; i < condition.getValueArray().size(); i++) {
+                    sj.add(tableAlias(condition) + condition.getFieldName()).add("<>").add(condition.getValueArray().get(i));
                 }
                 return sj.toString();
             }

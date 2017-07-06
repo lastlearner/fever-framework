@@ -106,6 +106,11 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
                 condition.getValueArray().forEach(i -> tempBoolQuery.should(termQuery(condition.getFieldName() + RAW, i)));
                 return tempBoolQuery.minimumShouldMatch(1).toString();
             }
+            if(condition.getValueType().equals(NUMERIC)){
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.should(termQuery(condition.getFieldName(), i)));
+                return tempBoolQuery.minimumShouldMatch(1).toString();
+            }
             return notFoundOperation();
         };
     }
@@ -115,6 +120,11 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
             if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
                 condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(termQuery(condition.getFieldName() + RAW, i)));
+                return tempBoolQuery.toString();
+            }
+            if(condition.getValueType().equals(NUMERIC)){
+                BoolQueryBuilder tempBoolQuery = boolQuery();
+                condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(termQuery(condition.getFieldName(), i)));
                 return tempBoolQuery.toString();
             }
             return notFoundOperation();

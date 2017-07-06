@@ -181,12 +181,12 @@ public enum Operator {
     /**
      * 任意等于
      */
-    IS_ANY("is_any", COMMA_SPLIT, ARRAY),
+    IS_ANY("is_any", COMMA_SPLIT, ARRAY, NUMERIC),
 
     /**
      * 任意不等于
      */
-    NOT_ANY("not_any", COMMA_SPLIT, ARRAY),
+    NOT_ANY("not_any", COMMA_SPLIT, ARRAY, NUMERIC),
 
     /**
      * 任意开头等于
