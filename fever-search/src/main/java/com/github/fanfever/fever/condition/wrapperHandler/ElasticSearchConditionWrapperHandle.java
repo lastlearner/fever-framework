@@ -57,7 +57,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
     static ConditionWrapperHandle prefixNotContainsHandle() {
         return condition -> {
             if (isText(condition.getValueType())) {
-                return boolQuery().mustNot(matchPhrasePrefixQuery(condition.getFieldName() + RAW, condition.getValueStr())).toString();
+                return boolQuery().mustNot(matchPhrasePrefixQuery(condition.getFieldName() + ANALYZER, condition.getValueStr())).toString();
             }
             return notFoundOperation();
         };
@@ -169,7 +169,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
         return condition -> {
             if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
-                condition.getValueArray().forEach(i -> tempBoolQuery.should(termQuery(condition.getFieldName() + RAW, "*" + i)));
+                condition.getValueArray().forEach(i -> tempBoolQuery.should(wildcardQuery(condition.getFieldName() + RAW, "*" + i)));
                 return tempBoolQuery.minimumShouldMatch(1).toString();
             }
             return notFoundOperation();
@@ -180,7 +180,7 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
         return condition -> {
             if (isMultiValue(condition.getValueType())) {
                 BoolQueryBuilder tempBoolQuery = boolQuery();
-                condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(termQuery(condition.getFieldName() + RAW, "*" + i)));
+                condition.getValueArray().forEach(i -> tempBoolQuery.mustNot(wildcardQuery(condition.getFieldName() + RAW, "*" + i)));
                 return tempBoolQuery.minimumShouldMatch(1).toString();
             }
             return notFoundOperation();
