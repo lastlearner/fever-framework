@@ -281,4 +281,17 @@ public class OSSStorageConfiguration {
     }
   }
 
+  public <T> T execute(String endpoint, OSSStorageCallback<T> action) {
+    PreCheck.notNull(action);
+    OSSClient ossClient = this.ossClient(endpoint);
+    try {
+      return action.execute(ossClient);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      if(ossClient != null)
+        ossClient.shutdown();
+    }
+  }
+
 }
