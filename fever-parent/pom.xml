@@ -29,10 +29,6 @@
             <id>nexus-snapshots</id>
             <url>http://awsjenkins.flyudesk.com/nexus/content/repositories/snapshots/</url>
         </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <url>http://repo.spring.io/libs-milestone/</url>
-        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
