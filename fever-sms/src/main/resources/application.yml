@@ -1,0 +1,5 @@
+sms:
+  appKey: 23997642
+  secretKey: b79606aa4322d6a88f8cb86a8c942f53
+  url: https://eco.taobao.com/router/rest
+  messageUrl: ws://mc.api.taobao.com

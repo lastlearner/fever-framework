@@ -29,6 +29,10 @@
             <id>nexus-snapshots</id>
             <url>http://awsjenkins.flyudesk.com/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>nexus-thirdparty</id>
+            <url>http://awsjenkins.flyudesk.com/nexus/content/repositories/thirdparty</url>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
@@ -127,6 +131,8 @@
 
         <!-- API DOC FUNCTION3 -->
         <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
+        <!-- taobao -->
+        <taobao-sdk-java.version>1.0</taobao-sdk-java.version>
 
         <!-- other params -->
         <nexus.url>http://awsjenkins.flyudesk.com/nexus</nexus.url>

@@ -19,6 +19,7 @@
 		<!--<module>fever-batch-metrics</module>-->
 		<module>fever-upload</module>
 		<module>fever-mail</module>
+		<module>fever-sms</module>
 	</modules>
 
 	<!-- DEPLOY -->
