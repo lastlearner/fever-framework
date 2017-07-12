@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class EhCacheUtils {
 	private static CacheManager cacheManager = ((CacheManager) SpringContextHolder.getBean("cacheManager"));
 
+	private static final String DEFAULT_CACHE = "default_cache";
 	private static final String SYS_CACHE = "sysCache";
 	private static final String SESSION_CACHE = "sessionCache";
 
@@ -52,6 +53,14 @@ public class EhCacheUtils {
 
 	public static void put(String key, Object value) {
 		put(SYS_CACHE, key, value);
+	}
+
+	public static Object getDefault(String key) {
+		return get(DEFAULT_CACHE, key);
+	}
+
+	public static void putDefault(String key, Object value) {
+		put(DEFAULT_CACHE, key, value);
 	}
 
 	public static void remove(String key) {
