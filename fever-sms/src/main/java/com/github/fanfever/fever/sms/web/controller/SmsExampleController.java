@@ -70,7 +70,7 @@ public class SmsExampleController {
     });
 
     try {
-      client.connect(smsTemplate.getSmsContext().getUrl());
+      client.connect(smsTemplate.getSmsContext().getMessageUrl());
     } catch (LinkException e ) {
       log.error(e.getMessage(), e);
     }
