@@ -1,0 +1,17 @@
+server:
+  port: 8081
+  tomcat.uri-encoding: UTF-8
+spring:
+  application:
+    name: case-web-wopihost
+spring.output.ansi.enabled: detect
+endpoints:
+  health:
+    sensitive: false
+  shutdown:
+    enabled: false
+logging:
+  path: /home/user/log/
+  file: /home/user/log/fever-web-wopihost-develop.log
+
+tempFileCatalog: /Users/fanfever/temp/
