@@ -3,7 +3,13 @@
 2. 安装域控
 3. 安装必需的角色和服务
 4. 安装office web apps server
-5. 安装语言包
+5. KB2760445(pdf支持)
+6. 安装语言包
+7. 修改默认支持大小10MB
+```
+GET-OfficeWebAppsFarm
+Set-OfficeWebAppsFarm -ExcelWorkbookSizeMax 50
+```
 
 # 实现
 + token鉴权接口
