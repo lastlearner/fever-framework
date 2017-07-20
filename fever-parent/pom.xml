@@ -472,6 +472,11 @@
                 <artifactId>aliyun-sdk-oss</artifactId>
                 <version>${aliyun-sdk-oss.version}</version>
             </dependency>
+            <dependency>
+                <groupId>taobao</groupId>
+                <artifactId>taobao</artifactId>
+                <version>${taobao-sdk-java.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
