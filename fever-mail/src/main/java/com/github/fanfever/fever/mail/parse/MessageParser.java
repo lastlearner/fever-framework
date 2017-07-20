@@ -303,6 +303,7 @@ public class MessageParser {
       EmbeddedImage image = new EmbeddedImage();
       DataHandler dataHandler = part.getDataHandler();
       String name = dataHandler.getName();
+      name = CipherUtil.decodeText(name);
       image.setOriginalImageName(name);
       String suffix = name.substring(name.lastIndexOf('.'), name.length());
       String[] contentIds = part.getHeader("Content-ID");
@@ -342,6 +343,7 @@ public class MessageParser {
       AttachmentElement attachmentElement = new AttachmentElement();
       DataHandler dataHandler = part.getDataHandler();
       String name = dataHandler.getName();
+      name = CipherUtil.decodeText(name);
       String suffix = name.substring(name.lastIndexOf('.'), name.length());
       attachmentElement.setOriginalFileName(name);
       String[] contentIds = part.getHeader("Content-ID");
