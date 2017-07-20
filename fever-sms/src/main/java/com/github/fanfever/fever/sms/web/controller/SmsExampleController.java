@@ -1,16 +1,8 @@
 package com.github.fanfever.fever.sms.web.controller;
 
-import com.github.fanfever.fever.sms.client.SmsTemplate;
-import com.github.fanfever.fever.sms.request.SmsSendRequest;
 import com.github.fanfever.fever.sms.response.SmsSendResponse;
 import com.taobao.api.internal.tmc.Message;
-import com.taobao.api.internal.tmc.TmcClient;
-import com.taobao.api.internal.toplink.LinkException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SmsExampleController {
 /*
   @Autowired
-  SmsTemplate smsTemplate;
+  SmsClient smsClient;
 
   @PostMapping(value = "/send")
   public ResponseEntity<String> send() {
@@ -37,7 +29,7 @@ public class SmsExampleController {
     smsSendRequest.setRecNum("18600000000");
     smsSendRequest.setSmsTemplateCode("SMS_72060007");
 
-    SmsSendResponse smsSendResponse = smsTemplate.send(smsSendRequest);
+    SmsSendResponse smsSendResponse = smsClient.send(smsSendRequest);
     log.info(smsSendResponse.getBody());
 
     return new ResponseEntity<>("", HttpStatus.OK);
@@ -45,8 +37,8 @@ public class SmsExampleController {
 
   @PostMapping(value = "/consume")
   public ResponseEntity<String> consume() {
-    TmcClient client = new TmcClient(smsTemplate.getSmsContext().getAppKey(),
-        smsTemplate.getSmsContext().getSecretKey(), "default");
+    TmcClient client = new TmcClient(smsClient.getSmsContext().getAppKey(),
+        smsClient.getSmsContext().getSecretKey(), "default");
 
     client.setMessageHandler((message, status) -> {
       try {
@@ -70,7 +62,7 @@ public class SmsExampleController {
     });
 
     try {
-      client.connect(smsTemplate.getSmsContext().getMessageUrl());
+      client.connect(smsClient.getSmsContext().getMessageUrl());
     } catch (LinkException e ) {
       log.error(e.getMessage(), e);
     }

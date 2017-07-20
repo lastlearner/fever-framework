@@ -18,7 +18,7 @@ import java.util.Objects;
  * @date 2017/7/5
  */
 @Slf4j
-public class SmsTemplate {
+public class SmsClient {
   private @Setter
   @Getter
   SmsContext smsContext;
