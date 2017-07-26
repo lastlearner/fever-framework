@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +47,7 @@ import java.util.Map;
  * @date 2017/4/8
  */
 @Slf4j
+@Lazy
 @Component
 public class AwsS3StorageConfiguration {
   //region Properties
