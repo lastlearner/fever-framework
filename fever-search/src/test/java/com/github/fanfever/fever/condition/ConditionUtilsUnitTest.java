@@ -96,7 +96,7 @@ public class ConditionUtilsUnitTest {
         snippetConditionMap.put(5, "(array = '1,2')");
 
 
-        String result = ConditionUtils.databaseCombineConditionWrapper(ELASTICSEARCH, "(1 and 3) or 5", snippetConditionMap);
+        String result = ConditionUtils.databaseCombineConditionWrapper(MYSQL, "(1 and 3) or 5", snippetConditionMap);
         assertThat(result, is("(text = 'text') AND (time = '2017-01-01 00:00:00') OR (array = '1,2')"));
     }
 
