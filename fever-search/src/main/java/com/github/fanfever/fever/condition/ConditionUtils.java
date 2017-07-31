@@ -224,12 +224,27 @@ public class ConditionUtils {
         final Map<Integer, Boolean> formulaMap = Maps.newLinkedHashMapWithExpectedSize(conditionList.size());
         final Map<Operator, ConditionWrapperHandle> handleMap = conditionWrapperHandleMap.get(dataSource);
         int[] idx = {1};
-        conditionList.forEach(i -> formulaMap.put(idx[0]++, (boolean) singleConditionWrapper(handleMap, i)));
+        conditionList.forEach(i -> formulaMap.put(idx[0]++, (boolean) singleConditionWrapper(handleMap, i, dataSource)));
         return formulaMap;
     }
 
-    private static Object singleConditionWrapper(@NonNull final Map<Operator, ConditionWrapperHandle> handleMap, @NonNull final BaseConditionRequest condition) {
-        return handleMap.get(condition.getOperator()).exec(condition);
+    private static Object singleConditionWrapper(@NonNull final Map<Operator, ConditionWrapperHandle> handleMap, @NonNull final BaseConditionRequest condition, DataSource dataSource) {
+        if(CollectionUtils.isEmpty(condition.getAttachmentList())){
+            return handleMap.get(condition.getOperator()).exec(condition);
+        }
+        List<BaseConditionRequest> conditionList = condition.getAttachmentList();
+        condition.setAttachmentList(null);
+        conditionList.add(condition);
+        int[] idx = {1};
+        if(!dataSource.equals(DataSource.JAVABEAN)){
+            final Map<Integer, String> formulaMap = Maps.newLinkedHashMapWithExpectedSize(conditionList.size());
+            conditionList.forEach(i -> formulaMap.put(idx[0]++, String.valueOf(singleConditionWrapper(handleMap, i, dataSource))));
+            return addBracket(dataSource, databaseCombineConditionWrapper(dataSource, formulaMap));
+        }else{
+            final Map<Integer, Boolean> formulaMap = Maps.newLinkedHashMapWithExpectedSize(conditionList.size());
+            conditionList.forEach(i -> formulaMap.put(idx[0]++, (boolean) singleConditionWrapper(handleMap, i, dataSource)));
+            return checkFormula(generateFullAndFormula(conditionList.size(), "and"), formulaMap);
+        }
     }
 
     /**
@@ -318,7 +333,7 @@ public class ConditionUtils {
         final Map<Integer, String> formulaMap = Maps.newLinkedHashMapWithExpectedSize(conditionList.size());
         final Map<Operator, ConditionWrapperHandle> handleMap = conditionWrapperHandleMap.get(dataSource);
         int[] idx = {1};
-        conditionList.forEach(i -> formulaMap.put(idx[0]++, String.valueOf(singleConditionWrapper(handleMap, i))));
+        conditionList.forEach(i -> formulaMap.put(idx[0]++, String.valueOf(singleConditionWrapper(handleMap, i, dataSource))));
         return formulaMap;
     }
 
@@ -494,8 +509,14 @@ public class ConditionUtils {
                 .replace('）', ')');
     }
 
-    private static String mysqlPermissionsWrapper() {
-
+    private static String addBracket(@NonNull final DataSource dataSource, String condition){
+        if(dataSource.equals(DataSource.ELASTICSEARCH)){
+//            return boolQuery().must(condition).toString();
+            return condition;
+        }
+        if(dataSource.equals(DataSource.MYSQL)){
+            return String.format("(%s)", condition);
+        }
         return null;
     }
 

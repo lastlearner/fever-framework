@@ -18,14 +18,23 @@ import java.util.stream.Collectors;
  * Url https://github.com/fanfever
  */
 @Data
-@AllArgsConstructor
 public abstract class BaseConditionRequest {
 
     private String fieldName;
     private ValueType valueType;
     private Operator operator;
     private Object value;
+    /**
+     * 附属条件，暂时支持and
+     */
+    private List<BaseConditionRequest> attachmentList;
 
+    protected BaseConditionRequest(String fieldName, ValueType valueType, Operator operator, Object value){
+        this.fieldName = fieldName;
+        this.valueType = valueType;
+        this.operator = operator;
+        this.value = value;
+    }
 
     public String getValueStr() {
         return String.valueOf(value).trim();

@@ -45,6 +45,8 @@ public class ConditionUtilsUnitTest {
         MemoryConditionRequest string = MemoryConditionRequest.of(bean, "strings", TEXT, IS, "fever");
         MemoryConditionRequest bigDecimal = MemoryConditionRequest.of(bean, "bigDecimals", NUMERIC, NOT, 2);
         MemoryConditionRequest localDateTime = MemoryConditionRequest.of(bean, "localDateTimes", TIME, IS, LocalDateTime.of(2017, 1, 1, 1, 1));
+        MemoryConditionRequest attachment = MemoryConditionRequest.of(bean, "strings", TEXT, IS, "fever");
+        localDateTime.setAttachmentList(Lists.newArrayList(attachment));
 
         boolean result = ConditionUtils.memoryValidate(Lists.newArrayList(string, bigDecimal, localDateTime));
         assertThat(result, is(true));
@@ -60,17 +62,24 @@ public class ConditionUtilsUnitTest {
         DataBaseConditionRequest time = DataBaseConditionRequest.of("time", TIME, IS, "2017-01-01 00:00:00", null);
         DataBaseConditionRequest numeric = DataBaseConditionRequest.of("numeric", NUMERIC, IS, 1, null);
         DataBaseConditionRequest array = DataBaseConditionRequest.of("array", ARRAY, IS, "1,2", null);
+        DataBaseConditionRequest attachment = DataBaseConditionRequest.of("numeric", NUMERIC, IS, 1, null);
+        DataBaseConditionRequest attachment1 = DataBaseConditionRequest.of("numeric", NUMERIC, IS, 1, null);
+        attachment.setAttachmentList(Lists.newArrayList(attachment1));
 
         //mysql
-        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(text, longText, time, numeric, array));
+        Map<Integer, String> mysqlConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(MYSQL, Lists.newArrayList(text, longText, time, numeric, array, attachment));
         assertThat(mysqlConditionWrapperMap, hasEntry(1, "(text = 'text')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(2, "(longText <> 'longText')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(3, "(time = '2017-01-01 00:00:00')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(4, "(numeric = '1')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(5, "(array = '1,2')"));
+        assertThat(mysqlConditionWrapperMap, hasEntry(6, "((numeric = '1') AND (numeric = '1'))"));
+
+
+        attachment.setAttachmentList(Lists.newArrayList(attachment1));
 
         //elasticSearch
-        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(text, longText, time, numeric, array));
+        Map<Integer, String> elasticSearchConditionWrapperMap = ConditionUtils.databaseSnippetConditionWrapper(ELASTICSEARCH, Lists.newArrayList(text, longText, time, numeric, array, attachment));
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(1), "$.bool"), notNullValue());
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(2), "$.bool"), notNullValue());
         assertThat(JsonPath.read(elasticSearchConditionWrapperMap.get(3), "$.bool"), notNullValue());
@@ -87,7 +96,7 @@ public class ConditionUtilsUnitTest {
         snippetConditionMap.put(5, "(array = '1,2')");
 
 
-        String result = ConditionUtils.databaseCombineConditionWrapper(MYSQL, "1 and 3 or 5", snippetConditionMap);
+        String result = ConditionUtils.databaseCombineConditionWrapper(ELASTICSEARCH, "(1 and 3) or 5", snippetConditionMap);
         assertThat(result, is("(text = 'text') AND (time = '2017-01-01 00:00:00') OR (array = '1,2')"));
     }
 

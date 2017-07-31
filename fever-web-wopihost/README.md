@@ -1,5 +1,10 @@
 # 安装
 1. 安装windows server
+```
+2012 r2
+Datacenter Product Key - JGXYY-7NMTC-MHKY3-QCC9B-VQRG7
+Automatic Virtual machine Activation Key - XVNRV-9HTX4-TH2JD-HVJQD-QRQWG
+```
 2. 安装域控
 3. 安装必需的角色和服务
 4. 安装office web apps server

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
+import java.util.List;
+
 /**
  * Created by fanfever on 2017/6/20.
  * Email fanfeveryahoo@gmail.com
