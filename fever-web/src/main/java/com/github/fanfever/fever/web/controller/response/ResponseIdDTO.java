@@ -30,14 +30,15 @@ public class ResponseIdDTO<S extends BaseModel> implements Converter<S, Response
         if (null == s) {
             return null;
         }
-        this.setId(s.getId());
-        return this;
+        ResponseIdDTO responseIdDTO = new ResponseIdDTO();
+        responseIdDTO.setId(s.getId());
+        return responseIdDTO;
     }
 
     public static ResponseIdDTO converts(BaseModel s) {
         return new ResponseIdDTO().convert(s);
     }
-//
+
     public static List converts(List s) {
         return new ResponseIdDTO().convertToList(s);
     }
