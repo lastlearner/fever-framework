@@ -70,7 +70,7 @@ public class MysqlQueryProvider {
         String sentence = "SELECT %s FROM %s WHERE 1=1 AND %s";
         String result = String.format(sentence, this.selectClause, this.fromClause, this.whereClause);
         if (StringUtils.hasText(this.orderClause)) {
-            result = result + " " + this.orderClause;
+            result = result + " order by " + this.orderClause;
         }
         if (StringUtils.hasText(this.pageClause)) {
             result = result + " " + this.pageClause;
