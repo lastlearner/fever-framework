@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +34,11 @@ public class WOPIHostController {
     @Value("${tempFileCatalog}")
     private String tempFileCatalog;
     private final static String demo_url = "https://s3.cn-north-1.amazonaws.com.cn/staging-crm-storage/attachment/2017-7-7/o_1bkdugmbm76s1nb4rm41vetgtmi.xlsx";
+
+    @GetMapping("/{name}/redirect")
+    public RedirectView redirect(@PathVariable(name = "name") String name) throws IOException, NoSuchAlgorithmException {
+        return new RedirectView("http://192.168.2.183/x/_layouts/xlviewerinternal.aspx?ui=zh-CN&rs=zh-CN&WOPISrc=http://192.168.2.191:8081/wopi/files/test.xlsx&access_token=123");
+    }
 
     @GetMapping("/{name}")
     public FileInfoResponse getFileInfo(@PathVariable(name = "name") String name) throws IOException, NoSuchAlgorithmException {
