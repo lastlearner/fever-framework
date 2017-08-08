@@ -1,6 +1,8 @@
 package com.github.fanfever.fever.upload.storage.aliyun.oss;
 
+import com.aliyun.oss.ClientConfiguration;
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.common.comm.Protocol;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.OSSObject;
@@ -54,7 +56,11 @@ public class OSSStorageConfiguration {
   }
 
   private OSSClient ossClient(String endpoint) {
-    return new OSSClient(endpoint, accessKeyId, accessKeySecret);
+    ClientConfiguration clientConfiguration = new ClientConfiguration();
+    if ("https".equals(protocol)) {
+      clientConfiguration.setProtocol(Protocol.HTTPS);
+    }
+    return new OSSClient(endpoint, accessKeyId, accessKeySecret, clientConfiguration);
   }
   //endregion
 
