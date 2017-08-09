@@ -24,8 +24,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.github.fanfever.fever.condition.type.ValueType.isMultiValue;
-import static com.github.fanfever.fever.condition.type.ValueType.isText;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -232,6 +230,9 @@ public class ConditionUtils {
         if(CollectionUtils.isEmpty(condition.getAttachmentList())){
             return handleMap.get(condition.getOperator()).exec(condition);
         }
+
+        Operator operator= condition.getOperator();
+        String joinSign = Operator.NOT.equals(operator) ? "or" : "and";
         List<BaseConditionRequest> conditionList = condition.getAttachmentList();
         condition.setAttachmentList(null);
         conditionList.add(condition);
@@ -239,11 +240,11 @@ public class ConditionUtils {
         if(!dataSource.equals(DataSource.JAVABEAN)){
             final Map<Integer, String> formulaMap = Maps.newLinkedHashMapWithExpectedSize(conditionList.size());
             conditionList.forEach(i -> formulaMap.put(idx[0]++, String.valueOf(singleConditionWrapper(handleMap, i, dataSource))));
-            return addBracket(dataSource, databaseCombineConditionWrapper(dataSource, formulaMap));
+            return addBracket(dataSource, databaseCombineConditionWrapper(dataSource, formulaMap,joinSign));
         }else{
             final Map<Integer, Boolean> formulaMap = Maps.newLinkedHashMapWithExpectedSize(conditionList.size());
             conditionList.forEach(i -> formulaMap.put(idx[0]++, (boolean) singleConditionWrapper(handleMap, i, dataSource)));
-            return checkFormula(generateFullAndFormula(conditionList.size(), "and"), formulaMap);
+            return checkFormula(generateFullAndFormula(conditionList.size(), joinSign), formulaMap);
         }
     }
 
@@ -257,7 +258,7 @@ public class ConditionUtils {
     public static String databaseConditionWrapper(@NonNull final DataSource dataSource, @NonNull final List<DataBaseConditionRequest> conditionList) {
         checkArgument(!dataSource.equals(DataSource.JAVABEAN));
         Map<Integer, String> snippetConditionMap = databaseSnippetConditionWrapper(dataSource, conditionList);
-        return databaseCombineConditionWrapper(dataSource, snippetConditionMap);
+        return databaseCombineConditionWrapper(dataSource, snippetConditionMap,"and");
     }
 
     /**
@@ -345,7 +346,18 @@ public class ConditionUtils {
      * @return like (companyId=1) and (name like data)
      */
     public static String databaseCombineConditionWrapper(@NonNull final DataSource dataSource, Map<Integer, String> snippetConditionMap) {
-        String formula = generateFullAndFormula(snippetConditionMap.size(), "and");
+        return databaseCombineConditionWrapper(dataSource, snippetConditionMap,"and");
+    }
+
+    /**
+     * 数据库条件合并包装，条件拼接符默认为and
+     *
+     * @param dataSource          support mysql, elasticsearch
+     * @param snippetConditionMap like 1->"companyId=1",2->"name like data"
+     * @return like (companyId=1) and (name like data)
+     */
+    public static String databaseCombineConditionWrapper(@NonNull final DataSource dataSource, Map<Integer, String> snippetConditionMap, String joinSign) {
+        String formula = generateFullAndFormula(snippetConditionMap.size(), StringUtils.isEmpty(joinSign) ? "and" : joinSign);
         return databaseCombineConditionWrapper(dataSource, formula, snippetConditionMap);
     }
 
