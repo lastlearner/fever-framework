@@ -221,7 +221,7 @@ public class SimpleEmail implements Serializable {
         .joining(";")));
     parameters.put("subject", subject);
     parameters.put("html", StringUtils.isBlank(textHtml) ? text : textHtml);
-    parameters.put("replyTo", replyTo.stream().collect(Collectors.joining(",")));
+    parameters.put("replyTo", replyTo.stream().collect(Collectors.joining(";")));
     parameters.put("headers", JsonHelper.serialize.convert(headers));
     parameters.putAll(additionalInformation);
     return parameters;
