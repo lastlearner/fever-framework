@@ -214,11 +214,11 @@ public class SimpleEmail implements Serializable {
     parameters.put("from", from);
     parameters.put("fromName", fromName);
     parameters.put("to", splitRecipients(Message.RecipientType.TO).stream().collect(Collectors
-        .joining(",")));
+        .joining(";")));
     parameters.put("cc", splitRecipients(Message.RecipientType.CC).stream().collect(Collectors
-        .joining(",")));
+        .joining(";")));
     parameters.put("bcc", splitRecipients(Message.RecipientType.BCC).stream().collect(Collectors
-        .joining(",")));
+        .joining(";")));
     parameters.put("subject", subject);
     parameters.put("html", StringUtils.isBlank(textHtml) ? text : textHtml);
     parameters.put("replyTo", replyTo.stream().collect(Collectors.joining(",")));
