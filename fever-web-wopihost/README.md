@@ -22,6 +22,11 @@ Set-OfficeWebAppsFarm -ExcelWorkbookSizeMax 50
 + WOPI协议getFile接口
 + 编辑接口(待实现，需要.Net 4.5.2+)
 
+# 常用命令
+```
+Get-OfficeWebAppsFarm
+```
+
 # 支持后缀
 /hosting/discovery
 
@@ -45,3 +50,4 @@ Set-OfficeWebAppsFarm -ExcelWorkbookSizeMax 50
 [部署 Office Web Apps Server](https://technet.microsoft.com/zh-cn/library/jj219455.aspx)
 [Office Web Apps安装部署](http://www.cnblogs.com/poissonnotes/p/3238238.html)
 [在线文档预览](http://www.jianshu.com/p/871aa9976b2c)
+[阿里云服务器部署Office online注意事项](http://www.cnblogs.com/icycore/p/7168640.html)
