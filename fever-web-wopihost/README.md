@@ -2,25 +2,28 @@
 1. 安装windows server
 ```
 2012 r2
-Datacenter Product Key - JGXYY-7NMTC-MHKY3-QCC9B-VQRG7
-Automatic Virtual machine Activation Key - XVNRV-9HTX4-TH2JD-HVJQD-QRQWG
 ```
-2. 安装域控
-3. 安装必需的角色和服务
-4. 安装office web apps server
-5. KB2760445(pdf支持)
-6. 安装语言包
-7. 修改默认支持大小10MB
+2. 安装office online server
+3. 安装域控
+4. 修改默认支持大小10MB
 ```
 GET-OfficeWebAppsFarm
 Set-OfficeWebAppsFarm -ExcelWorkbookSizeMax 50
 ```
+
+# 问题
+1. clr.dll 异常代码：0xc00000fd
+手动创建reg键“HKLM \ SYSTEM \ CurrentControlSet \ services \ eventlog \ Microsoft Office Web Apps
+2. word,ppt无法预览 需要预控单独安装
 
 # 实现
 + token鉴权接口
 + WOPI协议getFileInfo接口
 + WOPI协议getFile接口
 + 编辑接口(待实现，需要.Net 4.5.2+)
+
+# 支持后缀
+/hosting/discovery
 
 # 调用
 + word文档预览
@@ -41,3 +44,4 @@ Set-OfficeWebAppsFarm -ExcelWorkbookSizeMax 50
 # 参考
 [部署 Office Web Apps Server](https://technet.microsoft.com/zh-cn/library/jj219455.aspx)
 [Office Web Apps安装部署](http://www.cnblogs.com/poissonnotes/p/3238238.html)
+[在线文档预览](http://www.jianshu.com/p/871aa9976b2c)
