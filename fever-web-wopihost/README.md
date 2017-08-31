@@ -15,6 +15,8 @@ Set-OfficeWebAppsFarm -ExcelWorkbookSizeMax 50
 1. clr.dll 异常代码：0xc00000fd
 手动创建reg键“HKLM \ SYSTEM \ CurrentControlSet \ services \ eventlog \ Microsoft Office Web Apps
 2. word,ppt无法预览 需要预控单独安装
+3. DNS指向域控IP
+4. TCP/IP NetBIOS Helper, Remote Registry
 
 # 实现
 + token鉴权接口
