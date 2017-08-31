@@ -4,7 +4,7 @@
 2012 r2
 ```
 2. 安装office online server
-3. 安装域控
+3. 安装域控 注意域名为XXX.local防止与本身服务冲突
 4. 修改默认支持大小10MB
 ```
 GET-OfficeWebAppsFarm
