@@ -107,7 +107,7 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
             if (condition.getValueType().equals(NUMERIC)) {
                 StringJoiner sj = new StringJoiner(" OR ", "(", ")");
                 for (int i = 0; i < condition.getValueArray().size(); i++) {
-                    sj.add(tableAlias(condition) + condition.getFieldName()).add("=").add(condition.getValueArray().get(i));
+                    sj.add(tableAlias(condition) + condition.getFieldName() + "=" + condition.getValueArray().get(i));
                 }
                 return sj.toString();
             }
