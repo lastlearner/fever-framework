@@ -97,6 +97,11 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
 
     static ConditionWrapperHandle isAnyHandle() {
         return condition -> {
+            if(condition.getValueArray().size() == 0){
+                StringJoiner sj = new StringJoiner(" OR ", "(", ")");
+                sj.add("1=2");
+                return sj.toString();
+            }
             if (isMultiValue(condition.getValueType())) {
                 StringJoiner sj = new StringJoiner(" OR ", "(", ")");
                 for (int i = 0; i < condition.getValueArray().size(); i++) {
