@@ -75,11 +75,11 @@ public class FormulaUtil extends AbstractEvaluator<String> {
             if (operator == OR) {
                 qb1 = getValue(o1);
                 qb2 = getValue(o2);
-                sequence = qb1 + " OR " + qb2;
+                sequence = "(" + qb1 + " OR " + qb2 + ")";
             } else if (operator == AND) {
                 qb1 = getValue(o1);
                 qb2 = getValue(o2);
-                sequence = qb1 + " AND " + qb2;
+                sequence = "(" + qb1 + " AND " + qb2 + ")";
             } else {
                 throw new IllegalArgumentException();
             }

@@ -73,7 +73,7 @@ public class ConditionUtilsUnitTest {
         assertThat(mysqlConditionWrapperMap, hasEntry(3, "(time = '2017-01-01 00:00:00')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(4, "(numeric = '1')"));
         assertThat(mysqlConditionWrapperMap, hasEntry(5, "(array = '1,2')"));
-        assertThat(mysqlConditionWrapperMap, hasEntry(6, "((numeric = '1') AND (numeric = '1'))"));
+        assertThat(mysqlConditionWrapperMap, hasEntry(6, "(((numeric = '1') AND (numeric = '1')))"));
 
 
         attachment.setAttachmentList(Lists.newArrayList(attachment1));
@@ -97,7 +97,7 @@ public class ConditionUtilsUnitTest {
 
 
         String result = ConditionUtils.databaseCombineConditionWrapper(MYSQL, "(1 and 3) or 5", snippetConditionMap);
-        assertThat(result, is("(text = 'text') AND (time = '2017-01-01 00:00:00') OR (array = '1,2')"));
+        assertThat(result, is("(((text = 'text') AND (time = '2017-01-01 00:00:00')) OR (array = '1,2'))"));
     }
 
     @Test
