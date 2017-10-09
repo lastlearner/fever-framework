@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author fanfever
@@ -23,6 +24,8 @@ class BadRequestException extends BaseException {
 	@JsonProperty("message")
 	private List<String> messageList;
 
+	private Map<String,Object> data;
+
 	private transient I18nMessage i18nMessage;
 
 	public BadRequestException(String code, String... params) {
@@ -30,6 +33,14 @@ class BadRequestException extends BaseException {
 		i18nMessage = new I18nMessage(code, params);
 		this.messageList = Lists.newArrayListWithCapacity(1);
 		this.messageList.add(code);
+	}
+
+	public BadRequestException(Map<String,Object> data,String code, String... params) {
+		super(ExceptionType.ERROR);
+		i18nMessage = new I18nMessage(code, params);
+		this.messageList = Lists.newArrayListWithCapacity(1);
+		this.messageList.add(code);
+		this.setData(data);
 	}
 
 	public BadRequestException(List<String> messageList) {
