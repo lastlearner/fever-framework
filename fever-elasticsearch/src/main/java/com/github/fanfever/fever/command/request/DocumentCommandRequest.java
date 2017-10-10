@@ -22,7 +22,7 @@ class DocumentCommandRequest {
     @NonNull private String index;
     @NonNull private String type;
     @NonNull private Integer id;
-    private Object document;
+    private BaseDocument document;
 
     public String getId(){
         return String.valueOf(id);
