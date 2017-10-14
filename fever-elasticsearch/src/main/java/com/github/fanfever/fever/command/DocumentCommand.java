@@ -16,6 +16,7 @@ import org.elasticsearch.client.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -107,7 +108,7 @@ public class DocumentCommand {
     }
 
     private RefreshRequestBuilder refreshWrapper(Set<String> indexSet) {
-        return elasticsearchClient.admin().indices().prepareRefresh(indexSet.stream().collect(Collectors.joining(",")));
+        return elasticsearchClient.admin().indices().prepareRefresh(indexSet.toArray(new String[indexSet.size()]));
     }
 
     private byte[] serializeDocument(Object document) {
