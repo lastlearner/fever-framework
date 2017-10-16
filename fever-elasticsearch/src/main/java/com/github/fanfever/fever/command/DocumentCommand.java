@@ -113,6 +113,7 @@ public class DocumentCommand {
 
     private byte[] serializeDocument(Object document) {
         try {
+            log.debug("serializeDocument:{}", objectMapper.writeValueAsString(document));
             return objectMapper.writeValueAsBytes(document);
         } catch (JsonProcessingException e) {
             log.error("serializeDocument fail, document:{}, exception:{}", document, e);
