@@ -14,11 +14,11 @@ class Field {
 
     private String name;
     private DataType type;
-    private boolean isAnalysis = true;
+    private boolean isAnalysis = false;
     private boolean isNeedPinyinSearch = false;
     private boolean isSort = false;
 
     public enum DataType {
-        STRING, INTEGER, FLOAT, DATE, ARRAY;
+        STRING, INTEGER, FLOAT, DATE, ARRAY, COMMA;
     }
 }

@@ -278,6 +278,9 @@ public class IndexCommand {
                         XContentBuilder fields = name.startObject("fields");
                         fields.startObject("raw")
                                 .field("type", "keyword").endObject();
+                        fields.startObject("index_analyzer")
+                                .field("type", "text")
+                                .field("analyzer", "ngram_index_analyzer").endObject();
                         if (field.isAnalysis()) {
                             fields.startObject("analyzer")
                                     .field("type", "text")
@@ -297,6 +300,17 @@ public class IndexCommand {
                     case DATE:
                         name.field("type", "date")
                                 .field("format", "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis");
+                        break;
+                    case COMMA:
+                        name.field("type", "keyword");
+                        name.field("index", false);
+                        fields = name.startObject("fields");
+                        fields.startObject("raw")
+                                .field("type", "keyword").endObject();
+                        fields.startObject("index_analyzer")
+                                .field("type", "text")
+                                .field("analyzer", "comma").endObject();
+                        name.endObject();
                         break;
                     default:
                         name.field("type", field.getType().toString().toLowerCase());
