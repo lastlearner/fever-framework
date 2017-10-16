@@ -112,11 +112,12 @@ public class DocumentCommand {
     }
 
     private RefreshRequestBuilder refreshWrapper(Set<String> indexSet) {
-        return elasticsearchClient.admin().indices().prepareRefresh(indexSet.stream().collect(Collectors.joining(",")));
+        return elasticsearchClient.admin().indices().prepareRefresh(indexSet.toArray(new String[indexSet.size()]));
     }
 
     private byte[] serializeDocument(Object document) {
         try {
+            log.debug("serializeDocument, document:{}", objectMapper.writeValueAsString(document));
             return objectMapper.writeValueAsBytes(document);
         } catch (JsonProcessingException e) {
             log.error("serializeDocument fail, document:{}, exception:{}", document, e);
