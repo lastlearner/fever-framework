@@ -24,6 +24,8 @@ public abstract class BaseConditionRequest {
     private ValueType valueType;
     private Operator operator;
     private Object value;
+
+    private Boolean result;
     /**
      * 附属条件，暂时支持and
      */
@@ -34,6 +36,10 @@ public abstract class BaseConditionRequest {
         this.valueType = valueType;
         this.operator = operator;
         this.value = value;
+    }
+
+    protected BaseConditionRequest(Boolean result){
+        this.result = result;
     }
 
     public String getValueStr() {

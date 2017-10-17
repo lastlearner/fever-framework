@@ -2,6 +2,7 @@ package com.github.fanfever.fever.condition.wrapperHandler;
 
 import com.github.fanfever.fever.condition.request.BaseConditionRequest;
 import com.github.fanfever.fever.condition.request.MemoryConditionRequest;
+import com.github.fanfever.fever.util.DateUtils;
 import com.github.fanfever.fever.util.ReflectionUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
@@ -172,6 +173,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         };
     }
 
+
     static ConditionWrapperHandle notContainsAnyHandle() {
         return condition -> {
             Object value = getValue(condition);
@@ -183,6 +185,7 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
             return true;
         };
     }
+
 
     static ConditionWrapperHandle prefixContainsAnyHandle() {
         return condition -> {
@@ -277,6 +280,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
                 return 0 < ((BigDecimal) value).compareTo(new BigDecimal(condition.getValueStr()));
             } else if (condition.getValueType().equals(TIME) && value instanceof LocalDateTime) {
                 return 0 < ((LocalDateTime) value).compareTo((LocalDateTime) condition.getValue());
+            } else if (condition.getValueType().equals(TEXT)){
+                return 0 < String.valueOf(value).compareTo(String.valueOf(condition.getValue()));
             } else {
                 return notFoundOperation();
             }
@@ -290,6 +295,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
                 return 0 <= ((BigDecimal) value).compareTo(new BigDecimal(condition.getValueStr()));
             } else if (condition.getValueType().equals(TIME) && value instanceof LocalDateTime) {
                 return 0 <= ((LocalDateTime) value).compareTo((LocalDateTime) condition.getValue());
+            } else if (condition.getValueType().equals(TEXT)){
+                return 0 <= String.valueOf(value).compareTo(String.valueOf(condition.getValue()));
             } else {
                 return notFoundOperation();
             }
@@ -303,6 +310,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
                 return 0 > ((BigDecimal) value).compareTo(new BigDecimal(condition.getValueStr()));
             } else if (condition.getValueType().equals(TIME) && value instanceof LocalDateTime) {
                 return 0 > ((LocalDateTime) value).compareTo((LocalDateTime) condition.getValue());
+            } else if (condition.getValueType().equals(TEXT)){
+                return 0 > String.valueOf(value).compareTo(String.valueOf(condition.getValue()));
             } else {
                 return notFoundOperation();
             }
@@ -316,6 +325,8 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
                 return 0 >= ((BigDecimal) value).compareTo(new BigDecimal(condition.getValueStr()));
             } else if (condition.getValueType().equals(TIME) && value instanceof LocalDateTime) {
                 return 0 >= ((LocalDateTime) value).compareTo((LocalDateTime) condition.getValue());
+            } else if (condition.getValueType().equals(TEXT)){
+                return 0 >= String.valueOf(value).compareTo(String.valueOf(condition.getValue()));
             } else {
                 return notFoundOperation();
             }
@@ -472,6 +483,99 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
             if (condition.getValueType().equals(TIME)) {
                 LocalDate value = ((LocalDateTime) getValue(condition)).toLocalDate();
                 return LocalDate.now().plusYears(1L).withDayOfYear(1).atStartOfDay().toLocalDate().isBefore(value) && LocalDate.now().plusYears(1L).withDayOfYear(LocalDate.now().lengthOfYear()).atStartOfDay().toLocalDate().isAfter(value);
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle hasAnyHandle() {
+        return condition -> {
+            Object value = getValue(condition);
+            for (int i = 0; i < condition.getValueArray().size(); i++) {
+                if (String.valueOf(value).equals(condition.getValueArray().get(i))) {
+                    return true;
+                }
+            }
+            return false;
+        };
+    }
+
+    static ConditionWrapperHandle notHasAnyHandle() {
+        return condition -> {
+            Object value = getValue(condition);
+            for (int i = 0; i < condition.getValueArray().size(); i++) {
+                if (String.valueOf(value).equals(condition.getValueArray().get(i))) {
+                    return false;
+                }
+            }
+            return true;
+        };
+    }
+
+    static ConditionWrapperHandle betweenHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(TIME) && condition.getValueArray().size() == 2) {
+                LocalDateTime value = ((LocalDateTime) getValue(condition));
+                LocalDateTime beforeTime = DateUtils.parseDateTimeStr(condition.getValueArray().get(0));
+                LocalDateTime afterTime = DateUtils.parseDateTimeStr(condition.getValueArray().get(1));
+
+                return beforeTime.compareTo(value) <= 0 && afterTime.compareTo(value) >= 0;
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notBetweenHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(TIME) && condition.getValueArray().size() == 2) {
+                LocalDateTime value = ((LocalDateTime) getValue(condition));
+                LocalDateTime beforeTime = DateUtils.parseDateTimeStr(condition.getValueArray().get(0));
+                LocalDateTime afterTime = DateUtils.parseDateTimeStr(condition.getValueArray().get(1));
+
+                return beforeTime.compareTo(value) > 0 || afterTime.compareTo(value) < 0;
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notInDateHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(TIME)) {
+                LocalDateTime value = ((LocalDateTime) getValue(condition));
+
+                return !value.toLocalDate().equals(DateUtils.parseDateStr(condition.getValueStr()));
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle containsAllHandle() {
+        return condition -> {
+            if (isMultiValue(condition.getValueType())) {
+                List<String> dataValue = Lists.newArrayList(((String) getValue(condition)).split(","));
+                List<String> valueList = condition.getValueArray();
+                for (String aValue : valueList) {
+                    if(!dataValue.contains(aValue)){
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notContainsAllHandle() {
+        return condition -> {
+            if (isMultiValue(condition.getValueType())) {
+                List<String> dataValue = Lists.newArrayList(((String) getValue(condition)).split(","));
+                List<String> valueList = condition.getValueArray();
+                for (String aValue : valueList) {
+                    if(dataValue.contains(aValue)){
+                        return false;
+                    }
+                }
+                return true;
             }
             return notFoundOperation();
         };

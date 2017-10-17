@@ -81,22 +81,22 @@ public enum Operator {
     /**
      * 大于
      */
-    GREATER_THAN("greater_than", TIME, NUMERIC),
+    GREATER_THAN("greater_than", TIME, NUMERIC,TEXT),
 
     /**
      * 大于等于
      */
-    GREATER_THAN_EQ("greater_than_eq", TIME, NUMERIC),
+    GREATER_THAN_EQ("greater_than_eq", TIME, NUMERIC,TEXT),
 
     /**
      * 小于
      */
-    LESS_THAN("less_than", TIME, NUMERIC),
+    LESS_THAN("less_than", TIME, NUMERIC,TEXT),
 
     /**
      * 小于等于
      */
-    LESS_THAN_EQ("less_than_eq", TIME, NUMERIC),
+    LESS_THAN_EQ("less_than_eq", TIME, NUMERIC,TEXT),
 
     /**
      * 今天
@@ -206,7 +206,43 @@ public enum Operator {
     /**
      * 任意结尾不等于
      */
-    SUFFIX_NOT_CONTAINS_ANY("suffix_not_contains_any", COMMA_SPLIT, ARRAY);
+    SUFFIX_NOT_CONTAINS_ANY("suffix_not_contains_any", COMMA_SPLIT, ARRAY),
+
+    /**
+     * 包含任意
+     */
+    HAS_ANY("has_any",NUMERIC,COMMA_SPLIT,ARRAY),
+
+    /**
+     * 不包含任意
+     */
+    NOT_HAS_ANY("not_has_any",NUMERIC,COMMA_SPLIT,ARRAY),
+
+    /**
+     * 介于
+     */
+    BETWEEN("between",TIME),
+
+    /**
+     * 不介于
+     */
+    NOT_BETWEEN("not_between",TIME),
+
+    /**
+     * 不在(日期时间）
+     */
+    NOT_IN_DATE("not_in_date",TIME),
+
+    /**
+     * 包含所有
+     */
+    CONTAINS_ALL("contains_all"),
+
+    /**
+     * 不包含所有
+     */
+    NOT_CONTAINS_ALL("not_contains_all");
+
 
     @Getter
     private final String value;

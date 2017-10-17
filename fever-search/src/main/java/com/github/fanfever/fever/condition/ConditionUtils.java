@@ -12,6 +12,7 @@ import com.github.fanfever.fever.condition.wrapperHandler.MySqlConditionWrapperH
 import com.github.fanfever.fever.util.FormulaUtil;
 import com.google.common.collect.Maps;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -32,6 +33,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
  * Email fanfeveryahoo@gmail.com
  * Url https://github.com/fanfever
  */
+@Slf4j
 public class ConditionUtils {
 
     private ConditionUtils() {
@@ -82,6 +84,14 @@ public class ConditionUtils {
         mysqlConditionWrapperHandleMap.put(Operator.LAST_YEAR, MySqlConditionWrapperHandle.lastYearHandle());
         mysqlConditionWrapperHandleMap.put(Operator.NEXT_YEAR, MySqlConditionWrapperHandle.nextYearHandle());
 
+        mysqlConditionWrapperHandleMap.put(Operator.HAS_ANY, MySqlConditionWrapperHandle.hasAnyHandle());
+        mysqlConditionWrapperHandleMap.put(Operator.NOT_HAS_ANY, MySqlConditionWrapperHandle.notHasAnyHandle());
+        mysqlConditionWrapperHandleMap.put(Operator.CONTAINS_ALL, MySqlConditionWrapperHandle.containsAllHandle());
+        mysqlConditionWrapperHandleMap.put(Operator.NOT_CONTAINS_ALL, MySqlConditionWrapperHandle.notContainsAllHandle());
+        mysqlConditionWrapperHandleMap.put(Operator.BETWEEN, MySqlConditionWrapperHandle.betweenHandle());
+        mysqlConditionWrapperHandleMap.put(Operator.NOT_BETWEEN, MySqlConditionWrapperHandle.notBetweenHandle());
+        mysqlConditionWrapperHandleMap.put(Operator.NOT_IN_DATE, MySqlConditionWrapperHandle.notInDateHandle());
+
         conditionWrapperHandleMap.put(DataSource.MYSQL, mysqlConditionWrapperHandleMap);
 
         Map<Operator, ConditionWrapperHandle> elasticSearchConditionWrapperHandleMap = Maps.newEnumMap(Operator.class);
@@ -125,6 +135,14 @@ public class ConditionUtils {
         elasticSearchConditionWrapperHandleMap.put(Operator.LAST_YEAR, ElasticSearchConditionWrapperHandle.lastYearHandle());
         elasticSearchConditionWrapperHandleMap.put(Operator.NEXT_YEAR, ElasticSearchConditionWrapperHandle.nextYearHandle());
 
+        elasticSearchConditionWrapperHandleMap.put(Operator.HAS_ANY, ElasticSearchConditionWrapperHandle.hasAnyHandle());
+        elasticSearchConditionWrapperHandleMap.put(Operator.NOT_HAS_ANY, ElasticSearchConditionWrapperHandle.notHasAnyHandle());
+        elasticSearchConditionWrapperHandleMap.put(Operator.CONTAINS_ALL, ElasticSearchConditionWrapperHandle.containsAllHandle());
+        elasticSearchConditionWrapperHandleMap.put(Operator.NOT_CONTAINS_ALL, ElasticSearchConditionWrapperHandle.notContainsAllHandle());
+        elasticSearchConditionWrapperHandleMap.put(Operator.BETWEEN, ElasticSearchConditionWrapperHandle.betweenHandle());
+        elasticSearchConditionWrapperHandleMap.put(Operator.NOT_BETWEEN, ElasticSearchConditionWrapperHandle.notBetweenHandle());
+        elasticSearchConditionWrapperHandleMap.put(Operator.NOT_IN_DATE, ElasticSearchConditionWrapperHandle.notInDateHandle());
+
         conditionWrapperHandleMap.put(DataSource.ELASTICSEARCH, elasticSearchConditionWrapperHandleMap);
 
         Map<Operator, ConditionWrapperHandle> javaBeanConditionWrapperHandleMap = Maps.newEnumMap(Operator.class);
@@ -167,6 +185,14 @@ public class ConditionUtils {
         javaBeanConditionWrapperHandleMap.put(Operator.THIS_YEAR, JavaBeanConditionWrapperHandle.thisYearHandle());
         javaBeanConditionWrapperHandleMap.put(Operator.LAST_YEAR, JavaBeanConditionWrapperHandle.lastYearHandle());
         javaBeanConditionWrapperHandleMap.put(Operator.NEXT_YEAR, JavaBeanConditionWrapperHandle.nextYearHandle());
+
+        javaBeanConditionWrapperHandleMap.put(Operator.HAS_ANY, JavaBeanConditionWrapperHandle.hasAnyHandle());
+        javaBeanConditionWrapperHandleMap.put(Operator.NOT_HAS_ANY, JavaBeanConditionWrapperHandle.notHasAnyHandle());
+        javaBeanConditionWrapperHandleMap.put(Operator.CONTAINS_ALL, JavaBeanConditionWrapperHandle.containsAllHandle());
+        javaBeanConditionWrapperHandleMap.put(Operator.NOT_CONTAINS_ALL, JavaBeanConditionWrapperHandle.notContainsAllHandle());
+        javaBeanConditionWrapperHandleMap.put(Operator.BETWEEN, JavaBeanConditionWrapperHandle.betweenHandle());
+        javaBeanConditionWrapperHandleMap.put(Operator.NOT_BETWEEN, JavaBeanConditionWrapperHandle.notBetweenHandle());
+        javaBeanConditionWrapperHandleMap.put(Operator.NOT_IN_DATE, JavaBeanConditionWrapperHandle.notInDateHandle());
 
         conditionWrapperHandleMap.put(DataSource.JAVABEAN, javaBeanConditionWrapperHandleMap);
     }
@@ -222,7 +248,9 @@ public class ConditionUtils {
         final Map<Integer, Boolean> formulaMap = Maps.newLinkedHashMapWithExpectedSize(conditionList.size());
         final Map<Operator, ConditionWrapperHandle> handleMap = conditionWrapperHandleMap.get(dataSource);
         int[] idx = {1};
-        conditionList.forEach(i -> formulaMap.put(idx[0]++, (boolean) singleConditionWrapper(handleMap, i, dataSource)));
+        conditionList.forEach(i -> formulaMap.put(idx[0]++,
+                i.getResult() != null ? i.getResult() : (boolean) singleConditionWrapper(handleMap, i, dataSource)));
+        System.out.println(formulaMap);
         return formulaMap;
     }
 

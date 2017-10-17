@@ -19,6 +19,10 @@ public class MemoryConditionRequest extends BaseConditionRequest {
 
     private Object memoryObject;
 
+    private MemoryConditionRequest(Boolean result){
+        super(result);
+    }
+
     private MemoryConditionRequest(Object memoryObject, String fieldName, ValueType valueType, Operator operator, Object value) {
         super(fieldName, valueType, operator, value);
         this.memoryObject = memoryObject;
@@ -26,5 +30,9 @@ public class MemoryConditionRequest extends BaseConditionRequest {
 
     public static MemoryConditionRequest of(@NonNull Object memoryObject, @NonNull String fieldName, @NonNull ValueType valueType, @NonNull Operator operator, Object value) {
         return new MemoryConditionRequest(memoryObject, fieldName, valueType, operator, value);
+    }
+
+    public static MemoryConditionRequest of(Boolean result){
+        return new MemoryConditionRequest(result);
     }
 }

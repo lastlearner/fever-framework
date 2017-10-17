@@ -27,7 +27,15 @@ public class DataBaseConditionRequest extends BaseConditionRequest {
         this.alias = alias;
     }
 
+    private DataBaseConditionRequest(Boolean result){
+        super(result);
+    }
+
     public static DataBaseConditionRequest of(@NonNull String fieldName, @NonNull ValueType valueType, @NonNull Operator operator, Object value, String alias) {
         return new DataBaseConditionRequest(alias, fieldName, valueType, operator, value);
+    }
+
+    public static DataBaseConditionRequest of(Boolean result){
+        return new DataBaseConditionRequest(result);
     }
 }

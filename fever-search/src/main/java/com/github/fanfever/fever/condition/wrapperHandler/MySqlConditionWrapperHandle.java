@@ -2,7 +2,10 @@ package com.github.fanfever.fever.condition.wrapperHandler;
 
 import com.github.fanfever.fever.condition.request.BaseConditionRequest;
 import com.github.fanfever.fever.condition.request.DataBaseConditionRequest;
+import com.github.fanfever.fever.util.DateUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.StringJoiner;
 
@@ -390,6 +393,75 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
             if (condition.getValueType().equals(TIME)) {
                 return getJoiner().add("YEAR(" + tableAlias(condition) + condition.getFieldName() + ")").add("=").add("YEAR(NOW() + INTERVAL 1 YEAR)").toString();
             }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle hasAnyHandle() {
+        return condition -> {
+            if (isMultiValue(condition.getValueType())) {
+                return "";
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notHasAnyHandle() {
+        return condition -> {
+            if (isMultiValue(condition.getValueType())) {
+                return "";
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle betweenHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(TIME) && condition.getValueArray().size() == 2) {
+                StringJoiner sj = new StringJoiner(" AND ", "(", ")");
+                sj.add(tableAlias(condition) + condition.getFieldName()).add(">=").add(condition.getValueArray().get(0));
+                sj.add(tableAlias(condition) + condition.getFieldName()).add("<=").add(condition.getValueArray().get(1));
+
+                return sj.toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notBetweenHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(TIME) && condition.getValueArray().size() == 2) {
+                StringJoiner sj = new StringJoiner(" OR ", "(", ")");
+                sj.add(tableAlias(condition) + condition.getFieldName()).add("<").add(condition.getValueArray().get(0));
+                sj.add(tableAlias(condition) + condition.getFieldName()).add(">").add(condition.getValueArray().get(1));
+
+                return sj.toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notInDateHandle() {
+        return condition -> {
+            if (condition.getValueType().equals(TIME)) {
+                StringJoiner sj = new StringJoiner(" AND ", "(", ")");
+                LocalDateTime nextDay = DateUtils.parseDateStrToEndTime(condition.getValue().toString()).plusDays(1);
+                sj.add(tableAlias(condition) + condition.getFieldName()).add(">=").add("'" + condition.getValue() + "'");
+                sj.add(tableAlias(condition) + condition.getFieldName()).add("<").add("'" + nextDay.format(DateTimeFormatter.ISO_DATE_TIME) + "'");
+                return sj.toString();
+            }
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle containsAllHandle(){
+        return condition -> {
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notContainsAllHandle(){
+        return condition -> {
             return notFoundOperation();
         };
     }

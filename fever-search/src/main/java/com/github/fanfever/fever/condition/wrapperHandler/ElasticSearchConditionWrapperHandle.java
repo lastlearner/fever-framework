@@ -397,6 +397,48 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
         };
     }
 
+    static ConditionWrapperHandle hasAnyHandle() {
+        return condition -> {
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notHasAnyHandle() {
+        return condition -> {
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle betweenHandle() {
+        return condition -> {
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notBetweenHandle() {
+        return condition -> {
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notInDateHandle() {
+        return condition -> {
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle containsAllHandle(){
+        return condition -> {
+            return notFoundOperation();
+        };
+    }
+
+    static ConditionWrapperHandle notContainsAllHandle(){
+        return condition -> {
+            return notFoundOperation();
+        };
+    }
+
     static Void notFoundOperation() {
         throw new AssertionError("opration is not exists!");
     }
