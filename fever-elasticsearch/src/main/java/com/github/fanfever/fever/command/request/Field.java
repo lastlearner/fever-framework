@@ -19,6 +19,6 @@ class Field {
     private boolean isSort = false;
 
     public enum DataType {
-        STRING, INTEGER, FLOAT, DATE, ARRAY, COMMA;
+        STRING, INTEGER, FLOAT, DATE, ARRAY, COMMA, DOUBLE;
     }
 }
