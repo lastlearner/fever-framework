@@ -397,18 +397,6 @@ public interface ElasticSearchConditionWrapperHandle extends ConditionWrapperHan
         };
     }
 
-    static ConditionWrapperHandle hasAnyHandle() {
-        return condition -> {
-            return notFoundOperation();
-        };
-    }
-
-    static ConditionWrapperHandle notHasAnyHandle() {
-        return condition -> {
-            return notFoundOperation();
-        };
-    }
-
     static ConditionWrapperHandle betweenHandle() {
         return condition -> {
             return notFoundOperation();

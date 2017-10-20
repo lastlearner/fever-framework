@@ -209,16 +209,6 @@ public enum Operator {
     SUFFIX_NOT_CONTAINS_ANY("suffix_not_contains_any", COMMA_SPLIT, ARRAY),
 
     /**
-     * 包含任意
-     */
-    HAS_ANY("has_any",NUMERIC,COMMA_SPLIT,ARRAY),
-
-    /**
-     * 不包含任意
-     */
-    NOT_HAS_ANY("not_has_any",NUMERIC,COMMA_SPLIT,ARRAY),
-
-    /**
      * 介于
      */
     BETWEEN("between",TIME),

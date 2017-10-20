@@ -488,30 +488,6 @@ public interface JavaBeanConditionWrapperHandle extends ConditionWrapperHandle {
         };
     }
 
-    static ConditionWrapperHandle hasAnyHandle() {
-        return condition -> {
-            Object value = getValue(condition);
-            for (int i = 0; i < condition.getValueArray().size(); i++) {
-                if (String.valueOf(value).equals(condition.getValueArray().get(i))) {
-                    return true;
-                }
-            }
-            return false;
-        };
-    }
-
-    static ConditionWrapperHandle notHasAnyHandle() {
-        return condition -> {
-            Object value = getValue(condition);
-            for (int i = 0; i < condition.getValueArray().size(); i++) {
-                if (String.valueOf(value).equals(condition.getValueArray().get(i))) {
-                    return false;
-                }
-            }
-            return true;
-        };
-    }
-
     static ConditionWrapperHandle betweenHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME) && condition.getValueArray().size() == 2) {

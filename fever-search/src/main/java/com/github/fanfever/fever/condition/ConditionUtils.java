@@ -15,6 +15,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.SpelEvaluationException;
@@ -84,8 +85,6 @@ public class ConditionUtils {
         mysqlConditionWrapperHandleMap.put(Operator.LAST_YEAR, MySqlConditionWrapperHandle.lastYearHandle());
         mysqlConditionWrapperHandleMap.put(Operator.NEXT_YEAR, MySqlConditionWrapperHandle.nextYearHandle());
 
-        mysqlConditionWrapperHandleMap.put(Operator.HAS_ANY, MySqlConditionWrapperHandle.hasAnyHandle());
-        mysqlConditionWrapperHandleMap.put(Operator.NOT_HAS_ANY, MySqlConditionWrapperHandle.notHasAnyHandle());
         mysqlConditionWrapperHandleMap.put(Operator.CONTAINS_ALL, MySqlConditionWrapperHandle.containsAllHandle());
         mysqlConditionWrapperHandleMap.put(Operator.NOT_CONTAINS_ALL, MySqlConditionWrapperHandle.notContainsAllHandle());
         mysqlConditionWrapperHandleMap.put(Operator.BETWEEN, MySqlConditionWrapperHandle.betweenHandle());
@@ -135,8 +134,6 @@ public class ConditionUtils {
         elasticSearchConditionWrapperHandleMap.put(Operator.LAST_YEAR, ElasticSearchConditionWrapperHandle.lastYearHandle());
         elasticSearchConditionWrapperHandleMap.put(Operator.NEXT_YEAR, ElasticSearchConditionWrapperHandle.nextYearHandle());
 
-        elasticSearchConditionWrapperHandleMap.put(Operator.HAS_ANY, ElasticSearchConditionWrapperHandle.hasAnyHandle());
-        elasticSearchConditionWrapperHandleMap.put(Operator.NOT_HAS_ANY, ElasticSearchConditionWrapperHandle.notHasAnyHandle());
         elasticSearchConditionWrapperHandleMap.put(Operator.CONTAINS_ALL, ElasticSearchConditionWrapperHandle.containsAllHandle());
         elasticSearchConditionWrapperHandleMap.put(Operator.NOT_CONTAINS_ALL, ElasticSearchConditionWrapperHandle.notContainsAllHandle());
         elasticSearchConditionWrapperHandleMap.put(Operator.BETWEEN, ElasticSearchConditionWrapperHandle.betweenHandle());
@@ -186,8 +183,6 @@ public class ConditionUtils {
         javaBeanConditionWrapperHandleMap.put(Operator.LAST_YEAR, JavaBeanConditionWrapperHandle.lastYearHandle());
         javaBeanConditionWrapperHandleMap.put(Operator.NEXT_YEAR, JavaBeanConditionWrapperHandle.nextYearHandle());
 
-        javaBeanConditionWrapperHandleMap.put(Operator.HAS_ANY, JavaBeanConditionWrapperHandle.hasAnyHandle());
-        javaBeanConditionWrapperHandleMap.put(Operator.NOT_HAS_ANY, JavaBeanConditionWrapperHandle.notHasAnyHandle());
         javaBeanConditionWrapperHandleMap.put(Operator.CONTAINS_ALL, JavaBeanConditionWrapperHandle.containsAllHandle());
         javaBeanConditionWrapperHandleMap.put(Operator.NOT_CONTAINS_ALL, JavaBeanConditionWrapperHandle.notContainsAllHandle());
         javaBeanConditionWrapperHandleMap.put(Operator.BETWEEN, JavaBeanConditionWrapperHandle.betweenHandle());
@@ -255,12 +250,15 @@ public class ConditionUtils {
     }
 
     private static Object singleConditionWrapper(@NonNull final Map<Operator, ConditionWrapperHandle> handleMap, @NonNull final BaseConditionRequest condition, DataSource dataSource) {
+        if(condition.getResult() != null){
+            return condition.getResult();
+        }
         if(CollectionUtils.isEmpty(condition.getAttachmentList())){
             return handleMap.get(condition.getOperator()).exec(condition);
         }
 
         Operator operator= condition.getOperator();
-        String joinSign = Operator.NOT.equals(operator) ? "or" : "and";
+        String joinSign = isNegativeOperator(operator) ? "or" : "and";
         List<BaseConditionRequest> conditionList = condition.getAttachmentList();
         condition.setAttachmentList(null);
         conditionList.add(condition);
@@ -275,6 +273,17 @@ public class ConditionUtils {
             return checkFormula(generateFullAndFormula(conditionList.size(), joinSign), formulaMap);
         }
     }
+
+
+    private static boolean isNegativeOperator(Operator operator){
+        List<Operator> negativeOperatorList = Lists.newArrayList(Operator.NOT,
+                Operator.NOT_ANY,Operator.NOT_BETWEEN,Operator.NOT_CONTAINS,Operator.NOT_CONTAINS_ALL,
+                Operator.NOT_CONTAINS_ANY,Operator.NOT_IN_DATE,Operator.IS_NOT_NULL,Operator.PREFIX_NOT_CONTAINS,
+                Operator.PREFIX_NOT_CONTAINS_ANY,Operator.SUFFIX_NOT_CONTAINS,Operator.SUFFIX_NOT_CONTAINS_ANY);
+
+        return negativeOperatorList.contains(operator);
+    }
+
 
     /**
      * 数据库条件包装，条件拼接符默认为and

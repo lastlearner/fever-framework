@@ -397,24 +397,6 @@ public interface MySqlConditionWrapperHandle extends ConditionWrapperHandle {
         };
     }
 
-    static ConditionWrapperHandle hasAnyHandle() {
-        return condition -> {
-            if (isMultiValue(condition.getValueType())) {
-                return "";
-            }
-            return notFoundOperation();
-        };
-    }
-
-    static ConditionWrapperHandle notHasAnyHandle() {
-        return condition -> {
-            if (isMultiValue(condition.getValueType())) {
-                return "";
-            }
-            return notFoundOperation();
-        };
-    }
-
     static ConditionWrapperHandle betweenHandle() {
         return condition -> {
             if (condition.getValueType().equals(TIME) && condition.getValueArray().size() == 2) {
