@@ -125,6 +125,7 @@ dynamic: false
 ## Document
 ```json
 curl -XPOST 'localhost:9200/index/_search?pretty' -d ' { "query": { "match_all": {} } }'
+curl -XPOST 'localhost:9200/index/_delete_by_query' -d '{"query":{"match_all":{}}}'
 ```
 
 ## Analyzer(分析器) flow
