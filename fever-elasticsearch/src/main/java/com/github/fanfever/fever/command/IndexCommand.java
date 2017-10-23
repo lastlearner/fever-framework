@@ -266,7 +266,7 @@ public class IndexCommand {
      * @return a reference to this {@code XContentBuilder} object
      */
     private static XContentBuilder mappingsPropertiesWrapper(final IndexCommandRequest indexCommandRequest) {
-        try (XContentBuilder root = XContentFactory.jsonBuilder()) {
+        try (XContentBuilder root = XContentFactory.jsonBuilder().startObject()) {
             XContentBuilder properties = root.startObject("properties");
             for (int i = 0; i < indexCommandRequest.getFieldList().size(); i++) {
                 Field field = indexCommandRequest.getFieldList().get(i);
@@ -333,11 +333,17 @@ public class IndexCommand {
     public static void main(String[] args) {
         List<Field> fieldList = Lists.newArrayListWithCapacity(3);
         final Field nameField = Field.builder().name("name").type(Field.DataType.STRING).build();
-        final Field ageField = Field.builder().name("age").type(Field.DataType.INTEGER).build();
-        final Field createTimeField = Field.builder().name("createTime").type(Field.DataType.DATE).build();
+//        final Field ageField = Field.builder().name("age").type(Field.DataType.INTEGER).build();
+//        final Field createTimeField = Field.builder().name("createTime").type(Field.DataType.DATE).build();
         fieldList.add(nameField);
-        fieldList.add(ageField);
-        fieldList.add(createTimeField);
-        IndexCommandRequest.of(IndexCommandType.UPDATE_MAPPING, "myIndex", "myType").setFieldList(fieldList);
+//        fieldList.add(ageField);
+//        fieldList.add(createTimeField);
+        IndexCommandRequest request = IndexCommandRequest.of(IndexCommandType.UPDATE_MAPPING, "myIndex", "myType").setFieldList(fieldList);
+        XContentBuilder xContentBuilder = IndexCommand.mappingsPropertiesWrapper(request);
+        try {
+            log.info(xContentBuilder.string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
