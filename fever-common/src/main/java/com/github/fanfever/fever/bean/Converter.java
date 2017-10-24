@@ -22,18 +22,21 @@ public interface Converter<S, T>{
     T convert(S s);
 
     default List<T> convertToList(final List<S> input) {
-        if(CollectionUtils.isEmpty(input)){
-            return Collections.emptyList();
-        }
         if(input instanceof Page){
             Page<T> page = new Page<>();
-            page.addAll(input.stream().map(this::convert).collect(toList()));
+            if(!CollectionUtils.isEmpty(input)) {
+                page.addAll(input.stream().map(this::convert).collect(toList()));
+            }
             page.setTotal(((Page) input).getTotal());
             page.setPageNum(((Page) input).getPageNum());
             page.setPageSize(((Page) input).getPageSize());
             return page;
+        }else if(CollectionUtils.isEmpty(input)){
+            return Collections.emptyList();
         }else{
             return input.stream().map(this::convert).collect(toList());
         }
+
+
     }
 }
